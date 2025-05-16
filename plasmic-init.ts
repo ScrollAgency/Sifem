@@ -1,4 +1,5 @@
 import { initPlasmicLoader } from "@plasmicapp/loader-nextjs";
+import { LocaleToggleWrapper } from "./components/LocaleToggleWrapper";
 
 export const PLASMIC = initPlasmicLoader({
   projects: [
@@ -22,4 +23,24 @@ export const PLASMIC = initPlasmicLoader({
 // http://localhost:3000/plasmic-host).  See
 // https://docs.plasmic.app/learn/app-hosting/#set-a-plasmic-project-to-use-your-app-host
 
-// PLASMIC.registerComponent(...);
+PLASMIC.registerComponent(LocaleToggleWrapper, {
+  name: 'LocaleToggleWrapper',
+  props: {
+    children: 'slot'
+  },
+  providesData: true,
+  refActions: {
+    setLocale: {
+      argTypes: [
+        {
+          name: 'locale',
+          type: 'string',
+          displayName: 'Locale',
+          description: 'The locale to switch to (e.g., "en", "es", "fr")'
+        }
+      ],
+      displayName: 'Set locale',
+      description: 'Changes the current locale'
+    }
+  }
+});

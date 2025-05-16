@@ -10,25 +10,26 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import Error from "next/error";
 import { useRouter } from "next/router";
 import { PLASMIC } from "@/plasmic-init";
+import { LocaleProvider, useLocale } from '@/contexts/LocaleContext';
 
-export default function PlasmicLoaderPage(props: {
+function PlasmicLoaderInner(props: {
   plasmicData?: ComponentRenderData;
   queryCache?: Record<string, unknown>;
 }) {
   const { plasmicData, queryCache } = props;
   const router = useRouter();
-  const { locale } = router;
-  
+  const { locale } = useLocale();
+
   if (!plasmicData || plasmicData.entryCompMetas.length === 0) {
     return <Error statusCode={404} />;
   }
   const pageMeta = plasmicData.entryCompMetas[0];
-  
+
   return (
     <PlasmicRootProvider
       loader={PLASMIC}
       prefetchedData={plasmicData}
-      globalVariants={[{ name: 'locale', value: locale }]}
+      globalVariants={[{ name: 'Locale', value: locale }]}
       prefetchedQueryData={queryCache}
       pageRoute={pageMeta.path}
       pageParams={pageMeta.params}
@@ -36,6 +37,17 @@ export default function PlasmicLoaderPage(props: {
     >
       <PlasmicComponent component={pageMeta.displayName} />
     </PlasmicRootProvider>
+  );
+}
+
+export default function PlasmicLoaderPage(props: {
+  plasmicData?: ComponentRenderData;
+  queryCache?: Record<string, unknown>;
+}) {
+  return (
+    <LocaleProvider>
+      <PlasmicLoaderInner {...props} />
+    </LocaleProvider>
   );
 }
 
@@ -74,3 +86,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
     fallback: "blocking",
   };
 }
+
+
+// export default function MyApp({ pageProps }: AppProps) {
+//   const { locale } = useRouter();
+//   return (
+//       <DataProvider name="locale" data={locale}>
+//       <Component {...pageProps} />
+//   </DataProvider>
+//   );
+// }
