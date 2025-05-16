@@ -21,10 +21,12 @@ export default function PlasmicLoaderPage(props: {
     return <Error statusCode={404} />;
   }
   const pageMeta = plasmicData.entryCompMetas[0];
+  const { locale } = useRouter();
   return (
     <PlasmicRootProvider
       loader={PLASMIC}
       prefetchedData={plasmicData}
+      globalVariants={[{ name: 'locale', value: locale }]}
       prefetchedQueryData={queryCache}
       pageRoute={pageMeta.path}
       pageParams={pageMeta.params}
