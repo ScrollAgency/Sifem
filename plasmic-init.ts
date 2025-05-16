@@ -35,12 +35,10 @@ PLASMIC.registerComponent(LocaleToggleWrapper, {
         {
           name: 'locale',
           type: 'string',
-          displayName: 'Locale',
-          description: 'The locale to switch to (e.g., "en", "es", "fr")'
+          displayName: 'Locale'
         }
       ],
-      displayName: 'Set locale',
-      description: 'Changes the current locale'
+      displayName: 'Set locale'
     }
   }
 });
