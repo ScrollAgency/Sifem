@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // web pour webapp, export pour exportation
+  // output: 'web' pour webapp, output: 'export' pour exportation
   output: 'export',
 };
 
