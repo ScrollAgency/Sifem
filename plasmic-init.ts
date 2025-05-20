@@ -44,5 +44,55 @@ PLASMIC.registerComponent(LocaleToggleWrapper, {
   }
 });
 
-// Register ExportToPDF component
-PLASMIC.registerComponent(ExportToPDF, 'ExportToPDF');
+// Register ExportToPDF component with proper refActions
+PLASMIC.registerComponent(ExportToPDF, {
+  name: 'ExportToPDF',
+  props: {
+    elementIds: {
+      type: 'array',
+      displayName: 'Element IDs',
+      description: 'Array of element IDs to export',
+      itemType: {
+        type: 'object'
+      }
+    },
+    fileName: {
+      type: 'string',
+      displayName: 'File Name',
+      description: 'Name of the exported file (without extension)',
+      defaultValue: 'export'
+    },
+    format: {
+      type: 'choice',
+      displayName: 'Format',
+      description: 'Format to export as',
+      options: ['pdf', 'png'],
+      defaultValue: 'pdf'
+    },
+    orientation: {
+      type: 'choice',
+      displayName: 'Orientation',
+      description: 'Page orientation (PDF only)',
+      options: ['portrait', 'landscape'],
+      defaultValue: 'portrait'
+    },
+    onExport: {
+      type: 'eventHandler',
+      displayName: 'On Export Complete',
+      description: 'Function to call when export completes',
+      argTypes: []
+    },
+    className: {
+      type: 'string',
+      displayName: 'Additional Classes',
+      description: 'Additional CSS classes to apply to the component'
+    }
+  },
+  refActions: {
+    export: {
+      displayName: 'Export to PDF/PNG',
+      description: 'Trigger export of the specified elements',
+      argTypes: []
+    }
+  }
+});

@@ -143,10 +143,872 @@ const scrollAndWaitForRender = async (element: HTMLElement) => {
   };
 };
 
-// Removing the unused captureScreenshot function
+// Create a screenshot of an element using different methods
+// This function is for future use, currently disabled
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElement> => {
+  // First cleanup any leftover clones
+  document.querySelectorAll('.html2canvas-clone, .dom-capture-container').forEach(el => {
+    if (el.parentNode) {
+      el.parentNode.removeChild(el);
+    }
+  });
+  
+  // Preload all images in the element
+  console.log('Preloading images before capture');
+  await preloadImages(element);
+  
+  // Get element dimensions and position
+  const rect = element.getBoundingClientRect();
+  console.log(`Element dimensions: ${rect.width}x${rect.height}`);
+  
+  if (rect.width === 0 || rect.height === 0) {
+    console.warn(`Element has zero dimensions: ${rect.width}x${rect.height}`);
+  }
+  
+  // Create a canvas with the right dimensions
+  const canvas = document.createElement('canvas');
+  
+  // Force dimensions - use the computed dimensions or a minimum size
+  const width = Math.max(rect.width, element.offsetWidth, 100);
+  const height = Math.max(rect.height, element.offsetHeight, 100);
+  
+  canvas.width = width * 2; // Higher resolution
+  canvas.height = height * 2;
+  
+  // Method 1: Create a clone and render it manually
+  try {
+    // We'll create a container for the clone
+    const container = document.createElement('div');
+    container.className = 'dom-capture-container';
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = `${width}px`;
+    container.style.height = `${height}px`;
+    container.style.overflow = 'hidden';
+    container.style.zIndex = '-9999';
+    container.style.opacity = '0';
+    container.style.pointerEvents = 'none';
+    
+    // Create a deep clone of the element
+    const clone = element.cloneNode(true) as HTMLElement;
+    
+    // Apply all computed styles to the clone
+    const styles = window.getComputedStyle(element);
+    for (let i = 0; i < styles.length; i++) {
+      const prop = styles[i];
+      // Properly type-cast to handle the indexing operation
+      clone.style[prop as unknown as number] = styles.getPropertyValue(prop);
+    }
+    
+    // Add to container and to body
+    container.appendChild(clone);
+    document.body.appendChild(container);
+    
+    // Wait a moment for the clone to render
+    await delay(50);
+    
+    // Try to render using html2canvas
+    console.log('Trying to capture clone with html2canvas');
+    
+    // First convert all images in the clone to data URLs
+    const images = clone.querySelectorAll('img');
+    if (images.length > 0) {
+      console.log(`Converting ${images.length} cloned images to data URLs before capture`);
+      for (const img of Array.from(images)) {
+        try {
+          if (!img.src.startsWith('data:')) {
+            // Create temporary canvas to convert image
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = img.naturalWidth || img.width || 100;
+            tempCanvas.height = img.naturalHeight || img.height || 100;
+            
+            // Draw and convert
+            if (img.complete && img.naturalWidth > 0) {
+              const ctx = tempCanvas.getContext('2d');
+              if (ctx) {
+                ctx.drawImage(img, 0, 0);
+                img.src = tempCanvas.toDataURL('image/png');
+                console.log(`Converted cloned image from ${img.src} to data URL`);
+              }
+            }
+          }
+        } catch (err) {
+          console.warn('Error converting cloned image:', err);
+        }
+      }
+      
+      // Give time for the browser to process the image changes
+      await delay(50);
+    }
+    
+    const cloneCanvas = await html2canvas(clone, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      width: width,
+      height: height,
+      x: 0,
+      y: 0,
+      windowWidth: width + 50,
+      windowHeight: height + 50,
+      scrollX: 0,
+      scrollY: 0,
+      foreignObjectRendering: false, // Disable foreignObject to improve compatibility
+      imageTimeout: 5000, // Reduced timeout for images
+      logging: false, // Disable verbose logging
+      onclone: (clonedDoc) => {
+        // Process images in the clone
+        Array.from(clonedDoc.querySelectorAll('img')).forEach(img => {
+          img.loading = 'eager';
+          img.setAttribute('crossorigin', 'anonymous');
+          
+          // If the image has a srcset, remove it to avoid html2canvas issues
+          if (img.hasAttribute('srcset')) {
+            img.removeAttribute('srcset');
+          }
+        });
+        return Promise.resolve();
+      }
+    });
+    
+    // Cleanup
+    if (document.body.contains(container)) {
+      document.body.removeChild(container);
+    }
+    
+    // Verify canvas has dimensions
+    if (cloneCanvas.width > 0 && cloneCanvas.height > 0) {
+      console.log(`Successfully captured canvas: ${cloneCanvas.width}x${cloneCanvas.height}`);
+      return cloneCanvas;
+    } else {
+      console.warn('Clone canvas has zero dimensions. Falling back to direct capture.');
+    }
+  } catch (error) {
+    console.error('Error capturing cloned element:', error);
+  }
+  
+  // Method 2: Use direct html2canvas
+  try {
+    // Apply styles to optimize html2canvas capture
+    const originalStyles = {
+      backgroundColor: element.style.backgroundColor,
+      border: element.style.border,
+      margin: element.style.margin,
+      overflow: element.style.overflow
+    };
+    
+    // Make sure it has a background and is contained
+    if (!originalStyles.backgroundColor || originalStyles.backgroundColor === 'transparent') {
+      element.style.backgroundColor = '#ffffff';
+    }
+    if (!originalStyles.border) {
+      element.style.border = '1px solid transparent';
+    }
+    element.style.margin = '0';
+    element.style.overflow = 'visible';
+    
+    console.log('Trying direct capture with html2canvas');
+    
+    // Apply additional styles to make sure images are visible
+    const originalStylesMap = new Map();
+    const allImages = element.querySelectorAll('img');
+    Array.from(allImages).forEach(img => {
+      originalStylesMap.set(img, {
+        visibility: img.style.visibility,
+        display: img.style.display,
+        opacity: img.style.opacity,
+        border: img.style.border
+      });
+      
+      // Force visibility
+      img.style.visibility = 'visible';
+      img.style.display = 'inline-block';
+      img.style.opacity = '1';
+    });
+    
+    // Wait for styles to apply
+    await delay(50);
+    
+    const directCanvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      imageTimeout: 5000, // Reduced timeout for images
+      logging: false, // Disable verbose logging
+      ignoreElements: (el) => {
+        // Skip some problematic elements
+        return (
+          el.tagName === 'IFRAME' || 
+          el.tagName === 'SCRIPT' ||
+          (el.tagName === 'DIV' && el.classList.contains('html2canvas-clone'))
+        );
+      },
+      onclone: (clonedDoc) => {
+        // Process all images in the clone
+        const clonedImages = clonedDoc.querySelectorAll('img');
+        
+        Array.from(clonedImages).forEach(img => {
+          img.loading = 'eager';
+          img.setAttribute('crossorigin', 'anonymous');
+          
+          // Remove srcset attribute
+          if (img.hasAttribute('srcset')) {
+            img.removeAttribute('srcset');
+          }
+          
+          // Force visibility in clone
+          img.style.visibility = 'visible';
+          img.style.display = 'inline-block';
+          img.style.opacity = '1';
+        });
+        
+        return Promise.resolve();
+      }
+    });
+    
+    // Restore original styles
+    Array.from(allImages).forEach(img => {
+      const originalStyles = originalStylesMap.get(img);
+      if (originalStyles) {
+        img.style.visibility = originalStyles.visibility;
+        img.style.display = originalStyles.display;
+        img.style.opacity = originalStyles.opacity;
+        img.style.border = originalStyles.border;
+      }
+    });
+    
+    // Restore original styles
+    element.style.backgroundColor = originalStyles.backgroundColor;
+    element.style.border = originalStyles.border;
+    element.style.margin = originalStyles.margin;
+    element.style.overflow = originalStyles.overflow;
+    
+    if (directCanvas.width > 0 && directCanvas.height > 0) {
+      console.log(`Successfully captured direct canvas: ${directCanvas.width}x${directCanvas.height}`);
+      return directCanvas;
+    }
+    
+    console.warn('Direct canvas has zero dimensions. Falling back to manual rendering.');
+  } catch (error) {
+    console.error('Error with direct html2canvas capture:', error);
+  }
+  
+  // Method 3: Manual canvas rendering as fallback
+  console.log('Creating manual canvas rendering as fallback');
+  const ctx = canvas.getContext('2d');
+  
+  if (ctx) {
+    // Fill with background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    try {
+      // Try to draw an approximation of the element
+      // Get all text nodes from the element
+      const extractText = (node: Node): string[] => {
+        const texts: string[] = [];
+        if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) {
+          texts.push(node.textContent.trim());
+        }
+        for (let i = 0; i < node.childNodes.length; i++) {
+          texts.push(...extractText(node.childNodes[i]));
+        }
+        return texts;
+      };
+      
+      const texts = extractText(element);
+      
+      // Create a visual representation of the element
+      ctx.strokeStyle = '#cccccc';
+      ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+      
+      ctx.font = '20px Arial';
+      ctx.fillStyle = '#000000';
+      ctx.textAlign = 'center';
+      
+      // Draw element ID
+      ctx.fillText(`Element: #${element.id}`, canvas.width / 2, 40);
+      
+      // Draw element dimensions
+      ctx.fillText(`Dimensions: ${Math.round(rect.width)}x${Math.round(rect.height)}`, canvas.width / 2, 70);
+      
+      // Draw some text content
+      ctx.font = '16px Arial';
+      const maxTextsToShow = 5;
+      for (let i = 0; i < Math.min(texts.length, maxTextsToShow); i++) {
+        const text = texts[i].length > 40 ? texts[i].substring(0, 40) + '...' : texts[i];
+        ctx.fillText(text, canvas.width / 2, 110 + i * 25);
+      }
+      
+      if (texts.length > maxTextsToShow) {
+        ctx.fillText(`(${texts.length - maxTextsToShow} more text nodes...)`, canvas.width / 2, 110 + maxTextsToShow * 25);
+      }
+      
+      // Draw a warning
+      ctx.fillStyle = '#ff0000';
+      ctx.fillText('* Fallback rendering - actual element could not be captured *', canvas.width / 2, canvas.height - 20);
+    } catch (renderError) {
+      console.error('Error creating fallback rendering:', renderError);
+      // Even more basic fallback
+      ctx.fillStyle = '#ff0000';
+      ctx.font = '20px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText(`Failed to capture #${element.id}`, canvas.width / 2, canvas.height / 2);
+    }
+  }
+  
+  console.log(`Created fallback canvas: ${canvas.width}x${canvas.height}`);
+  return canvas;
+};
 
 export const useExportToPDF = () => {
   const [isExporting, setIsExporting] = useState(false);
+
+  // Force image download and conversion to base64 using fetch
+  const fetchAndConvertImage = async (url: string): Promise<string> => {
+    try {
+      // Skip data URLs
+      if (url.startsWith('data:')) {
+        return url;
+      }
+      
+      // For relative URLs, make them absolute
+      const absoluteUrl = url.startsWith('http') ? url : new URL(url, window.location.href).href;
+      
+      console.log(`Fetching image: ${absoluteUrl}`);
+      
+      // Fetch the image with cache busting
+      const response = await fetch(`${absoluteUrl}${absoluteUrl.includes('?') ? '&' : '?'}cacheBust=${Date.now()}`, {
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+      }
+      
+      // Get the blob
+      const blob = await response.blob();
+      
+      // Convert blob to base64
+      return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      console.error(`Error fetching image: ${url}`, error);
+      // Return a 1x1 transparent pixel as fallback
+      return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+    }
+  };
+
+  // Process all images in an element and prepare for PDF generation
+  const processImagesForPDF = async (element: HTMLElement): Promise<{[key: string]: string}> => {
+    const images = element.querySelectorAll('img');
+    const imageMap: {[key: string]: string} = {};
+    
+    console.log(`Pre-processing ${images.length} images for PDF generation`);
+    
+    // Process each image
+    await Promise.all(Array.from(images).map(async (img, index) => {
+      try {
+        const imgId = img.id || `img-${index}-${Date.now()}`;
+        
+        // Force image to load if needed
+        if (!img.complete || img.naturalWidth === 0) {
+          await new Promise<void>((resolve) => {
+            img.onload = () => resolve();
+            img.onerror = () => resolve();
+            
+            // Force reload in some cases
+            if (img.loading === 'lazy') {
+              img.loading = 'eager';
+              const currentSrc = img.src;
+              img.src = '';
+              setTimeout(() => { img.src = currentSrc; }, 10);
+            }
+          });
+        }
+        
+        // Get actual image URL
+        const imageUrl = img.currentSrc || img.src;
+        
+        // Fetch and convert the image
+        const dataUrl = await fetchAndConvertImage(imageUrl);
+        
+        // Store in map
+        imageMap[imgId] = dataUrl;
+        
+        // Add a special attribute to the image for later identification
+        img.setAttribute('data-pdf-id', imgId);
+      } catch (err) {
+        console.error(`Error processing image ${index}:`, err);
+      }
+    }));
+    
+    console.log(`Processed ${Object.keys(imageMap).length} images successfully`);
+    
+    return imageMap;
+  };
+
+  // Enhanced PDF generator that adds images separately
+  const generateEnhancedPDF = useCallback(async (elements: HTMLElement[], orientation: 'portrait' | 'landscape', fileName: string, save: boolean) => {
+    console.log('Starting enhanced PDF generation');
+    
+    // Create PDF document
+    const pdf = new jsPDF({
+      orientation,
+      unit: 'mm',
+      format: 'a4',
+    });
+
+    // Get page dimensions
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 10; // 10mm margin
+    const maxWidth = pageWidth - (2 * margin);
+
+    // Calculate positions for vertically stacked elements
+    let currentY = margin;
+    const pxToMm = 25.4 / 96; // Convert pixels to millimeters (assuming 96 DPI)
+    
+    // Process each element
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i];
+      
+      console.log(`Processing element ${i+1}/${elements.length} (${element.id || 'unknown'})`);
+      
+      // First, pre-process all images in the element
+      const imageMap = await processImagesForPDF(element);
+      
+      // Get element dimensions
+      const rect = element.getBoundingClientRect();
+      
+      // Convert to millimeters
+      let elementWidth = rect.width * pxToMm;
+      let elementHeight = rect.height * pxToMm;
+      
+      // Calculate scaling (scale to fit width, maintain aspect ratio)
+      let scale = 1;
+      if (elementWidth > maxWidth) {
+        scale = maxWidth / elementWidth;
+        elementWidth = maxWidth;
+        elementHeight *= scale;
+      }
+      
+      // Check if this element would go beyond page boundary
+      if (currentY + elementHeight > pageHeight - margin) {
+        // Add a new page
+        pdf.addPage();
+        currentY = margin;
+      }
+      
+      // Calculate centered x position
+      const x = (pageWidth - elementWidth) / 2;
+      const y = currentY;
+      
+      // Try the primary approach: direct element to canvas using html2canvas
+      let success = false;
+      
+      // APPROACH 1: Use html2canvas directly on the element with prepared images
+      try {
+        console.log('APPROACH 1: Direct element capture with html2canvas');
+        
+        // Temporarily modify the element to ensure text visibility
+        const originalStyles = new Map();
+        Array.from(element.querySelectorAll('*')).forEach(el => {
+          // Save original styles
+          originalStyles.set(el, {
+            color: (el as HTMLElement).style.color,
+            visibility: (el as HTMLElement).style.visibility,
+            opacity: (el as HTMLElement).style.opacity,
+            display: (el as HTMLElement).style.display
+          });
+          
+          // Ensure text elements are visible
+          if (
+            el.tagName === 'P' || 
+            el.tagName === 'SPAN' || 
+            el.tagName === 'DIV' || 
+            el.tagName === 'H1' || 
+            el.tagName === 'H2' || 
+            el.tagName === 'H3' || 
+            el.tagName === 'H4' || 
+            el.tagName === 'H5' || 
+            el.tagName === 'H6' ||
+            el.tagName === 'LI' ||
+            el.tagName === 'TD'
+          ) {
+            // Make text visible if it might be transparent
+            const computedStyle = window.getComputedStyle(el as HTMLElement);
+            const color = computedStyle.color.toLowerCase();
+            if (color === 'transparent' || 
+                color === 'rgba(0, 0, 0, 0)' ||
+                (color.includes('rgba') && color.endsWith(', 0)'))) {
+              (el as HTMLElement).style.color = '#000';
+            }
+            
+            // Make element visible
+            (el as HTMLElement).style.visibility = 'visible';
+            (el as HTMLElement).style.opacity = '1';
+          }
+        });
+        
+        // Add a background if needed
+        const originalBg = element.style.backgroundColor;
+        if (!originalBg || originalBg === 'transparent') {
+          element.style.backgroundColor = '#ffffff';
+        }
+        
+        // Capture directly
+        const canvas = await html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          imageTimeout: 5000,
+          logging: false
+        });
+        
+        // Convert to data URL
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        
+        // Add to PDF
+        pdf.addImage(
+          imgData,
+          'JPEG',
+          x,
+          y,
+          elementWidth,
+          elementHeight
+        );
+        
+        // Restore original styles
+        Array.from(element.querySelectorAll('*')).forEach(el => {
+          const original = originalStyles.get(el);
+          if (original) {
+            (el as HTMLElement).style.color = original.color;
+            (el as HTMLElement).style.visibility = original.visibility;
+            (el as HTMLElement).style.opacity = original.opacity;
+            (el as HTMLElement).style.display = original.display;
+          }
+        });
+        element.style.backgroundColor = originalBg;
+        
+        console.log('APPROACH 1 succeeded');
+        success = true;
+      } catch (error) {
+        console.error('APPROACH 1 failed:', error);
+        success = false;
+      }
+      
+      // APPROACH 2: Clone element and use html2canvas on the clone
+      if (!success) {
+        try {
+          console.log('APPROACH 2: Clone and capture with html2canvas');
+          
+          // Create a clone of the element for clean capture
+          const clone = element.cloneNode(true) as HTMLElement;
+          const container = document.createElement('div');
+          container.style.position = 'fixed';
+          container.style.left = '-9999px';
+          container.style.top = '0';
+          container.style.width = `${rect.width}px`;
+          container.style.height = `${rect.height}px`;
+          container.style.overflow = 'hidden';
+          container.style.background = '#fff';
+          document.body.appendChild(container);
+          container.appendChild(clone);
+          
+          // Apply styles to ensure text is visible
+          const applyStylesRecursively = (el: Element) => {
+            if (el.nodeType === Node.ELEMENT_NODE) {
+              const computedStyle = window.getComputedStyle(el as HTMLElement);
+              // Only apply if not hidden
+              if (computedStyle.display !== 'none' && computedStyle.visibility !== 'hidden') {
+                (el as HTMLElement).style.display = computedStyle.display;
+                (el as HTMLElement).style.visibility = 'visible';
+                (el as HTMLElement).style.opacity = '1';
+                
+                // For text elements, ensure text color is visible
+                if (
+                  el.tagName === 'P' || 
+                  el.tagName === 'SPAN' || 
+                  el.tagName === 'DIV' || 
+                  el.tagName === 'H1' || 
+                  el.tagName === 'H2' || 
+                  el.tagName === 'H3' || 
+                  el.tagName === 'H4' || 
+                  el.tagName === 'H5' || 
+                  el.tagName === 'H6' ||
+                  el.tagName === 'LI' ||
+                  el.tagName === 'TD'
+                ) {
+                  if (computedStyle.color) {
+                    const color = computedStyle.color.toLowerCase();
+                    // If transparent or very light, darken it
+                    if (color === 'transparent' || color === 'rgba(0, 0, 0, 0)' || 
+                        (color.includes('rgba') && color.endsWith(', 0)'))) {
+                      (el as HTMLElement).style.color = '#000';
+                    }
+                  }
+                }
+              }
+              
+              // Process children
+              for (let i = 0; i < el.children.length; i++) {
+                applyStylesRecursively(el.children[i]);
+              }
+            }
+          };
+          
+          // Apply styles to ensure visibility
+          applyStylesRecursively(clone);
+          
+          // Replace all image src attributes with their data URLs in the clone
+          const cloneImages = clone.querySelectorAll('img');
+          Array.from(cloneImages).forEach(img => {
+            const imgId = img.getAttribute('data-pdf-id');
+            if (imgId && imageMap[imgId]) {
+              img.src = imageMap[imgId];
+              img.style.maxWidth = '100%';
+              img.style.height = 'auto';
+              img.setAttribute('crossorigin', 'anonymous');
+              img.removeAttribute('srcset');
+              img.removeAttribute('loading');
+            }
+          });
+          
+          // Wait for clone to render
+          await delay(100);
+          
+          // Capture the complete element
+          const canvas = await html2canvas(clone, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff',
+            logging: false,
+            imageTimeout: 5000,
+            onclone: (clonedDoc) => {
+              // Double check all text elements are visible in the clone
+              Array.from(clonedDoc.querySelectorAll('p, div, span, h1, h2, h3, h4, h5, h6, li, td, th'))
+                .forEach(el => {
+                  (el as HTMLElement).style.visibility = 'visible';
+                  (el as HTMLElement).style.display = 'block';
+                  if ((el as HTMLElement).style.color === 'transparent' || 
+                      (el as HTMLElement).style.color === 'rgba(0, 0, 0, 0)') {
+                    (el as HTMLElement).style.color = '#000000';
+                  }
+                });
+              return Promise.resolve();
+            }
+          });
+          
+          // Clean up
+          if (document.body.contains(container)) {
+            document.body.removeChild(container);
+          }
+          
+          // Convert to data URL
+          const imgData = canvas.toDataURL('image/jpeg', 0.95);
+          
+          // Add to PDF
+          pdf.addImage(
+            imgData,
+            'JPEG',
+            x,
+            y,
+            elementWidth,
+            elementHeight
+          );
+          
+          console.log('APPROACH 2 succeeded');
+          success = true;
+        } catch (error) {
+          console.error('APPROACH 2 failed:', error);
+          success = false;
+        }
+      }
+      
+      // APPROACH 3: Fallback to separate image + text rendering
+      if (!success) {
+        try {
+          console.log('APPROACH 3: Fallback to separate image + text rendering');
+          
+          // Fallback: Add white background and add images separately
+          console.log('Using fallback approach: background + individual images + text');
+          
+          // First generate a white background
+          pdf.setFillColor(255, 255, 255);
+          pdf.rect(x, y, elementWidth, elementHeight, 'F');
+          
+          // Add each image
+          const images = element.querySelectorAll('img[data-pdf-id]');
+          console.log(`Found ${images.length} tagged images in element`);
+          
+          // Now add each image
+          Array.from(images).forEach((img) => {
+            try {
+              const imgId = img.getAttribute('data-pdf-id') || '';
+              const dataUrl = imageMap[imgId];
+              
+              if (!dataUrl) {
+                console.warn(`No data URL found for image with ID ${imgId}`);
+                return;
+              }
+              
+              // Get image position relative to element
+              const imgRect = img.getBoundingClientRect();
+              const relX = imgRect.left - rect.left;
+              const relY = imgRect.top - rect.top;
+              
+              // Convert to millimeters and apply scaling
+              const imgX = x + (relX * pxToMm * scale);
+              const imgY = y + (relY * pxToMm * scale);
+              const imgWidth = imgRect.width * pxToMm * scale;
+              const imgHeight = imgRect.height * pxToMm * scale;
+              
+              // Skip images with invalid dimensions
+              if (imgWidth <= 0 || imgHeight <= 0) {
+                console.warn(`Skipping image with invalid dimensions: ${imgWidth}x${imgHeight}`);
+                return;
+              }
+              
+              // Add image to PDF
+              console.log(`Adding image at (${imgX}, ${imgY}) with size ${imgWidth}x${imgHeight}`);
+              pdf.addImage(
+                dataUrl,
+                'PNG',
+                imgX,
+                imgY,
+                imgWidth,
+                imgHeight
+              );
+            } catch (err) {
+              console.error('Error adding image to PDF:', err);
+            }
+          });
+          
+          // Try to add text content
+          try {
+            // Find all text nodes
+            const textNodes = [];
+            const walker = document.createTreeWalker(
+              element,
+              NodeFilter.SHOW_TEXT,
+              {
+                acceptNode: function(node) {
+                  // Skip empty text nodes or those in scripts/styles
+                  if (!node.textContent || node.textContent.trim() === '') return NodeFilter.FILTER_REJECT;
+                  const parent = node.parentElement;
+                  if (!parent) return NodeFilter.FILTER_REJECT;
+                  if (parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
+                  
+                  // Check if the text is visible
+                  const style = window.getComputedStyle(parent);
+                  if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+                    return NodeFilter.FILTER_REJECT;
+                  }
+                  
+                  return NodeFilter.FILTER_ACCEPT;
+                }
+              }
+            );
+            
+            while (walker.nextNode()) {
+              const node = walker.currentNode;
+              const parent = node.parentElement;
+              
+              if (parent) {
+                const parentRect = parent.getBoundingClientRect();
+                const relX = parentRect.left - rect.left;
+                const relY = parentRect.top - rect.top;
+                
+                // Get style information
+                const style = window.getComputedStyle(parent);
+                const fontSize = parseFloat(style.fontSize);
+                const fontWeight = style.fontWeight;
+                const color = style.color;
+                
+                textNodes.push({
+                  text: node.textContent || '',
+                  x: relX,
+                  y: relY + fontSize, // Add font size to position text baseline
+                  fontSize: fontSize,
+                  fontWeight: fontWeight,
+                  color: color
+                });
+              }
+            }
+            
+            // Add text to PDF
+            pdf.setTextColor(0, 0, 0); // Default to black
+            pdf.setFontSize(12); // Default font size
+            
+            textNodes.forEach(node => {
+              try {
+                // Set font size (convert px to pt, roughly 0.75 conversion)
+                const ptSize = node.fontSize * 0.75;
+                pdf.setFontSize(ptSize);
+                
+                // Set position (convert to mm)
+                const textX = x + (node.x * pxToMm * scale);
+                const textY = y + (node.y * pxToMm * scale);
+                
+                // Add text
+                pdf.text(node.text.trim(), textX, textY);
+              } catch (textErr) {
+                console.warn('Error adding text to PDF:', textErr);
+              }
+            });
+            
+            console.log('APPROACH 3 succeeded');
+            success = true;
+          } catch (textErr) {
+            console.error('Error processing text content:', textErr);
+            success = false;
+          }
+        } catch (error) {
+          console.error('APPROACH 3 failed:', error);
+          success = false;
+        }
+      }
+      
+      // If all approaches failed, add a message
+      if (!success) {
+        const errorMessage = "Failed to capture content properly. Please try again or use a different format.";
+        pdf.setFontSize(16);
+        pdf.setTextColor(255, 0, 0);
+        pdf.text(errorMessage, x + elementWidth/2, y + elementHeight/2, { align: 'center' });
+      }
+      
+      // No border needed anymore
+      // pdf.setDrawColor(220, 220, 220);
+      // pdf.rect(x, y, elementWidth, elementHeight, 'S');
+      
+      // Update currentY for next element (add a small gap between elements)
+      currentY += elementHeight + 5;
+    }
+    
+    if (save) {
+      // Save the PDF
+      pdf.save(`${fileName}.pdf`);
+    }
+    
+          return pdf;
+    }, []);
 
   const exportElements = useCallback(async ({
     elementIds,
@@ -154,100 +1016,6 @@ export const useExportToPDF = () => {
     format = 'pdf',
     orientation = 'portrait'
   }: ExportOptions) => {
-    // Force image download and conversion to base64 using fetch
-    const fetchAndConvertImage = async (url: string): Promise<string> => {
-      try {
-        // Skip data URLs
-        if (url.startsWith('data:')) {
-          return url;
-        }
-        
-        // For relative URLs, make them absolute
-        const absoluteUrl = url.startsWith('http') ? url : new URL(url, window.location.href).href;
-        
-        console.log(`Fetching image: ${absoluteUrl}`);
-        
-        // Fetch the image with cache busting
-        const response = await fetch(`${absoluteUrl}${absoluteUrl.includes('?') ? '&' : '?'}cacheBust=${Date.now()}`, {
-          mode: 'cors',
-          cache: 'no-cache',
-          credentials: 'same-origin',
-          headers: {
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache'
-          }
-        });
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
-        }
-        
-        // Get the blob
-        const blob = await response.blob();
-        
-        // Convert blob to base64
-        return new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        });
-      } catch (error) {
-        console.error(`Error fetching image: ${url}`, error);
-        // Return a 1x1 transparent pixel as fallback
-        return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-      }
-    };
-    
-    // Process all images in an element and prepare for PDF generation
-    const processImagesForPDF = async (element: HTMLElement): Promise<{[key: string]: string}> => {
-      const images = element.querySelectorAll('img');
-      const imageMap: {[key: string]: string} = {};
-      
-      console.log(`Pre-processing ${images.length} images for PDF generation`);
-      
-      // Process each image
-      await Promise.all(Array.from(images).map(async (img, index) => {
-        try {
-          const imgId = img.id || `img-${index}-${Date.now()}`;
-          
-          // Force image to load if needed
-          if (!img.complete || img.naturalWidth === 0) {
-            await new Promise<void>((resolve) => {
-              img.onload = () => resolve();
-              img.onerror = () => resolve();
-              
-              // Force reload in some cases
-              if (img.loading === 'lazy') {
-                img.loading = 'eager';
-                const currentSrc = img.src;
-                img.src = '';
-                setTimeout(() => { img.src = currentSrc; }, 10);
-              }
-            });
-          }
-          
-          // Get actual image URL
-          const imageUrl = img.currentSrc || img.src;
-          
-          // Fetch and convert the image
-          const dataUrl = await fetchAndConvertImage(imageUrl);
-          
-          // Store in map
-          imageMap[imgId] = dataUrl;
-          
-          // Add a special attribute to the image for later identification
-          img.setAttribute('data-pdf-id', imgId);
-        } catch (err) {
-          console.error(`Error processing image ${index}:`, err);
-        }
-      }));
-      
-      console.log(`Processed ${Object.keys(imageMap).length} images successfully`);
-      
-      return imageMap;
-    };
-
     setIsExporting(true);
     try {
       console.log('Starting export with element IDs:', elementIds);
@@ -279,455 +1047,7 @@ export const useExportToPDF = () => {
         cleanup();
       }
 
-      // Enhanced PDF generator that adds images separately
-      const generateEnhancedPDF = async (elements: HTMLElement[], orientation: 'portrait' | 'landscape', fileName: string, save: boolean) => {
-        console.log('Starting enhanced PDF generation');
-        
-        // Create PDF document
-        const pdf = new jsPDF({
-          orientation,
-          unit: 'mm',
-          format: 'a4',
-        });
-        
-        // Get page dimensions
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-        const margin = 10; // 10mm margin
-        const maxWidth = pageWidth - (2 * margin);
-        
-        // Calculate positions for vertically stacked elements
-        let currentY = margin;
-        const pxToMm = 25.4 / 96; // Convert pixels to millimeters (assuming 96 DPI)
-        
-        // Process each element
-        for (let i = 0; i < elements.length; i++) {
-          const element = elements[i];
-          
-          console.log(`Processing element ${i+1}/${elements.length} (${element.id || 'unknown'})`);
-          
-          // First, pre-process all images in the element
-          const imageMap = await processImagesForPDF(element);
-          
-          // Get element dimensions
-          const rect = element.getBoundingClientRect();
-          
-          // Convert to millimeters
-          let elementWidth = rect.width * pxToMm;
-          let elementHeight = rect.height * pxToMm;
-          
-          // Calculate scaling (scale to fit width, maintain aspect ratio)
-          let scale = 1;
-          if (elementWidth > maxWidth) {
-            scale = maxWidth / elementWidth;
-            elementWidth = maxWidth;
-            elementHeight *= scale;
-          }
-          
-          // Check if this element would go beyond page boundary
-          if (currentY + elementHeight > pageHeight - margin) {
-            // Add a new page
-            pdf.addPage();
-            currentY = margin;
-          }
-          
-          // Calculate centered x position
-          const x = (pageWidth - elementWidth) / 2;
-          const y = currentY;
-          
-          // Try the primary approach: direct element to canvas using html2canvas
-          let success = false;
-          
-          // APPROACH 1: Use html2canvas directly on the element with prepared images
-          try {
-            console.log('APPROACH 1: Direct element capture with html2canvas');
-            
-            // Temporarily modify the element to ensure text visibility
-            const originalStyles = new Map<Element, { color: string; visibility: string; opacity: string; display: string }>();
-            Array.from(element.querySelectorAll('*')).forEach(el => {
-              // Save original styles
-              originalStyles.set(el, {
-                color: (el as HTMLElement).style.color,
-                visibility: (el as HTMLElement).style.visibility,
-                opacity: (el as HTMLElement).style.opacity,
-                display: (el as HTMLElement).style.display
-              });
-              
-              // Ensure text elements are visible
-              if (
-                el.tagName === 'P' || 
-                el.tagName === 'SPAN' || 
-                el.tagName === 'DIV' || 
-                el.tagName === 'H1' || 
-                el.tagName === 'H2' || 
-                el.tagName === 'H3' || 
-                el.tagName === 'H4' || 
-                el.tagName === 'H5' || 
-                el.tagName === 'H6' ||
-                el.tagName === 'LI' ||
-                el.tagName === 'TD'
-              ) {
-                // Make text visible if it might be transparent
-                const computedStyle = window.getComputedStyle(el as HTMLElement);
-                const color = computedStyle.color.toLowerCase();
-                if (color === 'transparent' || 
-                    color === 'rgba(0, 0, 0, 0)' ||
-                    (color.includes('rgba') && color.endsWith(', 0)'))) {
-                  (el as HTMLElement).style.color = '#000';
-                }
-                
-                // Make element visible
-                (el as HTMLElement).style.visibility = 'visible';
-                (el as HTMLElement).style.opacity = '1';
-              }
-            });
-            
-            // Add a background if needed
-            const originalBg = element.style.backgroundColor;
-            if (!originalBg || originalBg === 'transparent') {
-              element.style.backgroundColor = '#ffffff';
-            }
-            
-            // Capture directly
-            const canvas = await html2canvas(element, {
-              scale: 2,
-              useCORS: true,
-              allowTaint: true,
-              backgroundColor: '#ffffff',
-              imageTimeout: 5000,
-              logging: false
-            });
-            
-            // Convert to data URL
-            const imgData = canvas.toDataURL('image/jpeg', 0.95);
-            
-            // Add to PDF
-            pdf.addImage(
-              imgData,
-              'JPEG',
-              x,
-              y,
-              elementWidth,
-              elementHeight
-            );
-            
-            // Restore original styles
-            Array.from(element.querySelectorAll('*')).forEach(el => {
-              const original = originalStyles.get(el);
-              if (original) {
-                (el as HTMLElement).style.color = original.color;
-                (el as HTMLElement).style.visibility = original.visibility;
-                (el as HTMLElement).style.opacity = original.opacity;
-                (el as HTMLElement).style.display = original.display;
-              }
-            });
-            element.style.backgroundColor = originalBg;
-            
-            console.log('APPROACH 1 succeeded');
-            success = true;
-          } catch (error) {
-            console.error('APPROACH 1 failed:', error);
-            success = false;
-          }
-          
-          // APPROACH 2: Clone element and use html2canvas on the clone
-          if (!success) {
-            try {
-              console.log('APPROACH 2: Clone and capture with html2canvas');
-              
-              // Create a clone of the element for clean capture
-              const clone = element.cloneNode(true) as HTMLElement;
-              const container = document.createElement('div');
-              container.style.position = 'fixed';
-              container.style.left = '-9999px';
-              container.style.top = '0';
-              container.style.width = `${rect.width}px`;
-              container.style.height = `${rect.height}px`;
-              container.style.overflow = 'hidden';
-              container.style.background = '#fff';
-              document.body.appendChild(container);
-              container.appendChild(clone);
-              
-              // Apply styles to ensure text is visible
-              const applyStylesRecursively = (el: Element) => {
-                if (el.nodeType === Node.ELEMENT_NODE) {
-                  const computedStyle = window.getComputedStyle(el as HTMLElement);
-                  // Only apply if not hidden
-                  if (computedStyle.display !== 'none' && computedStyle.visibility !== 'hidden') {
-                    (el as HTMLElement).style.display = computedStyle.display;
-                    (el as HTMLElement).style.visibility = 'visible';
-                    (el as HTMLElement).style.opacity = '1';
-                    
-                    // For text elements, ensure text color is visible
-                    if (
-                      el.tagName === 'P' || 
-                      el.tagName === 'SPAN' || 
-                      el.tagName === 'DIV' || 
-                      el.tagName === 'H1' || 
-                      el.tagName === 'H2' || 
-                      el.tagName === 'H3' || 
-                      el.tagName === 'H4' || 
-                      el.tagName === 'H5' || 
-                      el.tagName === 'H6' ||
-                      el.tagName === 'LI' ||
-                      el.tagName === 'TD'
-                    ) {
-                      if (computedStyle.color) {
-                        const color = computedStyle.color.toLowerCase();
-                        // If transparent or very light, darken it
-                        if (color === 'transparent' || color === 'rgba(0, 0, 0, 0)' || 
-                            (color.includes('rgba') && color.endsWith(', 0)'))) {
-                          (el as HTMLElement).style.color = '#000';
-                        }
-                      }
-                    }
-                  }
-                  
-                  // Process children
-                  for (let i = 0; i < el.children.length; i++) {
-                    applyStylesRecursively(el.children[i]);
-                  }
-                }
-              };
-              
-              // Apply styles to ensure visibility
-              applyStylesRecursively(clone);
-              
-              // Replace all image src attributes with their data URLs in the clone
-              const cloneImages = clone.querySelectorAll('img');
-              Array.from(cloneImages).forEach(img => {
-                const imgId = img.getAttribute('data-pdf-id');
-                if (imgId && imageMap[imgId]) {
-                  img.src = imageMap[imgId];
-                  img.style.maxWidth = '100%';
-                  img.style.height = 'auto';
-                  img.setAttribute('crossorigin', 'anonymous');
-                  img.removeAttribute('srcset');
-                  img.removeAttribute('loading');
-                }
-              });
-              
-              // Wait for clone to render
-              await delay(100);
-              
-              // Capture the complete element
-              const canvas = await html2canvas(clone, {
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#ffffff',
-                logging: false,
-                imageTimeout: 5000,
-                onclone: (clonedDoc) => {
-                  // Double check all text elements are visible in the clone
-                  Array.from(clonedDoc.querySelectorAll('p, div, span, h1, h2, h3, h4, h5, h6, li, td, th'))
-                    .forEach(el => {
-                      (el as HTMLElement).style.visibility = 'visible';
-                      (el as HTMLElement).style.display = 'block';
-                      if ((el as HTMLElement).style.color === 'transparent' || 
-                          (el as HTMLElement).style.color === 'rgba(0, 0, 0, 0)') {
-                        (el as HTMLElement).style.color = '#000000';
-                      }
-                    });
-                  return Promise.resolve();
-                }
-              });
-              
-              // Clean up
-              if (document.body.contains(container)) {
-                document.body.removeChild(container);
-              }
-              
-              // Convert to data URL
-              const imgData = canvas.toDataURL('image/jpeg', 0.95);
-              
-              // Add to PDF
-              pdf.addImage(
-                imgData,
-                'JPEG',
-                x,
-                y,
-                elementWidth,
-                elementHeight
-              );
-              
-              console.log('APPROACH 2 succeeded');
-              success = true;
-            } catch (error) {
-              console.error('APPROACH 2 failed:', error);
-              success = false;
-            }
-          }
-          
-          // APPROACH 3: Fallback to separate image + text rendering
-          if (!success) {
-            try {
-              console.log('APPROACH 3: Fallback to separate image + text rendering');
-              
-              // Fallback: Add white background and add images separately
-              console.log('Using fallback approach: background + individual images + text');
-              
-              // First generate a white background
-              pdf.setFillColor(255, 255, 255);
-              pdf.rect(x, y, elementWidth, elementHeight, 'F');
-              
-              // Add each image
-              const images = element.querySelectorAll('img[data-pdf-id]');
-              console.log(`Found ${images.length} tagged images in element`);
-              
-              // Now add each image
-              Array.from(images).forEach((img) => {
-                try {
-                  const imgId = img.getAttribute('data-pdf-id') || '';
-                  const dataUrl = imageMap[imgId];
-                  
-                  if (!dataUrl) {
-                    console.warn(`No data URL found for image with ID ${imgId}`);
-                    return;
-                  }
-                  
-                  // Get image position relative to element
-                  const imgRect = img.getBoundingClientRect();
-                  const relX = imgRect.left - rect.left;
-                  const relY = imgRect.top - rect.top;
-                  
-                  // Convert to millimeters and apply scaling
-                  const imgX = x + (relX * pxToMm * scale);
-                  const imgY = y + (relY * pxToMm * scale);
-                  const imgWidth = imgRect.width * pxToMm * scale;
-                  const imgHeight = imgRect.height * pxToMm * scale;
-                  
-                  // Skip images with invalid dimensions
-                  if (imgWidth <= 0 || imgHeight <= 0) {
-                    console.warn(`Skipping image with invalid dimensions: ${imgWidth}x${imgHeight}`);
-                    return;
-                  }
-                  
-                  // Add image to PDF
-                  console.log(`Adding image at (${imgX}, ${imgY}) with size ${imgWidth}x${imgHeight}`);
-                  pdf.addImage(
-                    dataUrl,
-                    'PNG',
-                    imgX,
-                    imgY,
-                    imgWidth,
-                    imgHeight
-                  );
-                } catch (err) {
-                  console.error('Error adding image to PDF:', err);
-                }
-              });
-              
-              // Try to add text content
-              try {
-                // Find all text nodes
-                const textNodes = [];
-                const walker = document.createTreeWalker(
-                  element,
-                  NodeFilter.SHOW_TEXT,
-                  {
-                    acceptNode: function(node) {
-                      // Skip empty text nodes or those in scripts/styles
-                      if (!node.textContent || node.textContent.trim() === '') return NodeFilter.FILTER_REJECT;
-                      const parent = node.parentElement;
-                      if (!parent) return NodeFilter.FILTER_REJECT;
-                      if (parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
-                      
-                      // Check if the text is visible
-                      const style = window.getComputedStyle(parent);
-                      if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
-                        return NodeFilter.FILTER_REJECT;
-                      }
-                      
-                      return NodeFilter.FILTER_ACCEPT;
-                    }
-                  }
-                );
-                
-                while (walker.nextNode()) {
-                  const node = walker.currentNode;
-                  const parent = node.parentElement;
-                  
-                  if (parent) {
-                    const parentRect = parent.getBoundingClientRect();
-                    const relX = parentRect.left - rect.left;
-                    const relY = parentRect.top - rect.top;
-                    
-                    // Get style information
-                    const style = window.getComputedStyle(parent);
-                    const fontSize = parseFloat(style.fontSize);
-                    const fontWeight = style.fontWeight;
-                    const color = style.color;
-                    
-                    textNodes.push({
-                      text: node.textContent || '',
-                      x: relX,
-                      y: relY + fontSize, // Add font size to position text baseline
-                      fontSize: fontSize,
-                      fontWeight: fontWeight,
-                      color: color
-                    });
-                  }
-                }
-                
-                // Add text to PDF
-                pdf.setTextColor(0, 0, 0); // Default to black
-                pdf.setFontSize(12); // Default font size
-                
-                textNodes.forEach(node => {
-                  try {
-                    // Set font size (convert px to pt, roughly 0.75 conversion)
-                    const ptSize = node.fontSize * 0.75;
-                    pdf.setFontSize(ptSize);
-                    
-                    // Set position (convert to mm)
-                    const textX = x + (node.x * pxToMm * scale);
-                    const textY = y + (node.y * pxToMm * scale);
-                    
-                    // Add text
-                    pdf.text(node.text.trim(), textX, textY);
-                  } catch (textErr) {
-                    console.warn('Error adding text to PDF:', textErr);
-                  }
-                });
-                
-                console.log('APPROACH 3 succeeded');
-                success = true;
-              } catch (textErr) {
-                console.error('Error processing text content:', textErr);
-                success = false;
-              }
-            } catch (error) {
-              console.error('APPROACH 3 failed:', error);
-              success = false;
-            }
-          }
-          
-          // If all approaches failed, add a message
-          if (!success) {
-            const errorMessage = "Failed to capture content properly. Please try again or use a different format.";
-            pdf.setFontSize(16);
-            pdf.setTextColor(255, 0, 0);
-            pdf.text(errorMessage, x + elementWidth/2, y + elementHeight/2, { align: 'center' });
-          }
-          
-          // No border needed anymore
-          // pdf.setDrawColor(220, 220, 220);
-          // pdf.rect(x, y, elementWidth, elementHeight, 'S');
-          
-          // Update currentY for next element (add a small gap between elements)
-          currentY += elementHeight + 5;
-        }
-        
-        if (save) {
-          // Save the PDF
-          pdf.save(`${fileName}.pdf`);
-        }
-        
-        return pdf;
-      };
-
-      // Generate the enhanced PDF content
+      // Generate the enhanced PDF content - don't save file yet
       // We'll modify our function to return the PDF instance
       const pdfDoc = await generateEnhancedPDF(elements, orientation, fileName, format === 'pdf');
       
@@ -865,8 +1185,6 @@ interface ExportToPDFProps {
   orientation?: 'portrait' | 'landscape';
   onExport?: () => void;
   className?: string;
-  // Trigger prop for Plasmic to initiate export
-  exportTrigger?: boolean;
 }
 
 export interface ExportToPDFRef {
@@ -880,8 +1198,6 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
     format = 'pdf',
     orientation = 'portrait',
     onExport,
-    className = '',
-    exportTrigger = false,
   }, 
   ref
 ) => {
@@ -898,18 +1214,6 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
     })
   }));
 
-  // Trigger export when exportTrigger changes to true
-  React.useEffect(() => {
-    if (exportTrigger && !isExporting && elementIds.length > 0) {
-      exportElements({
-        elementIds,
-        fileName,
-        format,
-        orientation
-      });
-    }
-  }, [exportTrigger, elementIds, fileName, format, orientation, exportElements, isExporting]);
-
   // Call onExport if provided
   React.useEffect(() => {
     if (onExport && !isExporting) {
@@ -917,71 +1221,10 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
     }
   }, [isExporting, onExport]);
 
-  // Return an invisible element instead of null for Plasmic compatibility
-  return (
-    <div 
-      className={className}
-      style={{ 
-        display: 'none', 
-        width: 0, 
-        height: 0, 
-        overflow: 'hidden'
-      }}
-      data-plasmic-export-component="true"
-      data-export-element-ids={elementIds.join(',')}
-      data-export-format={format}
-      data-export-orientation={orientation}
-    />
-  );
-};
-
-// Define the component type including propInfo
-type ExportToPDFComponent = React.ForwardRefExoticComponent<ExportToPDFProps & React.RefAttributes<ExportToPDFRef>> & {
-  propInfo: Record<string, unknown>;
+  // Return null - component doesn't render anything
+  return null;
 };
 
 const ExportToPDF = forwardRef(ExportToPDFComponent);
-
-// Add metadata for Plasmic
-ExportToPDF.displayName = 'ExportToPDF';
-
-// Define prop info for Plasmic - use type assertion to avoid TS errors
-const propInfo: Record<string, unknown> = {
-  elementIds: {
-    type: 'string[]',
-    description: 'IDs of elements to export',
-    defaultValue: [],
-    required: true
-  },
-  fileName: {
-    type: 'string',
-    description: 'Name of the exported file (without extension)',
-    defaultValue: 'export'
-  },
-  format: {
-    type: 'choice',
-    options: ['pdf', 'png'],
-    description: 'Format to export (PDF or PNG)',
-    defaultValue: 'pdf'
-  },
-  orientation: {
-    type: 'choice',
-    options: ['portrait', 'landscape'],
-    description: 'Page orientation',
-    defaultValue: 'portrait'
-  },
-  exportTrigger: {
-    type: 'boolean',
-    description: 'Set to true to trigger the export',
-    defaultValue: false
-  },
-  onExport: {
-    type: 'eventHandler',
-    description: 'Function called when export is complete'
-  }
-};
-
-// Add metadata for Plasmic
-(ExportToPDF as ExportToPDFComponent).propInfo = propInfo;
 
 export default ExportToPDF; 
