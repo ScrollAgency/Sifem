@@ -1,6 +1,7 @@
 import { initPlasmicLoader } from "@plasmicapp/loader-nextjs";
 import { LocaleToggleWrapper } from "./components/LocaleToggleWrapper";
 import ExportToPDF from "./components/ExportToPDF";
+import FileList from "./components/FileList";
 
 export const PLASMIC = initPlasmicLoader({
   projects: [
@@ -95,4 +96,53 @@ PLASMIC.registerComponent(ExportToPDF, {
       argTypes: []
     }
   }
+});
+
+// Register FileList component
+PLASMIC.registerComponent(FileList, {
+  name: 'FileList',
+  props: {
+    bucketPath: {
+      type: 'string',
+      displayName: 'Bucket Path',
+      description: 'Path within the lesions bucket to list files from',
+      defaultValue: ''
+    },
+    onList: {
+      type: 'eventHandler',
+      displayName: 'On List Complete',
+      description: 'Function to call when file listing completes',
+      argTypes: [
+        {
+          name: 'files',
+          type: 'object[]'
+        }
+      ]
+    },
+    onError: {
+      type: 'eventHandler',
+      displayName: 'On Error',
+      description: 'Function to call when an error occurs',
+      argTypes: [
+        {
+          name: 'error',
+          type: 'object'
+        }
+      ]
+    }
+  },
+  refActions: {
+    listFiles: {
+      displayName: 'List Files',
+      description: 'List files in the specified bucket path',
+      argTypes: [
+        {
+          name: 'path',
+          type: 'string',
+          displayName: 'Path'
+        }
+      ]
+    }
+  },
+  importPath: './components/FileList'
 });
