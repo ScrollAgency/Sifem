@@ -3,9 +3,23 @@
 import { useRef, useEffect, useState } from 'react';
 import FileList, { FileListRef } from '../components/FileList';
 
+interface FileObject {
+  name: string;
+  id: string;
+  updated_at: string;
+  created_at: string;
+  last_accessed_at: string;
+  metadata: Record<string, unknown>;
+}
+
+interface TestState {
+  files?: FileObject[];
+  error?: string;
+}
+
 export default function TestFileList() {
   const fileListRef = useRef<FileListRef>(null);
-  const [result, setResult] = useState<{files?: any[], error?: string}>({});
+  const [result, setResult] = useState<TestState>({});
 
   useEffect(() => {
     // Test the file listing on component mount
@@ -16,10 +30,11 @@ export default function TestFileList() {
           path: 'image_map/image_POV_face'
         });
         console.log('Files found:', files);
-        setResult({ files });
-      } catch (error: any) {
+        setResult({ files: files || [] });
+      } catch (error) {
         console.error('Error listing files:', error);
-        setResult({ error: error.message });
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        setResult({ error: errorMessage });
       }
     };
 

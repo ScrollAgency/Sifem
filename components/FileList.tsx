@@ -1,6 +1,6 @@
 'use client';
 
-import React, { forwardRef, useCallback, useImperativeHandle, ForwardRefRenderFunction } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, ForwardRefRenderFunction } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client
@@ -15,7 +15,7 @@ interface FileObject {
   updated_at: string;
   created_at: string;
   last_accessed_at: string;
-  metadata: any;
+  metadata: Record<string, unknown>;
 }
 
 interface FileListProps {
@@ -47,12 +47,12 @@ const FileListComponent: ForwardRefRenderFunction<FileListRef, FileListProps> = 
       }
 
       const files = data || [];
-      onList?.(files);
-      return files;
-    } catch (err: any) {
-      const error = new Error(err.message || 'An error occurred while fetching files');
-      onError?.(error);
-      throw error;
+      onList?.(files as FileObject[]);
+      return files as FileObject[];
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error('An error occurred while fetching files');
+      onError?.(err);
+      throw err;
     }
   }, [bucketPath, onList, onError]);
 

@@ -469,7 +469,7 @@ export const useExportToPDF = () => {
   const [isExporting, setIsExporting] = useState(false);
 
   // Force image download and conversion to base64 using fetch
-  const fetchAndConvertImage = async (url: string): Promise<string> => {
+  const fetchAndConvertImage = useCallback(async (url: string): Promise<string> => {
     try {
       // Skip data URLs
       if (url.startsWith('data:')) {
@@ -511,10 +511,10 @@ export const useExportToPDF = () => {
       // Return a 1x1 transparent pixel as fallback
       return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
     }
-  };
+  }, []);
 
   // Process all images in an element and prepare for PDF generation
-  const processImagesForPDF = async (element: HTMLElement): Promise<{[key: string]: string}> => {
+  const processImagesForPDF = useCallback(async (element: HTMLElement): Promise<{[key: string]: string}> => {
     const images = element.querySelectorAll('img');
     const imageMap: {[key: string]: string} = {};
     
@@ -560,7 +560,7 @@ export const useExportToPDF = () => {
     console.log(`Processed ${Object.keys(imageMap).length} images successfully`);
     
     return imageMap;
-  };
+  }, [fetchAndConvertImage]);
 
   // Enhanced PDF generator that adds images separately
   const generateEnhancedPDF = useCallback(async (elements: HTMLElement[], orientation: 'portrait' | 'landscape', fileName: string, save: boolean) => {
@@ -1007,8 +1007,8 @@ export const useExportToPDF = () => {
       pdf.save(`${fileName}.pdf`);
     }
     
-          return pdf;
-    }, []);
+    return pdf;
+  }, [processImagesForPDF]);
 
   const exportElements = useCallback(async ({
     elementIds,
@@ -1169,7 +1169,7 @@ export const useExportToPDF = () => {
     } finally {
       setIsExporting(false);
     }
-  }, []);
+  }, [generateEnhancedPDF]);
 
   return {
     exportElements,

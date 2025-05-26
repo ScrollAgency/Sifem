@@ -115,7 +115,7 @@ PLASMIC.registerComponent(FileList, {
       argTypes: [
         {
           name: 'files',
-          type: 'object[]'
+          type: 'object'
         }
       ]
     },
