@@ -77,6 +77,12 @@ PLASMIC.registerComponent(ExportToPDF, {
       options: ['portrait', 'landscape'],
       defaultValue: 'portrait'
     },
+    autoResize: {
+      type: 'boolean',
+      displayName: 'Auto Resize',
+      description: 'Automatically adjust page size/orientation for wide elements',
+      defaultValue: true
+    },
     onExport: {
       type: 'eventHandler',
       displayName: 'On Export Complete',

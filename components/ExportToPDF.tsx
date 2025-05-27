@@ -7,6 +7,7 @@ interface ExportOptions {
   fileName?: string;
   format?: 'pdf' | 'png';
   orientation?: 'portrait' | 'landscape';
+  autoResize?: boolean; // If true, automatically adjusts page size/orientation for wide elements
 }
 
 // Helper function to wait a specified amount of time
@@ -16,56 +17,190 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const imageToDataURL = async (imgElement: HTMLImageElement): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
     try {
-      // If image is already a data URL, return it
+      // If image is already a data URL
       if (imgElement.src.startsWith('data:')) {
         console.log('Image is already a data URL');
+        
+        // For SVG data URLs, we need to render them to PNG to ensure compatibility
+        if (imgElement.src.includes('image/svg+xml')) {
+          console.log('Converting SVG data URL to PNG');
+          try {
+            const img = new Image();
+            img.onload = () => {
+              try {
+                // Get the actual display dimensions and object-fit style
+                const computedStyle = window.getComputedStyle(imgElement);
+                const displayWidth = parseFloat(computedStyle.width);
+                const displayHeight = parseFloat(computedStyle.height);
+                const objectFit = computedStyle.objectFit;
+                
+                console.log(`Image styles - Display: ${displayWidth}x${displayHeight}, Object-fit: ${objectFit}`);
+                
+                const canvas = document.createElement('canvas');
+                // Use display dimensions if available, otherwise fall back to natural dimensions
+                canvas.width = displayWidth || img.naturalWidth || img.width || 100;
+                canvas.height = displayHeight || img.naturalHeight || img.height || 100;
+                
+                const ctx = canvas.getContext('2d');
+                if (!ctx) throw new Error('Could not get canvas context');
+                
+                // Fill with white background
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Handle object-fit: fill by stretching the image
+                if (objectFit === 'fill') {
+                  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                } else {
+                  // For other object-fit values, maintain aspect ratio
+                  const scale = Math.min(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+                  const scaledWidth = img.naturalWidth * scale;
+                  const scaledHeight = img.naturalHeight * scale;
+                  const x = (canvas.width - scaledWidth) / 2;
+                  const y = (canvas.height - scaledHeight) / 2;
+                  ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+                }
+                
+                // Convert to PNG data URL
+                const pngDataUrl = canvas.toDataURL('image/png');
+                resolve(pngDataUrl);
+              } catch (err) {
+                console.warn('Failed to convert SVG to PNG:', err);
+                resolve(imgElement.src); // Fallback to original SVG
+              }
+            };
+            img.onerror = () => {
+              console.warn('Failed to load SVG for conversion');
+              resolve(imgElement.src); // Fallback to original SVG
+            };
+            img.src = imgElement.src;
+          } catch (err) {
+            console.warn('Error setting up SVG conversion:', err);
+            resolve(imgElement.src); // Fallback to original SVG
+          }
+          return;
+        }
+        
+        // For other data URLs, return as is
         resolve(imgElement.src);
         return;
       }
 
-      // Create a canvas to draw the image
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      
-      // Function to handle successful image load
-      const onImageLoad = () => {
+      // Function to handle the actual image conversion
+      const convertImage = async () => {
         try {
-          // Set canvas dimensions to match the image
-          canvas.width = imgElement.naturalWidth || imgElement.width;
-          canvas.height = imgElement.naturalHeight || imgElement.height;
+          // Try to fetch the image directly first
+          const response = await fetch(imgElement.src);
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          const blob = await response.blob();
+          const dataUrl = await new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.readAsDataURL(blob);
+          });
+          resolve(dataUrl);
+        } catch (fetchError) {
+          console.warn('Direct fetch failed, trying canvas method:', fetchError);
           
-          if (!canvas.width || !canvas.height) {
-            console.warn(`Cannot convert image with invalid dimensions: ${canvas.width}x${canvas.height}`);
-            // Return a transparent pixel as fallback
+          // Fallback to canvas method
+          try {
+            // Create a new image element
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            
+            // Add query parameter to bypass cache
+            const url = new URL(imgElement.src, window.location.href);
+            url.searchParams.set('crossorigin', '1');
+            url.searchParams.set('t', Date.now().toString());
+            
+            img.onload = () => {
+              try {
+                // Get the actual display dimensions and object-fit style
+                const computedStyle = window.getComputedStyle(imgElement);
+                const displayWidth = parseFloat(computedStyle.width);
+                const displayHeight = parseFloat(computedStyle.height);
+                const objectFit = computedStyle.objectFit;
+                
+                console.log(`Image styles - Display: ${displayWidth}x${displayHeight}, Object-fit: ${objectFit}, Natural: ${img.naturalWidth}x${img.naturalHeight}`);
+                
+                const canvas = document.createElement('canvas');
+                // Use display dimensions if available, otherwise fall back to natural dimensions
+                canvas.width = displayWidth || img.naturalWidth || img.width || 100;
+                canvas.height = displayHeight || img.naturalHeight || img.height || 100;
+                
+                if (!canvas.width || !canvas.height) {
+                  console.warn(`Cannot convert image with invalid dimensions: ${canvas.width}x${canvas.height}`);
+                  resolve('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
+                  return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                if (!ctx) throw new Error('Could not get canvas context');
+                
+                // Fill with white background first
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Handle object-fit: fill by stretching the image
+                if (objectFit === 'fill') {
+                  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                } else {
+                  // For other object-fit values, maintain aspect ratio
+                  const scale = Math.min(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+                  const scaledWidth = img.naturalWidth * scale;
+                  const scaledHeight = img.naturalHeight * scale;
+                  const x = (canvas.width - scaledWidth) / 2;
+                  const y = (canvas.height - scaledHeight) / 2;
+                  ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+                }
+                
+                // Try to get data URL
+                try {
+                  const dataURL = canvas.toDataURL('image/png');
+                  console.log(`Converted image to data URL (${dataURL.length} bytes)`);
+                  resolve(dataURL);
+                } catch (canvasError) {
+                  console.error('Canvas export failed:', canvasError);
+                  // If canvas is tainted, try to use fetch API as final fallback
+                  fetch(img.src)
+                    .then(response => response.blob())
+                    .then(blob => {
+                      const reader = new FileReader();
+                      reader.onloadend = () => resolve(reader.result as string);
+                      reader.readAsDataURL(blob);
+                    })
+                    .catch(error => {
+                      console.error('All conversion methods failed:', error);
+                      resolve('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
+                    });
+                }
+              } catch (err) {
+                console.error('Error processing loaded image:', err);
+                resolve('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
+              }
+            };
+            
+            img.onerror = () => {
+              console.warn(`Failed to load image for conversion: ${img.src}`);
+              resolve('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
+            };
+            
+            // Start loading the image
+            img.src = url.toString();
+          } catch (canvasError) {
+            console.error('Canvas method failed:', canvasError);
             resolve('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
-            return;
           }
-          
-          // Draw image to canvas
-          if (ctx) {
-            ctx.drawImage(imgElement, 0, 0);
-            // Convert to data URL
-            const dataURL = canvas.toDataURL('image/png');
-            console.log(`Converted image to data URL (${dataURL.length} bytes)`);
-            resolve(dataURL);
-          } else {
-            throw new Error('Could not get canvas context');
-          }
-        } catch (err) {
-          console.error('Error in onImageLoad:', err);
-          reject(err);
         }
       };
 
-      // Handle already loaded images
+      // Start the conversion process
       if (imgElement.complete && imgElement.naturalWidth > 0) {
-        onImageLoad();
+        convertImage();
       } else {
-        // Handle loading/error for images not yet loaded
-        imgElement.onload = onImageLoad;
+        imgElement.onload = () => convertImage();
         imgElement.onerror = () => {
           console.warn(`Failed to load image for conversion: ${imgElement.src}`);
-          // Return a transparent pixel as fallback
           resolve('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
         };
       }
@@ -83,8 +218,9 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
   
   if (images.length === 0) return;
   
-  // First pass: Make all images eager loading
+  // First pass: Make all images eager loading and set CORS attributes
   Array.from(images).forEach(img => {
+    // Set loading to eager
     if (img.loading === 'lazy') {
       img.loading = 'eager';
       console.log(`Changed image loading to eager: ${img.src}`);
@@ -93,6 +229,26 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
     // Remove srcset to ensure the browser uses src only
     if (img.srcset) {
       img.removeAttribute('srcset');
+    }
+    
+    // Set crossOrigin attribute if not already set
+    if (!img.hasAttribute('crossorigin')) {
+      img.crossOrigin = 'anonymous';
+      console.log(`Set crossOrigin to anonymous: ${img.src}`);
+    }
+    
+    // Add cache-busting parameter to force fresh request for non-data URLs
+    if (!img.src.startsWith('data:')) {
+      try {
+        const url = new URL(img.src, window.location.href);
+        url.searchParams.set('crossorigin', '1');
+        url.searchParams.set('t', Date.now().toString());
+        img.src = url.toString();
+      } catch (err) {
+        console.warn(`Could not modify URL for CORS: ${img.src}`, err);
+      }
+    } else {
+      console.log('Skipping URL modification for data URL');
     }
   });
   
@@ -563,48 +719,95 @@ export const useExportToPDF = () => {
   }, [fetchAndConvertImage]);
 
   // Enhanced PDF generator that adds images separately
-  const generateEnhancedPDF = useCallback(async (elements: HTMLElement[], orientation: 'portrait' | 'landscape', fileName: string, save: boolean) => {
+  const generateEnhancedPDF = useCallback(async (elements: HTMLElement[], orientation: 'portrait' | 'landscape', fileName: string, save: boolean, autoResize: boolean = true) => {
     console.log('Starting enhanced PDF generation');
     
-    // Create PDF document
+    // First, analyze all elements to determine optimal page setup
+    const elementDimensions = elements.map(element => {
+      const rect = element.getBoundingClientRect();
+      return {
+        element,
+        width: rect.width,
+        height: rect.height,
+        aspectRatio: rect.width / rect.height
+      };
+    });
+    
+    // Find the widest element to determine if we need landscape or larger format
+    const maxElementWidth = Math.max(...elementDimensions.map(d => d.width));
+    const pxToMm = 25.4 / 96; // Convert pixels to millimeters (assuming 96 DPI)
+    const maxElementWidthMm = maxElementWidth * pxToMm;
+    
+    // Determine optimal page format and orientation
+    let pageFormat: string | [number, number] = 'a4';
+    let finalOrientation = orientation;
+    
+    // A4 dimensions in mm
+    const a4Portrait = { width: 210, height: 297 };
+    const a4Landscape = { width: 297, height: 210 };
+    const margin = 10;
+    
+    console.log(`Max element width: ${maxElementWidthMm.toFixed(1)}mm`);
+    
+    // Check if we need to adjust format/orientation (only if autoResize is enabled)
+    if (autoResize && maxElementWidthMm > a4Portrait.width - (2 * margin)) {
+      if (maxElementWidthMm <= a4Landscape.width - (2 * margin)) {
+        // Switch to landscape if it fits
+        finalOrientation = 'landscape';
+        console.log('Switching to landscape orientation to fit wide elements');
+      } else if (maxElementWidthMm <= 420 - (2 * margin)) {
+        // Use A3 if A4 landscape isn't enough
+        pageFormat = 'a3';
+        finalOrientation = maxElementWidthMm > 297 - (2 * margin) ? 'landscape' : 'portrait';
+        console.log(`Switching to A3 ${finalOrientation} to fit wide elements`);
+      } else {
+        // Use custom size for very wide elements
+        const customWidth = Math.max(maxElementWidthMm + (2 * margin), 210);
+        const customHeight = 297; // Keep standard height
+        pageFormat = [customWidth, customHeight];
+        finalOrientation = 'portrait';
+        console.log(`Using custom page size: ${customWidth}x${customHeight}mm`);
+      }
+    }
+    
+    // Create PDF document with optimal settings
     const pdf = new jsPDF({
-      orientation,
+      orientation: finalOrientation,
       unit: 'mm',
-      format: 'a4',
+      format: pageFormat,
     });
 
-    // Get page dimensions
+    // Get actual page dimensions
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 10; // 10mm margin
     const maxWidth = pageWidth - (2 * margin);
+    
+    console.log(`Using page size: ${pageWidth.toFixed(1)}x${pageHeight.toFixed(1)}mm (max content width: ${maxWidth.toFixed(1)}mm)`);
 
     // Calculate positions for vertically stacked elements
     let currentY = margin;
-    const pxToMm = 25.4 / 96; // Convert pixels to millimeters (assuming 96 DPI)
     
     // Process each element
     for (let i = 0; i < elements.length; i++) {
-      const element = elements[i];
+      const elementData = elementDimensions[i];
+      const element = elementData.element;
       
       console.log(`Processing element ${i+1}/${elements.length} (${element.id || 'unknown'})`);
       
       // First, pre-process all images in the element
       const imageMap = await processImagesForPDF(element);
       
-      // Get element dimensions
-      const rect = element.getBoundingClientRect();
-      
       // Convert to millimeters
-      let elementWidth = rect.width * pxToMm;
-      let elementHeight = rect.height * pxToMm;
+      let elementWidth = elementData.width * pxToMm;
+      let elementHeight = elementData.height * pxToMm;
       
-      // Calculate scaling (scale to fit width, maintain aspect ratio)
+      // Calculate scaling - be more conservative with scaling
       let scale = 1;
       if (elementWidth > maxWidth) {
         scale = maxWidth / elementWidth;
         elementWidth = maxWidth;
         elementHeight *= scale;
+        console.log(`Scaling element by ${scale.toFixed(3)} to fit page width`);
       }
       
       // Check if this element would go beyond page boundary
@@ -612,6 +815,7 @@ export const useExportToPDF = () => {
         // Add a new page
         pdf.addPage();
         currentY = margin;
+        console.log('Added new page for element');
       }
       
       // Calculate centered x position
@@ -724,8 +928,8 @@ export const useExportToPDF = () => {
           container.style.position = 'fixed';
           container.style.left = '-9999px';
           container.style.top = '0';
-          container.style.width = `${rect.width}px`;
-          container.style.height = `${rect.height}px`;
+          container.style.width = `${elementData.width}px`;
+          container.style.height = `${elementData.height}px`;
           container.style.overflow = 'hidden';
           container.style.background = '#fff';
           document.body.appendChild(container);
@@ -871,8 +1075,9 @@ export const useExportToPDF = () => {
               
               // Get image position relative to element
               const imgRect = img.getBoundingClientRect();
-              const relX = imgRect.left - rect.left;
-              const relY = imgRect.top - rect.top;
+              const elementRect = element.getBoundingClientRect();
+              const relX = imgRect.left - elementRect.left;
+              const relY = imgRect.top - elementRect.top;
               
               // Convert to millimeters and apply scaling
               const imgX = x + (relX * pxToMm * scale);
@@ -933,8 +1138,9 @@ export const useExportToPDF = () => {
               
               if (parent) {
                 const parentRect = parent.getBoundingClientRect();
-                const relX = parentRect.left - rect.left;
-                const relY = parentRect.top - rect.top;
+                const elementRect = element.getBoundingClientRect();
+                const relX = parentRect.left - elementRect.left;
+                const relY = parentRect.top - elementRect.top;
                 
                 // Get style information
                 const style = window.getComputedStyle(parent);
@@ -1014,7 +1220,8 @@ export const useExportToPDF = () => {
     elementIds,
     fileName = 'export',
     format = 'pdf',
-    orientation = 'portrait'
+    orientation = 'portrait',
+    autoResize = true
   }: ExportOptions) => {
     setIsExporting(true);
     try {
@@ -1049,7 +1256,7 @@ export const useExportToPDF = () => {
 
       // Generate the enhanced PDF content - don't save file yet
       // We'll modify our function to return the PDF instance
-      const pdfDoc = await generateEnhancedPDF(elements, orientation, fileName, format === 'pdf');
+      const pdfDoc = await generateEnhancedPDF(elements, orientation, fileName, false, autoResize);
       
       if (format === 'png') {
         // Export as PNG using the PDF we just created
@@ -1183,6 +1390,7 @@ interface ExportToPDFProps {
   fileName?: string;
   format?: 'pdf' | 'png';
   orientation?: 'portrait' | 'landscape';
+  autoResize?: boolean;
   onExport?: () => void;
   className?: string;
 }
@@ -1197,6 +1405,7 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
     fileName = 'export',
     format = 'pdf',
     orientation = 'portrait',
+    autoResize = true,
     onExport,
   }, 
   ref
@@ -1210,6 +1419,7 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
       fileName,
       format,
       orientation,
+      autoResize,
       ...options
     })
   }));
