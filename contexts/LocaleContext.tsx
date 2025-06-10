@@ -10,14 +10,14 @@ interface LocaleContextType {
 }
 
 const defaultContextValue: LocaleContextType = {
-  locale: 'en', // Default to English
+  locale: 'fr', // Default to Fr
   setLocale: () => {}
 };
 
 const LocaleContext = React.createContext<LocaleContextType>(defaultContextValue);
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = React.useState('en');
+  const [locale, setLocaleState] = React.useState('fr');
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
