@@ -722,6 +722,18 @@ export const useExportToPDF = () => {
   const generateEnhancedPDF = useCallback(async (elements: HTMLElement[], orientation: 'portrait' | 'landscape', fileName: string, save: boolean, autoResize: boolean = true) => {
     console.log('Starting enhanced PDF generation');
     
+    // Detect if we were originally on mobile to adjust capture settings
+    const wasMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    
+    // Since we now force desktop layout, we can use consistent settings
+    const pxToMm = 25.4 / 96; // Convert pixels to millimeters (assuming 96 DPI)
+    
+    // Adjust capture scale for mobile devices to ensure better text rendering
+    const captureScale = wasMobile ? Math.max(3, devicePixelRatio * 1.5) : 2;
+    
+    console.log(`Capture settings: wasMobile=${wasMobile}, devicePixelRatio=${devicePixelRatio}, captureScale=${captureScale}`);
+    
     // First, analyze all elements to determine optimal page setup
     const elementDimensions = elements.map(element => {
       const rect = element.getBoundingClientRect();
@@ -735,7 +747,6 @@ export const useExportToPDF = () => {
     
     // Find the widest element to determine if we need landscape or larger format
     const maxElementWidth = Math.max(...elementDimensions.map(d => d.width));
-    const pxToMm = 25.4 / 96; // Convert pixels to millimeters (assuming 96 DPI)
     const maxElementWidthMm = maxElementWidth * pxToMm;
     
     // Determine optimal page format and orientation
@@ -875,9 +886,16 @@ export const useExportToPDF = () => {
           element.style.backgroundColor = '#ffffff';
         }
         
-        // Capture directly
+        // Final delay before capture to ensure complete rendering
+        await delay(500);
+        
+        // Force one more reflow before capture
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        element.offsetHeight;
+        
+        // Capture directly with simpler, more reliable settings
         const canvas = await html2canvas(element, {
-          scale: 2,
+          scale: captureScale,
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
@@ -994,19 +1012,23 @@ export const useExportToPDF = () => {
             }
           });
           
-          // Wait for clone to render
-          await delay(100);
+          // Wait for clone to render properly
+          await delay(500);
           
-          // Capture the complete element
+          // Force reflow on clone
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          clone.offsetHeight;
+          
+          // Capture the complete element with simpler settings
           const canvas = await html2canvas(clone, {
-            scale: 2,
+            scale: captureScale,
             useCORS: true,
             allowTaint: true,
             backgroundColor: '#ffffff',
             logging: false,
             imageTimeout: 5000,
             onclone: (clonedDoc) => {
-              // Double check all text elements are visible in the clone
+              // Just ensure text elements are visible in the clone
               Array.from(clonedDoc.querySelectorAll('p, div, span, h1, h2, h3, h4, h5, h6, li, td, th'))
                 .forEach(el => {
                   (el as HTMLElement).style.visibility = 'visible';
@@ -1216,6 +1238,122 @@ export const useExportToPDF = () => {
     return pdf;
   }, [processImagesForPDF]);
 
+  // Helper function to temporarily switch to desktop layout
+  const temporarilySetDesktopLayout = useCallback(() => {
+    const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (!isMobile) {
+      return () => {}; // No-op cleanup function for desktop
+    }
+    
+    console.log('Temporarily switching to desktop layout for export');
+    
+    // Store original values
+    const originalValues = {
+      viewportMeta: null as HTMLMetaElement | null,
+      bodyMinWidth: document.body.style.minWidth,
+      bodyWidth: document.body.style.width,
+      htmlMinWidth: document.documentElement.style.minWidth,
+      htmlWidth: document.documentElement.style.width,
+      bodyOverflow: document.body.style.overflow,
+      htmlOverflow: document.documentElement.style.overflow,
+      bodyTransform: document.body.style.transform,
+      htmlTransform: document.documentElement.style.transform,
+      bodyFontSize: document.body.style.fontSize,
+      htmlFontSize: document.documentElement.style.fontSize,
+      injectedStyleSheet: null as HTMLStyleElement | null
+    };
+    
+    // Find existing viewport meta tag
+    originalValues.viewportMeta = document.querySelector('meta[name="viewport"]') as HTMLMetaElement;
+    const originalViewportContent = originalValues.viewportMeta?.content || '';
+    
+    // Create or modify viewport meta tag to force desktop width
+    let viewportMeta = originalValues.viewportMeta;
+    if (!viewportMeta) {
+      viewportMeta = document.createElement('meta');
+      viewportMeta.name = 'viewport';
+      document.head.appendChild(viewportMeta);
+    }
+    
+    // Set desktop viewport - more conservative approach
+    viewportMeta.content = 'width=1024, initial-scale=1.0, user-scalable=yes';
+    
+    // Light CSS injection to help with text rendering only
+    const desktopStyleSheet = document.createElement('style');
+    desktopStyleSheet.setAttribute('data-export-desktop-override', 'true');
+    desktopStyleSheet.innerHTML = `
+      /* Minimal adjustments for better text rendering */
+      * {
+        -webkit-text-size-adjust: 100% !important;
+        -ms-text-size-adjust: 100% !important;
+        text-size-adjust: 100% !important;
+      }
+    `;
+    document.head.appendChild(desktopStyleSheet);
+    originalValues.injectedStyleSheet = desktopStyleSheet;
+    
+    // Force minimum width on body and html to ensure desktop layout
+    document.body.style.minWidth = '1024px';
+    document.body.style.width = 'auto';
+    document.documentElement.style.minWidth = '1024px';
+    document.documentElement.style.width = 'auto';
+    
+    // Prevent horizontal scroll during capture
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    
+    // Just prevent mobile text scaling without forcing sizes
+    
+    // Force multiple reflows to ensure complete layout recalculation
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    document.body.offsetHeight;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    document.documentElement.offsetWidth;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions  
+    document.body.getBoundingClientRect();
+    
+    // Force style recalculation on all elements
+    const allElements = document.querySelectorAll('*');
+    Array.from(allElements).slice(0, 50).forEach(el => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      window.getComputedStyle(el as Element).display;
+    });
+    
+    // Return cleanup function
+    return () => {
+      console.log('Restoring mobile layout');
+      
+      // Remove injected stylesheet
+      if (originalValues.injectedStyleSheet && originalValues.injectedStyleSheet.parentNode) {
+        originalValues.injectedStyleSheet.parentNode.removeChild(originalValues.injectedStyleSheet);
+      }
+      
+      // Restore viewport meta tag
+      if (originalValues.viewportMeta) {
+        originalValues.viewportMeta.content = originalViewportContent;
+      } else if (viewportMeta && viewportMeta.parentNode) {
+        viewportMeta.parentNode.removeChild(viewportMeta);
+      }
+      
+      // Restore body and html styles
+      document.body.style.minWidth = originalValues.bodyMinWidth;
+      document.body.style.width = originalValues.bodyWidth;
+      document.documentElement.style.minWidth = originalValues.htmlMinWidth;
+      document.documentElement.style.width = originalValues.htmlWidth;
+      document.body.style.overflow = originalValues.bodyOverflow;
+      document.documentElement.style.overflow = originalValues.htmlOverflow;
+      document.body.style.transform = originalValues.bodyTransform;
+      document.documentElement.style.transform = originalValues.htmlTransform;
+      document.body.style.fontSize = originalValues.bodyFontSize;
+      document.documentElement.style.fontSize = originalValues.htmlFontSize;
+      
+      // Force a reflow to apply the restoration
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      document.body.offsetHeight;
+    };
+  }, []);
+
   const exportElements = useCallback(async ({
     elementIds,
     fileName = 'export',
@@ -1224,8 +1362,30 @@ export const useExportToPDF = () => {
     autoResize = true
   }: ExportOptions) => {
     setIsExporting(true);
+    let restoreLayout: (() => void) | null = null;
+    
     try {
       console.log('Starting export with element IDs:', elementIds);
+      
+      // Step 1: Switch to desktop layout if on mobile
+      restoreLayout = temporarilySetDesktopLayout();
+      
+      // Wait for layout changes to take effect - longer delay for complete re-render
+      await delay(1000);
+      
+      // Force multiple reflows to ensure complete layout recalculation
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      document.body.offsetHeight;
+      await delay(200);
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      document.documentElement.offsetWidth;
+      await delay(200);
+      
+      // Wait for any web fonts to fully load
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+        await delay(100);
+      }
       
       // First verify elements are found in the DOM
       const elements = [];
@@ -1237,9 +1397,9 @@ export const useExportToPDF = () => {
           continue;
         }
         
-        // Check if element is visible
+        // Check if element is visible (now with desktop layout)
         const rect = element.getBoundingClientRect();
-        console.log(`Element "${id}" found with size ${rect.width}x${rect.height}`);
+        console.log(`Element "${id}" found with desktop size ${rect.width}x${rect.height}`);
         elements.push(element);
       }
       
@@ -1252,6 +1412,9 @@ export const useExportToPDF = () => {
         const cleanup = await scrollAndWaitForRender(element);
         await preloadImages(element);
         cleanup();
+        
+        // Additional delay to ensure element is fully rendered in new layout
+        await delay(300);
       }
 
       // Generate the enhanced PDF content - don't save file yet
@@ -1374,9 +1537,15 @@ export const useExportToPDF = () => {
       console.error('Export failed:', error);
       alert(error instanceof Error ? error.message : 'Failed to export elements. Please try again.');
     } finally {
+      // Always restore layout before finishing
+      if (restoreLayout) {
+        restoreLayout();
+        // Wait a moment for layout restoration
+        await delay(200);
+      }
       setIsExporting(false);
     }
-  }, [generateEnhancedPDF]);
+  }, [generateEnhancedPDF, temporarilySetDesktopLayout]);
 
   return {
     exportElements,
