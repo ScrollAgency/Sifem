@@ -886,8 +886,8 @@ export const useExportToPDF = () => {
           element.style.backgroundColor = '#ffffff';
         }
         
-        // Final delay before capture to ensure complete rendering
-        await delay(500);
+        // Quick delay before capture
+        await delay(150);
         
         // Force one more reflow before capture
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -1012,8 +1012,8 @@ export const useExportToPDF = () => {
             }
           });
           
-          // Wait for clone to render properly
-          await delay(500);
+          // Wait for clone to render
+          await delay(150);
           
           // Force reflow on clone
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -1252,8 +1252,10 @@ export const useExportToPDF = () => {
     const originalValues = {
       viewportMeta: null as HTMLMetaElement | null,
       bodyMinWidth: document.body.style.minWidth,
+      bodyMaxWidth: document.body.style.maxWidth,
       bodyWidth: document.body.style.width,
       htmlMinWidth: document.documentElement.style.minWidth,
+      htmlMaxWidth: document.documentElement.style.maxWidth,
       htmlWidth: document.documentElement.style.width,
       bodyOverflow: document.body.style.overflow,
       htmlOverflow: document.documentElement.style.overflow,
@@ -1276,8 +1278,9 @@ export const useExportToPDF = () => {
       document.head.appendChild(viewportMeta);
     }
     
-    // Set desktop viewport - more conservative approach
-    viewportMeta.content = 'width=1024, initial-scale=1.0, user-scalable=yes';
+    // Set desktop viewport - limit max width for consistency across large screens
+    const targetWidth = Math.min(1440, Math.max(1024, window.screen.width));
+    viewportMeta.content = `width=${targetWidth}, initial-scale=1.0, user-scalable=yes`;
     
     // Light CSS injection to help with text rendering only
     const desktopStyleSheet = document.createElement('style');
@@ -1293,10 +1296,12 @@ export const useExportToPDF = () => {
     document.head.appendChild(desktopStyleSheet);
     originalValues.injectedStyleSheet = desktopStyleSheet;
     
-    // Force minimum width on body and html to ensure desktop layout
-    document.body.style.minWidth = '1024px';
+    // Force optimal width on body and html for consistent layout across screen sizes
+    document.body.style.minWidth = `${targetWidth}px`;
+    document.body.style.maxWidth = '1440px'; // Cap maximum width for consistency
     document.body.style.width = 'auto';
-    document.documentElement.style.minWidth = '1024px';
+    document.documentElement.style.minWidth = `${targetWidth}px`;
+    document.documentElement.style.maxWidth = '1440px';
     document.documentElement.style.width = 'auto';
     
     // Prevent horizontal scroll during capture
@@ -1305,20 +1310,9 @@ export const useExportToPDF = () => {
     
     // Just prevent mobile text scaling without forcing sizes
     
-    // Force multiple reflows to ensure complete layout recalculation
+    // Force layout recalculation
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     document.body.offsetHeight;
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    document.documentElement.offsetWidth;
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions  
-    document.body.getBoundingClientRect();
-    
-    // Force style recalculation on all elements
-    const allElements = document.querySelectorAll('*');
-    Array.from(allElements).slice(0, 50).forEach(el => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      window.getComputedStyle(el as Element).display;
-    });
     
     // Return cleanup function
     return () => {
@@ -1338,8 +1332,10 @@ export const useExportToPDF = () => {
       
       // Restore body and html styles
       document.body.style.minWidth = originalValues.bodyMinWidth;
+      document.body.style.maxWidth = originalValues.bodyMaxWidth;
       document.body.style.width = originalValues.bodyWidth;
       document.documentElement.style.minWidth = originalValues.htmlMinWidth;
+      document.documentElement.style.maxWidth = originalValues.htmlMaxWidth;
       document.documentElement.style.width = originalValues.htmlWidth;
       document.body.style.overflow = originalValues.bodyOverflow;
       document.documentElement.style.overflow = originalValues.htmlOverflow;
@@ -1370,21 +1366,24 @@ export const useExportToPDF = () => {
       // Step 1: Switch to desktop layout if on mobile
       restoreLayout = temporarilySetDesktopLayout();
       
-      // Wait for layout changes to take effect - longer delay for complete re-render
-      await delay(1000);
+      // Wait for layout changes to take effect - optimized timing
+      await delay(400);
       
-      // Force multiple reflows to ensure complete layout recalculation
+      // Force reflow to ensure layout recalculation
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       document.body.offsetHeight;
-      await delay(200);
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      document.documentElement.offsetWidth;
-      await delay(200);
+      await delay(100);
       
-      // Wait for any web fonts to fully load
+      // Wait for web fonts if available (non-blocking)
       if (document.fonts && document.fonts.ready) {
-        await document.fonts.ready;
-        await delay(100);
+        try {
+          await Promise.race([
+            document.fonts.ready,
+            delay(200) // Max 200ms wait for fonts
+          ]);
+        } catch {
+          // Continue if fonts fail to load
+        }
       }
       
       // First verify elements are found in the DOM
@@ -1413,8 +1412,8 @@ export const useExportToPDF = () => {
         await preloadImages(element);
         cleanup();
         
-        // Additional delay to ensure element is fully rendered in new layout
-        await delay(300);
+        // Quick delay to ensure element is rendered in new layout
+        await delay(100);
       }
 
       // Generate the enhanced PDF content - don't save file yet
