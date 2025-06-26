@@ -5,7 +5,6 @@ export default function PostHogClient() {
     process.env.NEXT_PUBLIC_POSTHOG_KEY!,
     {
       host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-      capture_pageview: 'history_change',
       flushAt: 1,
       flushInterval: 0,
     }
