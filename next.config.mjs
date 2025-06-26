@@ -4,12 +4,12 @@ const nextConfig = {
 
   async rewrites() {
     return [
-      // Plus spécifique en premier : les assets statiques
+      // Essai avec app.posthog.com pour les assets statiques
       {
         source: '/ingest/static/:path*',
-        destination: 'https://eu.i.posthog.com/static/:path*',
+        destination: 'https://app.posthog.com/static/:path*',
       },
-      // Route générale pour toutes les autres requêtes PostHog
+      // Route générale pour les autres requêtes vers EU
       {
         source: '/ingest/:path*',
         destination: 'https://eu.i.posthog.com/:path*',
