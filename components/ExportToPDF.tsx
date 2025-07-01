@@ -13,6 +13,20 @@ interface ExportOptions {
 // Helper function to wait a specified amount of time
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+// Unified delay for consistent timing across all platforms
+const optimizedDelay = (desktopMs: number, mobileMs: number = desktopMs) => {
+  // Use the higher value to ensure stability on all platforms
+  const unifiedMs = Math.max(desktopMs, mobileMs);
+  return delay(unifiedMs);
+};
+
+// Unified delay for layout-critical operations across all platforms
+const layoutSafeDelay = (desktopMs: number, mobileMs: number) => {
+  // Use the higher value to ensure stability on all platforms
+  const unifiedMs = Math.max(desktopMs, mobileMs);
+  return delay(unifiedMs);
+};
+
 // Helper function to convert an image to a data URL
 const imageToDataURL = async (imgElement: HTMLImageElement): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
@@ -218,6 +232,8 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
   
   if (images.length === 0) return;
   
+  const isDesktop = window.innerWidth > 768 && !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
   // First pass: Make all images eager loading and set CORS attributes
   Array.from(images).forEach(img => {
     // Set loading to eager
@@ -237,25 +253,26 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
       console.log(`Set crossOrigin to anonymous: ${img.src}`);
     }
     
-    // Add cache-busting parameter to force fresh request for non-data URLs
-    if (!img.src.startsWith('data:')) {
+    // Add cache-busting parameter to force fresh request for non-data URLs (only on mobile, more critical there)
+    if (!isDesktop && !img.src.startsWith('data:')) {
       try {
         const url = new URL(img.src, window.location.href);
         url.searchParams.set('crossorigin', '1');
-        url.searchParams.set('t', Date.now().toString());
+        // Use a simpler timestamp for mobile to reduce processing
+        url.searchParams.set('cb', Date.now().toString().slice(-6)); // Last 6 digits only
         img.src = url.toString();
       } catch (err) {
         console.warn(`Could not modify URL for CORS: ${img.src}`, err);
       }
-    } else {
+    } else if (img.src.startsWith('data:')) {
       console.log('Skipping URL modification for data URL');
     }
   });
   
-  // Wait for initial DOM update
-  await delay(50);
+  // Conservative wait for DOM update
+  await optimizedDelay(20, 60); // Extended delays for JPEG image stabilization
   
-  // Second pass: Convert all images to data URLs
+  // Second pass: Convert all images to data URLs in parallel
   const imagePromises = Array.from(images).map(async (img, index) => {
     try {
       // Try to convert it to a data URL
@@ -264,8 +281,10 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
       // Update the image src to use the data URL
       img.src = dataUrl;
       
-      // Wait a moment for the browser to process
-      await delay(25);
+      // Conservative wait time for JPEG image processing
+      if (!isDesktop) {
+        await delay(30); // Extended delay for better JPEG stability on mobile
+      }
       
       return true;
     } catch (err) {
@@ -278,20 +297,22 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
   await Promise.all(imagePromises);
   console.log('All images processed');
   
-  // Add a small delay to ensure everything is rendered
-  await delay(150);
+  // Conservative delay for rendering - JPEG images need time to stabilize
+  await layoutSafeDelay(80, 150); // Increased delays to ensure JPEG images are fully stable
 };
 
 // Helper function to scroll an element into view and wait for it to render
 const scrollAndWaitForRender = async (element: HTMLElement) => {
+  const isDesktop = window.innerWidth > 768 && !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
   // Scroll the element into view with smooth behavior
   element.scrollIntoView({
-    behavior: 'smooth',
+    behavior: isDesktop ? 'auto' : 'smooth', // Instant scroll on desktop for speed
     block: 'center',
   });
   
-  // Wait for scroll and rendering to complete
-  await delay(150);
+  // Conservative wait for scroll and rendering to complete
+  await optimizedDelay(40, 120); // Extended delays to ensure JPEG images are stable
   
   // Return a no-op cleanup function
   return () => {
@@ -485,16 +506,19 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
       img.style.opacity = '1';
     });
     
-    // Wait for styles to apply
-    await delay(50);
+    // Optimized wait for styles to apply
+    await optimizedDelay(20, 50);
     
+    // Reliable capture settings for stable JPEG rendering
     const directCanvas = await html2canvas(element, {
       scale: 2,
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#ffffff',
-      imageTimeout: 5000, // Reduced timeout for images
+      imageTimeout: 6000, // Conservative timeout for stability
       logging: false, // Disable verbose logging
+      foreignObjectRendering: false, // Keep disabled for stability
+      removeContainer: false, // Keep container for better stability
       ignoreElements: (el) => {
         // Skip some problematic elements
         return (
@@ -621,6 +645,8 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
   return canvas;
 };
 
+
+
 export const useExportToPDF = () => {
   const [isExporting, setIsExporting] = useState(false);
 
@@ -637,22 +663,45 @@ export const useExportToPDF = () => {
       
       console.log(`Fetching image: ${absoluteUrl}`);
       
-      // Fetch the image with cache busting
-      const response = await fetch(`${absoluteUrl}${absoluteUrl.includes('?') ? '&' : '?'}cacheBust=${Date.now()}`, {
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
-        }
-      });
+      // Try different CORS strategies
+      const fetchStrategies = [
+        // Strategy 1: Normal CORS request
+        () => fetch(`${absoluteUrl}${absoluteUrl.includes('?') ? '&' : '?'}cacheBust=${Date.now()}`, {
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials: 'same-origin',
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+          }
+        }),
+        
+        // Strategy 2: No-cors mode (fallback for localhost)
+        () => fetch(absoluteUrl, {
+          mode: 'no-cors',
+          cache: 'no-cache',
+        }),
+        
+        // Strategy 3: Simple request without headers
+        () => fetch(absoluteUrl)
+      ];
       
-      if (!response.ok) {
-        throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+      let response;
+      for (const strategy of fetchStrategies) {
+        try {
+          response = await strategy();
+          if (response.ok || response.type === 'opaque') break;
+        } catch {
+          console.warn(`Fetch strategy failed, trying next...`);
+          continue;
+        }
       }
       
-      // Get the blob
+      if (!response || (!response.ok && response.type !== 'opaque')) {
+        throw new Error(`All fetch strategies failed for: ${absoluteUrl}`);
+      }
+      
+      // Get the blob (handle opaque responses)
       const blob = await response.blob();
       
       // Convert blob to base64
@@ -663,8 +712,8 @@ export const useExportToPDF = () => {
         reader.readAsDataURL(blob);
       });
     } catch (error) {
-      console.error(`Error fetching image: ${url}`, error);
-      // Return a 1x1 transparent pixel as fallback
+      console.warn(`Error fetching image: ${url}`, error);
+      // Return a 1x1 transparent pixel as fallback (won't break the export)
       return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
     }
   }, []);
@@ -722,17 +771,16 @@ export const useExportToPDF = () => {
   const generateEnhancedPDF = useCallback(async (elements: HTMLElement[], orientation: 'portrait' | 'landscape', fileName: string, save: boolean, autoResize: boolean = true) => {
     console.log('Starting enhanced PDF generation');
     
-    // Detect if we were originally on mobile to adjust capture settings
-    const wasMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    // Force consistent DPI and measurements regardless of original device
+    // Since we convert mobile to desktop layout temporarily, treat everything as desktop quality
     const devicePixelRatio = window.devicePixelRatio || 1;
-    
-    // Since we now force desktop layout, we can use consistent settings
     const pxToMm = 25.4 / 96; // Convert pixels to millimeters (assuming 96 DPI)
     
-    // Adjust capture scale for mobile devices to ensure better text rendering
-    const captureScale = wasMobile ? Math.max(3, devicePixelRatio * 1.5) : 2;
+    // Fixed capture scale for consistent rendering across all platforms
+    // Using a fixed scale prevents text deformation issues on high-DPR mobile devices
+    const captureScale = 2; // Unified scale: high quality without mobile deformation
     
-    console.log(`Capture settings: wasMobile=${wasMobile}, devicePixelRatio=${devicePixelRatio}, captureScale=${captureScale}`);
+    console.log(`Capture settings: devicePixelRatio=${devicePixelRatio}, captureScale=${captureScale} (fixed to prevent deformation)`);
     
     // First, analyze all elements to determine optimal page setup
     const elementDimensions = elements.map(element => {
@@ -753,10 +801,10 @@ export const useExportToPDF = () => {
     let pageFormat: string | [number, number] = 'a4';
     let finalOrientation = orientation;
     
-    // A4 dimensions in mm
+    // A4 dimensions in mm with consistent margins
     const a4Portrait = { width: 210, height: 297 };
     const a4Landscape = { width: 297, height: 210 };
-    const margin = 10;
+    const margin = 15; // Increased margin for better consistency and visual appeal
     
     console.log(`Max element width: ${maxElementWidthMm.toFixed(1)}mm`);
     
@@ -781,11 +829,13 @@ export const useExportToPDF = () => {
       }
     }
     
-    // Create PDF document with optimal settings
+    // Create PDF document with consistent high-quality settings
     const pdf = new jsPDF({
       orientation: finalOrientation,
       unit: 'mm',
       format: pageFormat,
+      compress: true, // Enable compression for consistent file sizes
+      precision: 3, // Higher precision for better quality
     });
 
     // Get actual page dimensions
@@ -886,34 +936,36 @@ export const useExportToPDF = () => {
           element.style.backgroundColor = '#ffffff';
         }
         
-        // Quick delay before capture
-        await delay(150);
+        // Optimized delay before capture - JPEG images load faster
+        await layoutSafeDelay(75, 150); // Reduced delays since JPEG is more efficient
         
         // Force one more reflow before capture
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         element.offsetHeight;
         
-        // Capture directly with simpler, more reliable settings
+        // Reliable capture settings for stable JPEG rendering
         const canvas = await html2canvas(element, {
           scale: captureScale,
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
-          imageTimeout: 5000,
-          logging: false
+          imageTimeout: 6000, // Conservative timeout for stability
+          logging: false,
+          foreignObjectRendering: false, // Keep disabled for stability
+          removeContainer: false, // Keep container for better stability
         });
         
-        // Convert to data URL
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        // Convert to high quality JPEG (since images are already JPEG format)
+        const imgData = canvas.toDataURL('image/jpeg', 0.98);
         
-        // Add to PDF
+        // Add to PDF with precise dimensions for consistency
         pdf.addImage(
           imgData,
           'JPEG',
-          x,
-          y,
-          elementWidth,
-          elementHeight
+          Math.round(x * 100) / 100, // Round to 2 decimal places for consistency
+          Math.round(y * 100) / 100,
+          Math.round(elementWidth * 100) / 100,
+          Math.round(elementHeight * 100) / 100
         );
         
         // Restore original styles
@@ -1012,21 +1064,23 @@ export const useExportToPDF = () => {
             }
           });
           
-          // Wait for clone to render
-          await delay(150);
+          // Optimized wait for clone to render - JPEG images load faster
+          await layoutSafeDelay(75, 150); // Reduced delays since JPEG is more efficient
           
           // Force reflow on clone
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           clone.offsetHeight;
           
-          // Capture the complete element with simpler settings
+          // Reliable capture settings for stable JPEG rendering
           const canvas = await html2canvas(clone, {
             scale: captureScale,
             useCORS: true,
             allowTaint: true,
             backgroundColor: '#ffffff',
             logging: false,
-            imageTimeout: 5000,
+            imageTimeout: 6000, // Conservative timeout for stability
+            foreignObjectRendering: false, // Keep disabled for stability
+            removeContainer: false, // Keep container for better stability
             onclone: (clonedDoc) => {
               // Just ensure text elements are visible in the clone
               Array.from(clonedDoc.querySelectorAll('p, div, span, h1, h2, h3, h4, h5, h6, li, td, th'))
@@ -1047,17 +1101,17 @@ export const useExportToPDF = () => {
             document.body.removeChild(container);
           }
           
-          // Convert to data URL
-          const imgData = canvas.toDataURL('image/jpeg', 0.95);
+          // Convert to high quality JPEG (since images are already JPEG format)
+          const imgData = canvas.toDataURL('image/jpeg', 0.98);
           
-          // Add to PDF
+          // Add to PDF with precise dimensions for consistency
           pdf.addImage(
             imgData,
             'JPEG',
-            x,
-            y,
-            elementWidth,
-            elementHeight
+            Math.round(x * 100) / 100, // Round to 2 decimal places for consistency
+            Math.round(y * 100) / 100,
+            Math.round(elementWidth * 100) / 100,
+            Math.round(elementHeight * 100) / 100
           );
           
           console.log('APPROACH 2 succeeded');
@@ -1113,15 +1167,15 @@ export const useExportToPDF = () => {
                 return;
               }
               
-              // Add image to PDF
+              // Add image to PDF with precise dimensions for consistency
               console.log(`Adding image at (${imgX}, ${imgY}) with size ${imgWidth}x${imgHeight}`);
               pdf.addImage(
                 dataUrl,
                 'PNG',
-                imgX,
-                imgY,
-                imgWidth,
-                imgHeight
+                Math.round(imgX * 100) / 100, // Round to 2 decimal places for consistency
+                Math.round(imgY * 100) / 100,
+                Math.round(imgWidth * 100) / 100,
+                Math.round(imgHeight * 100) / 100
               );
             } catch (err) {
               console.error('Error adding image to PDF:', err);
@@ -1243,6 +1297,7 @@ export const useExportToPDF = () => {
     const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     if (!isMobile) {
+      console.log('Desktop detected - skipping layout changes');
       return () => {}; // No-op cleanup function for desktop
     }
     
@@ -1278,31 +1333,49 @@ export const useExportToPDF = () => {
       document.head.appendChild(viewportMeta);
     }
     
-    // Set desktop viewport - limit max width for consistency across large screens
-    const targetWidth = Math.min(1440, Math.max(1024, window.screen.width));
-    viewportMeta.content = `width=${targetWidth}, initial-scale=1.0, user-scalable=yes`;
+    // Set fixed desktop viewport for consistent rendering across all devices
+    const targetWidth = 1200; // Fixed width for absolute consistency
+    viewportMeta.content = `width=${targetWidth}, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no`;
     
-    // Light CSS injection to help with text rendering only
+    // Comprehensive CSS injection for identical rendering across platforms
     const desktopStyleSheet = document.createElement('style');
     desktopStyleSheet.setAttribute('data-export-desktop-override', 'true');
     desktopStyleSheet.innerHTML = `
-      /* Minimal adjustments for better text rendering */
+      /* Force identical text rendering across all platforms */
+      * {
+        -webkit-text-size-adjust: 100% !important;
+        -ms-text-size-adjust: 100% !important;
+        text-size-adjust: 100% !important;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
+        text-rendering: optimizeLegibility !important;
+      }
+      
+      /* Minimal adjustments for consistent rendering */
       * {
         -webkit-text-size-adjust: 100% !important;
         -ms-text-size-adjust: 100% !important;
         text-size-adjust: 100% !important;
       }
+      
+      /* Disable animations during export only */
+      @media (max-width: 9999px) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
     `;
     document.head.appendChild(desktopStyleSheet);
     originalValues.injectedStyleSheet = desktopStyleSheet;
     
-    // Force optimal width on body and html for consistent layout across screen sizes
+    // Force identical dimensions on body and html for perfect consistency
     document.body.style.minWidth = `${targetWidth}px`;
-    document.body.style.maxWidth = '1440px'; // Cap maximum width for consistency
-    document.body.style.width = 'auto';
+    document.body.style.maxWidth = `${targetWidth}px`;
+    document.body.style.width = `${targetWidth}px`;
     document.documentElement.style.minWidth = `${targetWidth}px`;
-    document.documentElement.style.maxWidth = '1440px';
-    document.documentElement.style.width = 'auto';
+    document.documentElement.style.maxWidth = `${targetWidth}px`;
+    document.documentElement.style.width = `${targetWidth}px`;
     
     // Prevent horizontal scroll during capture
     document.body.style.overflow = 'hidden';
@@ -1366,20 +1439,19 @@ export const useExportToPDF = () => {
       // Step 1: Switch to desktop layout if on mobile
       restoreLayout = temporarilySetDesktopLayout();
       
-      // Wait for layout changes to take effect - optimized timing
-      await delay(400);
-      
+      // Unified wait for layout changes across all platforms
+      await delay(400); // Fixed delay for consistent timing
       // Force reflow to ensure layout recalculation
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       document.body.offsetHeight;
-      await delay(100);
+      await delay(100); // Additional consistent stabilization delay
       
-      // Wait for web fonts if available (non-blocking)
+      // Wait for web fonts if available (non-blocking) - optimized for both platforms
       if (document.fonts && document.fonts.ready) {
         try {
           await Promise.race([
             document.fonts.ready,
-            delay(200) // Max 200ms wait for fonts
+            optimizedDelay(100, 150) // Reduced from 200ms to 150ms on mobile
           ]);
         } catch {
           // Continue if fonts fail to load
@@ -1406,13 +1478,14 @@ export const useExportToPDF = () => {
         throw new Error('No valid elements found to export. Please check that your element IDs exist and are visible.');
       }
 
-      // Scroll to each element and preload images for both formats
+      // Unified element processing for consistent results across platforms
+      // Process sequentially on all platforms for maximum consistency
       for (const element of elements) {
         const cleanup = await scrollAndWaitForRender(element);
         await preloadImages(element);
         cleanup();
         
-        // Quick delay to ensure element is rendered in new layout
+        // Fixed inter-element delay for consistency
         await delay(100);
       }
 
@@ -1478,14 +1551,16 @@ export const useExportToPDF = () => {
             
             // Use existing approach to capture element
             try {
-              // Try APPROACH 1: Direct capture
+              // Reliable settings for stable JPEG export
               const tempCanvas = await html2canvas(info.element, {
-                scale: 2,
+                scale: 2, // Fixed scale for consistency
                 useCORS: true,
                 allowTaint: true,
                 backgroundColor: '#ffffff',
-                imageTimeout: 5000,
-                logging: false
+                imageTimeout: 6000, // Conservative timeout for stability
+                logging: false,
+                foreignObjectRendering: false, // Keep disabled for stability
+                removeContainer: false, // Keep container for better stability
               });
               
               // Draw the element's canvas onto our main canvas
@@ -1539,8 +1614,8 @@ export const useExportToPDF = () => {
       // Always restore layout before finishing
       if (restoreLayout) {
         restoreLayout();
-        // Wait a moment for layout restoration
-        await delay(200);
+        // Optimized wait for layout restoration
+        await optimizedDelay(50, 150); // Reduced mobile restoration delay from 200ms to 150ms
       }
       setIsExporting(false);
     }
