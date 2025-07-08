@@ -4,7 +4,7 @@ android {
     namespace "org.sifem.dpei_pocket"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "org.sifem.dpei-pocket"
+        applicationId "org.sifem.dpei_pocket"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
