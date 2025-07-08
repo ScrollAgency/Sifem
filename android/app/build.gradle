@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.sifem.app"
+    namespace "org.sifem.dpei_pocket"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.sifem.app"
+        applicationId "org.sifem.dpei-pocket"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
