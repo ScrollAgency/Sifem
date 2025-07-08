@@ -276,10 +276,10 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
   const imagePromises = Array.from(images).map(async (img, index) => {
     try {
       // Try to convert it to a data URL
-      const dataUrl = await imageToDataURL(img);
+      const dataUrl = await imageToDataURL(img as HTMLImageElement);
       
       // Update the image src to use the data URL
-      img.src = dataUrl;
+      (img as HTMLImageElement).src = dataUrl;
       
       // Conservative wait time for JPEG image processing
       if (!isDesktop) {
@@ -436,9 +436,9 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
       foreignObjectRendering: false, // Disable foreignObject to improve compatibility
       imageTimeout: 5000, // Reduced timeout for images
       logging: false, // Disable verbose logging
-      onclone: (clonedDoc) => {
+      onclone: (clonedDoc: Document) => {
         // Process images in the clone
-        Array.from(clonedDoc.querySelectorAll('img')).forEach(img => {
+        Array.from(clonedDoc.querySelectorAll('img')).forEach((img: HTMLImageElement) => {
           img.loading = 'eager';
           img.setAttribute('crossorigin', 'anonymous');
           
@@ -449,7 +449,7 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
         });
         return Promise.resolve();
       }
-    });
+    } as any);
     
     // Cleanup
     if (document.body.contains(container)) {
@@ -519,7 +519,7 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
       logging: false, // Disable verbose logging
       foreignObjectRendering: false, // Keep disabled for stability
       removeContainer: false, // Keep container for better stability
-      ignoreElements: (el) => {
+      ignoreElements: (el: Element) => {
         // Skip some problematic elements
         return (
           el.tagName === 'IFRAME' || 
@@ -527,11 +527,11 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
           (el.tagName === 'DIV' && el.classList.contains('html2canvas-clone'))
         );
       },
-      onclone: (clonedDoc) => {
+      onclone: (clonedDoc: Document) => {
         // Process all images in the clone
         const clonedImages = clonedDoc.querySelectorAll('img');
         
-        Array.from(clonedImages).forEach(img => {
+        Array.from(clonedImages).forEach((img: HTMLImageElement) => {
           img.loading = 'eager';
           img.setAttribute('crossorigin', 'anonymous');
           
@@ -548,7 +548,7 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
         
         return Promise.resolve();
       }
-    });
+    } as any);
     
     // Restore original styles
     Array.from(allImages).forEach(img => {
@@ -953,7 +953,7 @@ export const useExportToPDF = () => {
           logging: false,
           foreignObjectRendering: false, // Keep disabled for stability
           removeContainer: false, // Keep container for better stability
-        });
+        } as any);
         
         // Convert to high quality JPEG (since images are already JPEG format)
         const imgData = canvas.toDataURL('image/jpeg', 0.98);
@@ -1055,12 +1055,12 @@ export const useExportToPDF = () => {
           Array.from(cloneImages).forEach(img => {
             const imgId = img.getAttribute('data-pdf-id');
             if (imgId && imageMap[imgId]) {
-              img.src = imageMap[imgId];
-              img.style.maxWidth = '100%';
-              img.style.height = 'auto';
-              img.setAttribute('crossorigin', 'anonymous');
-              img.removeAttribute('srcset');
-              img.removeAttribute('loading');
+              (img as HTMLImageElement).src = imageMap[imgId];
+              (img as HTMLImageElement).style.maxWidth = '100%';
+              (img as HTMLImageElement).style.height = 'auto';
+              (img as HTMLImageElement).setAttribute('crossorigin', 'anonymous');
+              (img as HTMLImageElement).removeAttribute('srcset');
+              (img as HTMLImageElement).removeAttribute('loading');
             }
           });
           
@@ -1081,7 +1081,7 @@ export const useExportToPDF = () => {
             imageTimeout: 6000, // Conservative timeout for stability
             foreignObjectRendering: false, // Keep disabled for stability
             removeContainer: false, // Keep container for better stability
-            onclone: (clonedDoc) => {
+            onclone: (clonedDoc: Document) => {
               // Just ensure text elements are visible in the clone
               Array.from(clonedDoc.querySelectorAll('p, div, span, h1, h2, h3, h4, h5, h6, li, td, th'))
                 .forEach(el => {
@@ -1094,7 +1094,7 @@ export const useExportToPDF = () => {
                 });
               return Promise.resolve();
             }
-          });
+          } as any);
           
           // Clean up
           if (document.body.contains(container)) {
@@ -1553,7 +1553,7 @@ export const useExportToPDF = () => {
             try {
               // Reliable settings for stable JPEG export
               const tempCanvas = await html2canvas(info.element, {
-                scale: 2, // Fixed scale for consistency
+                scale: 2,
                 useCORS: true,
                 allowTaint: true,
                 backgroundColor: '#ffffff',
@@ -1561,7 +1561,7 @@ export const useExportToPDF = () => {
                 logging: false,
                 foreignObjectRendering: false, // Keep disabled for stability
                 removeContainer: false, // Keep container for better stability
-              });
+              } as any);
               
               // Draw the element's canvas onto our main canvas
               const elementCtx = elementCanvas.getContext('2d');

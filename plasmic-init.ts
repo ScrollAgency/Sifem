@@ -1,5 +1,7 @@
 import { initPlasmicLoader } from "@plasmicapp/loader-nextjs";
 import { LocaleToggleWrapper } from "./components/LocaleToggleWrapper";
+import ExportToPDF from "./components/ExportToPDF";
+import FileList from "./components/FileList";
 
 export const PLASMIC = initPlasmicLoader({
   projects: [
@@ -39,6 +41,79 @@ PLASMIC.registerComponent(LocaleToggleWrapper, {
         }
       ],
       displayName: 'Set locale'
+    }
+  }
+});
+
+PLASMIC.registerComponent(ExportToPDF, {
+  name: 'ExportToPDF',
+  props: {
+    elementIds: {
+      type: 'array',
+      displayName: 'Element IDs',
+      description: 'Array of element IDs to export'
+    },
+    fileName: {
+      type: 'string',
+      displayName: 'File Name',
+      defaultValue: 'export'
+    },
+    format: {
+      type: 'choice',
+      options: ['pdf', 'png'],
+      displayName: 'Export Format',
+      defaultValue: 'pdf'
+    },
+    orientation: {
+      type: 'choice',
+      options: ['portrait', 'landscape'],
+      displayName: 'Orientation',
+      defaultValue: 'portrait'
+    },
+    autoResize: {
+      type: 'boolean',
+      displayName: 'Auto Resize',
+      defaultValue: true
+    },
+    className: {
+      type: 'string',
+      displayName: 'CSS Class'
+    }
+  },
+  refActions: {
+    export: {
+      argTypes: [
+        {
+          name: 'options',
+          type: 'object',
+          displayName: 'Export Options'
+        }
+      ],
+      displayName: 'Export to PDF/PNG'
+    }
+  }
+});
+
+PLASMIC.registerComponent(FileList, {
+  name: 'FileList',
+  props: {
+    bucketPath: {
+      type: 'string',
+      displayName: 'Bucket Path',
+      defaultValue: ''
+    }
+  },
+  providesData: true,
+  refActions: {
+    listFiles: {
+      argTypes: [
+        {
+          name: 'options',
+          type: 'object',
+          displayName: 'List Options'
+        }
+      ],
+      displayName: 'List Files'
     }
   }
 });
