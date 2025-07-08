@@ -3,11 +3,11 @@
 import { forwardRef, useCallback, useImperativeHandle, ForwardRefRenderFunction } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-);
+// Initialize Supabase client with fallback values for build time
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2MDUzMDg2ODEsImV4cCI6MTkyMDg4NDY4MX0.placeholder';
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 interface FileObject {
   name: string;
@@ -34,6 +34,11 @@ const FileListComponent: ForwardRefRenderFunction<FileListRef, FileListProps> = 
 ) => {
   const listFiles = useCallback(async (options?: { path?: string }) => {
     try {
+      // Check if we have valid Supabase configuration
+      if (supabaseUrl === 'https://placeholder.supabase.co') {
+        throw new Error('Supabase configuration not found. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables.');
+      }
+
       const path = options?.path || bucketPath;
       console.log(`Listing files in lesions bucket at path: ${path}`);
 
@@ -66,5 +71,6 @@ const FileListComponent: ForwardRefRenderFunction<FileListRef, FileListProps> = 
 };
 
 const FileList = forwardRef(FileListComponent);
+FileList.displayName = 'FileList';
 
 export default FileList; 
