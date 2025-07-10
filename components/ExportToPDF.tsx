@@ -16,14 +16,14 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 // Unified delay for consistent timing across all platforms
 const optimizedDelay = (desktopMs: number, mobileMs: number = desktopMs) => {
   // Use the higher value to ensure stability on all platforms
-  const unifiedMs = Math.max(desktopMs, mobileMs);
+  const unifiedMs = Math.max(desktopMs, mobileMs) / 2; // Accelerated x2
   return delay(unifiedMs);
 };
 
 // Unified delay for layout-critical operations across all platforms
 const layoutSafeDelay = (desktopMs: number, mobileMs: number) => {
   // Use the higher value to ensure stability on all platforms
-  const unifiedMs = Math.max(desktopMs, mobileMs);
+  const unifiedMs = Math.max(desktopMs, mobileMs) / 2; // Accelerated x2
   return delay(unifiedMs);
 };
 
@@ -269,8 +269,8 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
     }
   });
   
-  // Conservative wait for DOM update
-  await optimizedDelay(20, 60); // Extended delays for JPEG image stabilization
+  // Minimal wait for DOM update
+  await optimizedDelay(5, 15); // Minimal delay for JPEG stabilization
   
   // Second pass: Convert all images to data URLs in parallel
   const imagePromises = Array.from(images).map(async (img, index) => {
@@ -281,9 +281,9 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
       // Update the image src to use the data URL
       img.src = dataUrl;
       
-      // Conservative wait time for JPEG image processing
+      // Minimal wait time for JPEG image processing
       if (!isDesktop) {
-        await delay(30); // Extended delay for better JPEG stability on mobile
+        await delay(5); // Minimal delay for JPEG stability on mobile
       }
       
       return true;
@@ -298,7 +298,7 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
   console.log('All images processed');
   
   // Conservative delay for rendering - JPEG images need time to stabilize
-  await layoutSafeDelay(80, 150); // Increased delays to ensure JPEG images are fully stable
+  await layoutSafeDelay(40, 75); // Increased delays to ensure JPEG images are fully stable (accelerated x2)
 };
 
 // Helper function to scroll an element into view and wait for it to render
@@ -312,7 +312,7 @@ const scrollAndWaitForRender = async (element: HTMLElement) => {
   });
   
   // Conservative wait for scroll and rendering to complete
-  await optimizedDelay(40, 120); // Extended delays to ensure JPEG images are stable
+  await optimizedDelay(20, 60); // Extended delays to ensure JPEG images are stable (accelerated x2)
   
   // Return a no-op cleanup function
   return () => {
@@ -383,8 +383,7 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
     container.appendChild(clone);
     document.body.appendChild(container);
     
-    // Wait a moment for the clone to render
-    await delay(50);
+    // Skip delay - clone should render immediately
     
     // Try to render using html2canvas
     console.log('Trying to capture clone with html2canvas');
@@ -416,8 +415,7 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
         }
       }
       
-      // Give time for the browser to process the image changes
-      await delay(50);
+      // Skip delay - images should process immediately
     }
     
     const cloneCanvas = await html2canvas(clone, {
@@ -433,9 +431,9 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
       windowHeight: height + 50,
       scrollX: 0,
       scrollY: 0,
-      foreignObjectRendering: false, // Disable foreignObject to improve compatibility
-      imageTimeout: 5000, // Reduced timeout for images
-      logging: false, // Disable verbose logging
+              foreignObjectRendering: false, // Disable foreignObject to improve compatibility
+        imageTimeout: 2000, // More conservative timeout for reliable image loading
+        logging: false, // Disable verbose logging
       onclone: (clonedDoc) => {
         // Process images in the clone
         Array.from(clonedDoc.querySelectorAll('img')).forEach(img => {
@@ -506,17 +504,17 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
       img.style.opacity = '1';
     });
     
-    // Optimized wait for styles to apply
-    await optimizedDelay(20, 50);
-    
-    // Reliable capture settings for stable JPEG rendering
-    const directCanvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: '#ffffff',
-      imageTimeout: 6000, // Conservative timeout for stability
-      logging: false, // Disable verbose logging
+            // Minimal wait for styles to apply
+        await optimizedDelay(5, 10); // Minimal style processing delay
+        
+        // Reliable capture settings for stable JPEG rendering
+        const directCanvas = await html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          imageTimeout: 2000, // More conservative timeout for reliable image loading
+          logging: false, // Disable verbose logging
       foreignObjectRendering: false, // Keep disabled for stability
       removeContainer: false, // Keep container for better stability
       ignoreElements: (el) => {
@@ -739,9 +737,10 @@ export const useExportToPDF = () => {
             // Force reload in some cases
             if (img.loading === 'lazy') {
               img.loading = 'eager';
+              // Force immediate reload without delay
               const currentSrc = img.src;
               img.src = '';
-              setTimeout(() => { img.src = currentSrc; }, 10);
+              img.src = currentSrc;
             }
           });
         }
@@ -936,8 +935,8 @@ export const useExportToPDF = () => {
           element.style.backgroundColor = '#ffffff';
         }
         
-        // Optimized delay before capture - JPEG images load faster
-        await layoutSafeDelay(75, 150); // Reduced delays since JPEG is more efficient
+        // Minimal delay before capture
+        await layoutSafeDelay(20, 40); // Minimal pre-capture stabilization
         
         // Force one more reflow before capture
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -949,7 +948,7 @@ export const useExportToPDF = () => {
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
-          imageTimeout: 6000, // Conservative timeout for stability
+          imageTimeout: 2000, // More conservative timeout for reliable image loading
           logging: false,
           foreignObjectRendering: false, // Keep disabled for stability
           removeContainer: false, // Keep container for better stability
@@ -1064,8 +1063,8 @@ export const useExportToPDF = () => {
             }
           });
           
-          // Optimized wait for clone to render - JPEG images load faster
-          await layoutSafeDelay(75, 150); // Reduced delays since JPEG is more efficient
+          // Minimal wait for clone to render
+          await layoutSafeDelay(20, 40); // Minimal clone stabilization
           
           // Force reflow on clone
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -1078,7 +1077,7 @@ export const useExportToPDF = () => {
             allowTaint: true,
             backgroundColor: '#ffffff',
             logging: false,
-            imageTimeout: 6000, // Conservative timeout for stability
+            imageTimeout: 2000, // More conservative timeout for reliable image loading
             foreignObjectRendering: false, // Keep disabled for stability
             removeContainer: false, // Keep container for better stability
             onclone: (clonedDoc) => {
@@ -1439,19 +1438,19 @@ export const useExportToPDF = () => {
       // Step 1: Switch to desktop layout if on mobile
       restoreLayout = temporarilySetDesktopLayout();
       
-      // Unified wait for layout changes across all platforms
-      await delay(400); // Fixed delay for consistent timing
+      // Minimal wait for layout changes across all platforms
+      await delay(100); // Reduced layout timing
       // Force reflow to ensure layout recalculation
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       document.body.offsetHeight;
-      await delay(100); // Additional consistent stabilization delay
+      await delay(25); // Minimal stabilization delay
       
       // Wait for web fonts if available (non-blocking) - optimized for both platforms
       if (document.fonts && document.fonts.ready) {
         try {
           await Promise.race([
             document.fonts.ready,
-            optimizedDelay(100, 150) // Reduced from 200ms to 150ms on mobile
+            optimizedDelay(25, 35) // Minimal font loading timeout
           ]);
         } catch {
           // Continue if fonts fail to load
@@ -1485,8 +1484,7 @@ export const useExportToPDF = () => {
         await preloadImages(element);
         cleanup();
         
-        // Fixed inter-element delay for consistency
-        await delay(100);
+        // Skip inter-element delay - not necessary
       }
 
       // Generate the enhanced PDF content - don't save file yet
@@ -1557,7 +1555,7 @@ export const useExportToPDF = () => {
                 useCORS: true,
                 allowTaint: true,
                 backgroundColor: '#ffffff',
-                imageTimeout: 6000, // Conservative timeout for stability
+                imageTimeout: 2000, // More conservative timeout for reliable image loading
                 logging: false,
                 foreignObjectRendering: false, // Keep disabled for stability
                 removeContainer: false, // Keep container for better stability
@@ -1615,7 +1613,7 @@ export const useExportToPDF = () => {
       if (restoreLayout) {
         restoreLayout();
         // Optimized wait for layout restoration
-        await optimizedDelay(50, 150); // Reduced mobile restoration delay from 200ms to 150ms
+        await optimizedDelay(25, 75); // Reduced mobile restoration delay (accelerated x2)
       }
       setIsExporting(false);
     }
