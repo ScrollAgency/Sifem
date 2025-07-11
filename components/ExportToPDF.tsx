@@ -16,14 +16,14 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 // Unified delay for consistent timing across all platforms
 const optimizedDelay = (desktopMs: number, mobileMs: number = desktopMs) => {
   // Use the higher value to ensure stability on all platforms
-  const unifiedMs = Math.max(desktopMs, mobileMs);
+  const unifiedMs = Math.max(desktopMs, mobileMs) / 2; // Accelerated x2
   return delay(unifiedMs);
 };
 
 // Unified delay for layout-critical operations across all platforms
 const layoutSafeDelay = (desktopMs: number, mobileMs: number) => {
   // Use the higher value to ensure stability on all platforms
-  const unifiedMs = Math.max(desktopMs, mobileMs);
+  const unifiedMs = Math.max(desktopMs, mobileMs) / 2; // Accelerated x2
   return delay(unifiedMs);
 };
 
@@ -269,21 +269,21 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
     }
   });
   
-  // Conservative wait for DOM update
-  await optimizedDelay(20, 60); // Extended delays for JPEG image stabilization
+  // Minimal wait for DOM update
+  await optimizedDelay(5, 15); // Minimal delay for JPEG stabilization
   
   // Second pass: Convert all images to data URLs in parallel
   const imagePromises = Array.from(images).map(async (img, index) => {
     try {
       // Try to convert it to a data URL
-      const dataUrl = await imageToDataURL(img as HTMLImageElement);
+      const dataUrl = await imageToDataURL(img);
       
       // Update the image src to use the data URL
-      (img as HTMLImageElement).src = dataUrl;
+      img.src = dataUrl;
       
-      // Conservative wait time for JPEG image processing
+      // Minimal wait time for JPEG image processing
       if (!isDesktop) {
-        await delay(30); // Extended delay for better JPEG stability on mobile
+        await delay(5); // Minimal delay for JPEG stability on mobile
       }
       
       return true;
@@ -298,7 +298,7 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
   console.log('All images processed');
   
   // Conservative delay for rendering - JPEG images need time to stabilize
-  await layoutSafeDelay(80, 150); // Increased delays to ensure JPEG images are fully stable
+  await layoutSafeDelay(40, 75); // Increased delays to ensure JPEG images are fully stable (accelerated x2)
 };
 
 // Helper function to scroll an element into view and wait for it to render
@@ -312,7 +312,7 @@ const scrollAndWaitForRender = async (element: HTMLElement) => {
   });
   
   // Conservative wait for scroll and rendering to complete
-  await optimizedDelay(40, 120); // Extended delays to ensure JPEG images are stable
+  await optimizedDelay(20, 60); // Extended delays to ensure JPEG images are stable (accelerated x2)
   
   // Return a no-op cleanup function
   return () => {
@@ -383,8 +383,7 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
     container.appendChild(clone);
     document.body.appendChild(container);
     
-    // Wait a moment for the clone to render
-    await delay(50);
+    // Skip delay - clone should render immediately
     
     // Try to render using html2canvas
     console.log('Trying to capture clone with html2canvas');
@@ -416,8 +415,7 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
         }
       }
       
-      // Give time for the browser to process the image changes
-      await delay(50);
+      // Skip delay - images should process immediately
     }
     
     const cloneCanvas = await html2canvas(clone, {
@@ -434,17 +432,18 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
       scrollX: 0,
       scrollY: 0,
       foreignObjectRendering: false, // Disable foreignObject to improve compatibility
-      imageTimeout: 5000, // Reduced timeout for images
+      imageTimeout: 3000, // Timeout augmenté pour une meilleure compatibilité
       logging: false, // Disable verbose logging
-      onclone: (clonedDoc: Document) => {
+      onclone: (clonedDoc: any) => {
         // Process images in the clone
-        Array.from(clonedDoc.querySelectorAll('img')).forEach((img: HTMLImageElement) => {
-          img.loading = 'eager';
-          img.setAttribute('crossorigin', 'anonymous');
+        Array.from(clonedDoc.querySelectorAll('img')).forEach(img => {
+          const image = img as HTMLImageElement;
+          image.loading = 'eager';
+          image.setAttribute('crossorigin', 'anonymous');
           
           // If the image has a srcset, remove it to avoid html2canvas issues
-          if (img.hasAttribute('srcset')) {
-            img.removeAttribute('srcset');
+          if (image.hasAttribute('srcset')) {
+            image.removeAttribute('srcset');
           }
         });
         return Promise.resolve();
@@ -506,20 +505,20 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
       img.style.opacity = '1';
     });
     
-    // Optimized wait for styles to apply
-    await optimizedDelay(20, 50);
-    
-    // Reliable capture settings for stable JPEG rendering
-    const directCanvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: '#ffffff',
-      imageTimeout: 6000, // Conservative timeout for stability
-      logging: false, // Disable verbose logging
+            // Minimal wait for styles to apply
+        await optimizedDelay(5, 10); // Minimal style processing delay
+        
+        // Reliable capture settings for stable JPEG rendering
+        const directCanvas = await html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          imageTimeout: 3000, // Timeout augmenté pour une meilleure compatibilité
+          logging: false, // Disable verbose logging
       foreignObjectRendering: false, // Keep disabled for stability
       removeContainer: false, // Keep container for better stability
-      ignoreElements: (el: Element) => {
+      ignoreElements: (el: any) => {
         // Skip some problematic elements
         return (
           el.tagName === 'IFRAME' || 
@@ -527,23 +526,24 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
           (el.tagName === 'DIV' && el.classList.contains('html2canvas-clone'))
         );
       },
-      onclone: (clonedDoc: Document) => {
+      onclone: (clonedDoc: any) => {
         // Process all images in the clone
         const clonedImages = clonedDoc.querySelectorAll('img');
         
-        Array.from(clonedImages).forEach((img: HTMLImageElement) => {
-          img.loading = 'eager';
-          img.setAttribute('crossorigin', 'anonymous');
+        Array.from(clonedImages).forEach(img => {
+          const image = img as HTMLImageElement;
+          image.loading = 'eager';
+          image.setAttribute('crossorigin', 'anonymous');
           
           // Remove srcset attribute
-          if (img.hasAttribute('srcset')) {
-            img.removeAttribute('srcset');
+          if (image.hasAttribute('srcset')) {
+            image.removeAttribute('srcset');
           }
           
           // Force visibility in clone
-          img.style.visibility = 'visible';
-          img.style.display = 'inline-block';
-          img.style.opacity = '1';
+          image.style.visibility = 'visible';
+          image.style.display = 'inline-block';
+          image.style.opacity = '1';
         });
         
         return Promise.resolve();
@@ -739,9 +739,10 @@ export const useExportToPDF = () => {
             // Force reload in some cases
             if (img.loading === 'lazy') {
               img.loading = 'eager';
+              // Force immediate reload without delay
               const currentSrc = img.src;
               img.src = '';
-              setTimeout(() => { img.src = currentSrc; }, 10);
+              img.src = currentSrc;
             }
           });
         }
@@ -782,6 +783,9 @@ export const useExportToPDF = () => {
     
     console.log(`Capture settings: devicePixelRatio=${devicePixelRatio}, captureScale=${captureScale} (fixed to prevent deformation)`);
     
+    // Détection mobile (à placer en haut de generateEnhancedPDF)
+    const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
     // First, analyze all elements to determine optimal page setup
     const elementDimensions = elements.map(element => {
       const rect = element.getBoundingClientRect();
@@ -792,40 +796,29 @@ export const useExportToPDF = () => {
         aspectRatio: rect.width / rect.height
       };
     });
-    
+
     // Find the widest element to determine if we need landscape or larger format
     const maxElementWidth = Math.max(...elementDimensions.map(d => d.width));
     const maxElementWidthMm = maxElementWidth * pxToMm;
-    
-    // Determine optimal page format and orientation
+
+    // Définition du format de page (retour à la logique standard)
     let pageFormat: string | [number, number] = 'a4';
     let finalOrientation = orientation;
-    
-    // A4 dimensions in mm with consistent margins
     const a4Portrait = { width: 210, height: 297 };
     const a4Landscape = { width: 297, height: 210 };
-    const margin = 15; // Increased margin for better consistency and visual appeal
-    
-    console.log(`Max element width: ${maxElementWidthMm.toFixed(1)}mm`);
-    
-    // Check if we need to adjust format/orientation (only if autoResize is enabled)
+    const margin = 15;
+
     if (autoResize && maxElementWidthMm > a4Portrait.width - (2 * margin)) {
       if (maxElementWidthMm <= a4Landscape.width - (2 * margin)) {
-        // Switch to landscape if it fits
         finalOrientation = 'landscape';
-        console.log('Switching to landscape orientation to fit wide elements');
       } else if (maxElementWidthMm <= 420 - (2 * margin)) {
-        // Use A3 if A4 landscape isn't enough
         pageFormat = 'a3';
         finalOrientation = maxElementWidthMm > 297 - (2 * margin) ? 'landscape' : 'portrait';
-        console.log(`Switching to A3 ${finalOrientation} to fit wide elements`);
       } else {
-        // Use custom size for very wide elements
         const customWidth = Math.max(maxElementWidthMm + (2 * margin), 210);
-        const customHeight = 297; // Keep standard height
+        const customHeight = 297;
         pageFormat = [customWidth, customHeight];
         finalOrientation = 'portrait';
-        console.log(`Using custom page size: ${customWidth}x${customHeight}mm`);
       }
     }
     
@@ -842,6 +835,7 @@ export const useExportToPDF = () => {
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
     const maxWidth = pageWidth - (2 * margin);
+    const maxHeight = pageHeight - (2 * margin);
     
     console.log(`Using page size: ${pageWidth.toFixed(1)}x${pageHeight.toFixed(1)}mm (max content width: ${maxWidth.toFixed(1)}mm)`);
 
@@ -864,11 +858,11 @@ export const useExportToPDF = () => {
       
       // Calculate scaling - be more conservative with scaling
       let scale = 1;
-      if (elementWidth > maxWidth) {
-        scale = maxWidth / elementWidth;
-        elementWidth = maxWidth;
+      if (elementWidth > maxWidth || elementHeight > maxHeight) {
+        scale = Math.min(maxWidth / elementWidth, maxHeight / elementHeight);
+        scale *= isMobile ? 0.72 : 1; // marge de sécurité plus forte sur mobile
+        elementWidth *= scale;
         elementHeight *= scale;
-        console.log(`Scaling element by ${scale.toFixed(3)} to fit page width`);
       }
       
       // Check if this element would go beyond page boundary
@@ -936,8 +930,8 @@ export const useExportToPDF = () => {
           element.style.backgroundColor = '#ffffff';
         }
         
-        // Optimized delay before capture - JPEG images load faster
-        await layoutSafeDelay(75, 150); // Reduced delays since JPEG is more efficient
+        // Minimal delay before capture
+        await layoutSafeDelay(20, 40); // Minimal pre-capture stabilization
         
         // Force one more reflow before capture
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -949,7 +943,7 @@ export const useExportToPDF = () => {
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
-          imageTimeout: 6000, // Conservative timeout for stability
+          imageTimeout: 5000, // More conservative timeout for reliable image loading
           logging: false,
           foreignObjectRendering: false, // Keep disabled for stability
           removeContainer: false, // Keep container for better stability
@@ -1055,17 +1049,17 @@ export const useExportToPDF = () => {
           Array.from(cloneImages).forEach(img => {
             const imgId = img.getAttribute('data-pdf-id');
             if (imgId && imageMap[imgId]) {
-              (img as HTMLImageElement).src = imageMap[imgId];
-              (img as HTMLImageElement).style.maxWidth = '100%';
-              (img as HTMLImageElement).style.height = 'auto';
-              (img as HTMLImageElement).setAttribute('crossorigin', 'anonymous');
-              (img as HTMLImageElement).removeAttribute('srcset');
-              (img as HTMLImageElement).removeAttribute('loading');
+              img.src = imageMap[imgId];
+              img.style.maxWidth = '100%';
+              img.style.height = 'auto';
+              img.setAttribute('crossorigin', 'anonymous');
+              img.removeAttribute('srcset');
+              img.removeAttribute('loading');
             }
           });
           
-          // Optimized wait for clone to render - JPEG images load faster
-          await layoutSafeDelay(75, 150); // Reduced delays since JPEG is more efficient
+          // Minimal wait for clone to render
+          await layoutSafeDelay(20, 40); // Minimal clone stabilization
           
           // Force reflow on clone
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -1078,10 +1072,10 @@ export const useExportToPDF = () => {
             allowTaint: true,
             backgroundColor: '#ffffff',
             logging: false,
-            imageTimeout: 6000, // Conservative timeout for stability
+            imageTimeout: 5000, // More conservative timeout for reliable image loading
             foreignObjectRendering: false, // Keep disabled for stability
             removeContainer: false, // Keep container for better stability
-            onclone: (clonedDoc: Document) => {
+            onclone: (clonedDoc: any) => {
               // Just ensure text elements are visible in the clone
               Array.from(clonedDoc.querySelectorAll('p, div, span, h1, h2, h3, h4, h5, h6, li, td, th'))
                 .forEach(el => {
@@ -1286,7 +1280,18 @@ export const useExportToPDF = () => {
     
     if (save) {
       // Save the PDF
-      pdf.save(`${fileName}.pdf`);
+      // Remplacement du pdf.save par un téléchargement Blob pour forcer le download sur mobile
+      const blob = pdf.output('blob');
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = `${fileName}.pdf`;
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, 100);
     }
     
     return pdf;
@@ -1439,19 +1444,19 @@ export const useExportToPDF = () => {
       // Step 1: Switch to desktop layout if on mobile
       restoreLayout = temporarilySetDesktopLayout();
       
-      // Unified wait for layout changes across all platforms
-      await delay(400); // Fixed delay for consistent timing
+      // Minimal wait for layout changes across all platforms
+      await delay(100); // Reduced layout timing
       // Force reflow to ensure layout recalculation
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       document.body.offsetHeight;
-      await delay(100); // Additional consistent stabilization delay
+      await delay(25); // Minimal stabilization delay
       
       // Wait for web fonts if available (non-blocking) - optimized for both platforms
       if (document.fonts && document.fonts.ready) {
         try {
           await Promise.race([
             document.fonts.ready,
-            optimizedDelay(100, 150) // Reduced from 200ms to 150ms on mobile
+            optimizedDelay(25, 35) // Minimal font loading timeout
           ]);
         } catch {
           // Continue if fonts fail to load
@@ -1485,8 +1490,7 @@ export const useExportToPDF = () => {
         await preloadImages(element);
         cleanup();
         
-        // Fixed inter-element delay for consistency
-        await delay(100);
+        // Skip inter-element delay - not necessary
       }
 
       // Generate the enhanced PDF content - don't save file yet
@@ -1553,11 +1557,11 @@ export const useExportToPDF = () => {
             try {
               // Reliable settings for stable JPEG export
               const tempCanvas = await html2canvas(info.element, {
-                scale: 2,
+                scale: 2, // Fixed scale for consistency
                 useCORS: true,
                 allowTaint: true,
                 backgroundColor: '#ffffff',
-                imageTimeout: 6000, // Conservative timeout for stability
+                imageTimeout: 5000, // Timeout augmenté pour une meilleure compatibilité mobile
                 logging: false,
                 foreignObjectRendering: false, // Keep disabled for stability
                 removeContainer: false, // Keep container for better stability
@@ -1588,11 +1592,17 @@ export const useExportToPDF = () => {
           }
           
           // Convert to PNG and download
+          const blob = await new Promise<Blob>((resolve) => canvas.toBlob(b => resolve(b!), 'image/png'));
+          const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.download = `${fileName}.png`;
-          link.href = canvas.toDataURL('image/png');
+          link.href = url;
+          document.body.appendChild(link);
           link.click();
-          
+          setTimeout(() => {
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+          }, 100);
           console.log('PNG export completed successfully');
         } catch (pngError) {
           console.error('Error generating PNG:', pngError);
@@ -1603,7 +1613,18 @@ export const useExportToPDF = () => {
         }
       } else {
         // Just save the PDF we already created
-        pdfDoc.save(`${fileName}.pdf`);
+        // Remplacement du pdf.save par un téléchargement Blob pour forcer le download sur mobile
+        const blob = pdfDoc.output('blob');
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `${fileName}.pdf`;
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, 100);
       }
       
       console.log('Export completed successfully');
@@ -1615,7 +1636,7 @@ export const useExportToPDF = () => {
       if (restoreLayout) {
         restoreLayout();
         // Optimized wait for layout restoration
-        await optimizedDelay(50, 150); // Reduced mobile restoration delay from 200ms to 150ms
+        await optimizedDelay(25, 75); // Reduced mobile restoration delay (accelerated x2)
       }
       setIsExporting(false);
     }

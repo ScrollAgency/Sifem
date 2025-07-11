@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'org.sifem.dpei-pocket',
-  appName: 'Sifem',
+  appName: 'dPEI Pocket',
   webDir: 'out'
 };
 
