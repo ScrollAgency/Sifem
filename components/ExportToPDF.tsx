@@ -781,6 +781,9 @@ export const useExportToPDF = () => {
     
     console.log(`Capture settings: devicePixelRatio=${devicePixelRatio}, captureScale=${captureScale} (fixed to prevent deformation)`);
     
+    // Détection mobile (à placer en haut de generateEnhancedPDF)
+    const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
     // First, analyze all elements to determine optimal page setup
     const elementDimensions = elements.map(element => {
       const rect = element.getBoundingClientRect();
@@ -791,40 +794,31 @@ export const useExportToPDF = () => {
         aspectRatio: rect.width / rect.height
       };
     });
-    
+
     // Find the widest element to determine if we need landscape or larger format
     const maxElementWidth = Math.max(...elementDimensions.map(d => d.width));
+    const maxElementHeight = Math.max(...elementDimensions.map(d => d.height));
     const maxElementWidthMm = maxElementWidth * pxToMm;
-    
-    // Determine optimal page format and orientation
+    const maxElementHeightMm = maxElementHeight * pxToMm;
+
+    // Définition du format de page (retour à la logique standard)
     let pageFormat: string | [number, number] = 'a4';
     let finalOrientation = orientation;
-    
-    // A4 dimensions in mm with consistent margins
     const a4Portrait = { width: 210, height: 297 };
     const a4Landscape = { width: 297, height: 210 };
-    const margin = 15; // Increased margin for better consistency and visual appeal
-    
-    console.log(`Max element width: ${maxElementWidthMm.toFixed(1)}mm`);
-    
-    // Check if we need to adjust format/orientation (only if autoResize is enabled)
+    const margin = 15;
+
     if (autoResize && maxElementWidthMm > a4Portrait.width - (2 * margin)) {
       if (maxElementWidthMm <= a4Landscape.width - (2 * margin)) {
-        // Switch to landscape if it fits
         finalOrientation = 'landscape';
-        console.log('Switching to landscape orientation to fit wide elements');
       } else if (maxElementWidthMm <= 420 - (2 * margin)) {
-        // Use A3 if A4 landscape isn't enough
         pageFormat = 'a3';
         finalOrientation = maxElementWidthMm > 297 - (2 * margin) ? 'landscape' : 'portrait';
-        console.log(`Switching to A3 ${finalOrientation} to fit wide elements`);
       } else {
-        // Use custom size for very wide elements
         const customWidth = Math.max(maxElementWidthMm + (2 * margin), 210);
-        const customHeight = 297; // Keep standard height
+        const customHeight = 297;
         pageFormat = [customWidth, customHeight];
         finalOrientation = 'portrait';
-        console.log(`Using custom page size: ${customWidth}x${customHeight}mm`);
       }
     }
     
@@ -841,6 +835,7 @@ export const useExportToPDF = () => {
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
     const maxWidth = pageWidth - (2 * margin);
+    const maxHeight = pageHeight - (2 * margin);
     
     console.log(`Using page size: ${pageWidth.toFixed(1)}x${pageHeight.toFixed(1)}mm (max content width: ${maxWidth.toFixed(1)}mm)`);
 
@@ -863,11 +858,11 @@ export const useExportToPDF = () => {
       
       // Calculate scaling - be more conservative with scaling
       let scale = 1;
-      if (elementWidth > maxWidth) {
-        scale = maxWidth / elementWidth;
-        elementWidth = maxWidth;
+      if (elementWidth > maxWidth || elementHeight > maxHeight) {
+        scale = Math.min(maxWidth / elementWidth, maxHeight / elementHeight);
+        scale *= isMobile ? 0.72 : 1; // marge de sécurité plus forte sur mobile
+        elementWidth *= scale;
         elementHeight *= scale;
-        console.log(`Scaling element by ${scale.toFixed(3)} to fit page width`);
       }
       
       // Check if this element would go beyond page boundary
