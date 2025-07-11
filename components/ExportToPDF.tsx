@@ -797,9 +797,9 @@ export const useExportToPDF = () => {
 
     // Find the widest element to determine if we need landscape or larger format
     const maxElementWidth = Math.max(...elementDimensions.map(d => d.width));
-    const maxElementHeight = Math.max(...elementDimensions.map(d => d.height));
+    // const maxElementHeight = Math.max(...elementDimensions.map(d => d.height)); // supprimé car inutilisé
     const maxElementWidthMm = maxElementWidth * pxToMm;
-    const maxElementHeightMm = maxElementHeight * pxToMm;
+    // const maxElementHeightMm = maxElementHeight * pxToMm; // supprimé car inutilisé
 
     // Définition du format de page (retour à la logique standard)
     let pageFormat: string | [number, number] = 'a4';
