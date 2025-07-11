@@ -432,7 +432,7 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
       scrollX: 0,
       scrollY: 0,
               foreignObjectRendering: false, // Disable foreignObject to improve compatibility
-        imageTimeout: 2000, // More conservative timeout for reliable image loading
+        imageTimeout: 3000, // Timeout augmenté pour une meilleure compatibilité
         logging: false, // Disable verbose logging
       onclone: (clonedDoc) => {
         // Process images in the clone
@@ -513,7 +513,7 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
-          imageTimeout: 2000, // More conservative timeout for reliable image loading
+          imageTimeout: 3000, // Timeout augmenté pour une meilleure compatibilité
           logging: false, // Disable verbose logging
       foreignObjectRendering: false, // Keep disabled for stability
       removeContainer: false, // Keep container for better stability
@@ -948,7 +948,7 @@ export const useExportToPDF = () => {
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
-          imageTimeout: 2000, // More conservative timeout for reliable image loading
+          imageTimeout: 5000, // More conservative timeout for reliable image loading
           logging: false,
           foreignObjectRendering: false, // Keep disabled for stability
           removeContainer: false, // Keep container for better stability
@@ -1077,7 +1077,7 @@ export const useExportToPDF = () => {
             allowTaint: true,
             backgroundColor: '#ffffff',
             logging: false,
-            imageTimeout: 2000, // More conservative timeout for reliable image loading
+            imageTimeout: 5000, // More conservative timeout for reliable image loading
             foreignObjectRendering: false, // Keep disabled for stability
             removeContainer: false, // Keep container for better stability
             onclone: (clonedDoc) => {
@@ -1285,7 +1285,18 @@ export const useExportToPDF = () => {
     
     if (save) {
       // Save the PDF
-      pdf.save(`${fileName}.pdf`);
+      // Remplacement du pdf.save par un téléchargement Blob pour forcer le download sur mobile
+      const blob = pdf.output('blob');
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = `${fileName}.pdf`;
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, 100);
     }
     
     return pdf;
@@ -1555,7 +1566,7 @@ export const useExportToPDF = () => {
                 useCORS: true,
                 allowTaint: true,
                 backgroundColor: '#ffffff',
-                imageTimeout: 2000, // More conservative timeout for reliable image loading
+                imageTimeout: 5000, // Timeout augmenté pour une meilleure compatibilité mobile
                 logging: false,
                 foreignObjectRendering: false, // Keep disabled for stability
                 removeContainer: false, // Keep container for better stability
@@ -1586,11 +1597,17 @@ export const useExportToPDF = () => {
           }
           
           // Convert to PNG and download
+          const blob = await new Promise<Blob>((resolve) => canvas.toBlob(b => resolve(b!), 'image/png'));
+          const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.download = `${fileName}.png`;
-          link.href = canvas.toDataURL('image/png');
+          link.href = url;
+          document.body.appendChild(link);
           link.click();
-          
+          setTimeout(() => {
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+          }, 100);
           console.log('PNG export completed successfully');
         } catch (pngError) {
           console.error('Error generating PNG:', pngError);
@@ -1601,7 +1618,18 @@ export const useExportToPDF = () => {
         }
       } else {
         // Just save the PDF we already created
-        pdfDoc.save(`${fileName}.pdf`);
+        // Remplacement du pdf.save par un téléchargement Blob pour forcer le download sur mobile
+        const blob = pdfDoc.output('blob');
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `${fileName}.pdf`;
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, 100);
       }
       
       console.log('Export completed successfully');
