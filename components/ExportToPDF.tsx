@@ -860,7 +860,7 @@ export const useExportToPDF = () => {
       let scale = 1;
       if (elementWidth > maxWidth || elementHeight > maxHeight) {
         scale = Math.min(maxWidth / elementWidth, maxHeight / elementHeight);
-        scale *= isMobile ? 0.72 : 1; // marge de sécurité plus forte sur mobile
+        scale *= isMobile ? 1 : 1; // marge de sécurité plus forte sur mobile
         elementWidth *= scale;
         elementHeight *= scale;
       }
