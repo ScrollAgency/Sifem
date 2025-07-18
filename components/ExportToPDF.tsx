@@ -67,7 +67,7 @@ const imageToDataURL = async (imgElement: HTMLImageElement): Promise<string> => 
                   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 } else {
                   // For other object-fit values, maintain aspect ratio
-                  const scale = Math.min(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+                  const scale: any = Math.min(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
                   const scaledWidth = img.naturalWidth * scale;
                   const scaledHeight = img.naturalHeight * scale;
                   const x = (canvas.width - scaledWidth) / 2;
@@ -160,7 +160,7 @@ const imageToDataURL = async (imgElement: HTMLImageElement): Promise<string> => 
                   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 } else {
                   // For other object-fit values, maintain aspect ratio
-                  const scale = Math.min(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+                  const scale: any = Math.min(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
                   const scaledWidth = img.naturalWidth * scale;
                   const scaledHeight = img.naturalHeight * scale;
                   const x = (canvas.width - scaledWidth) / 2;
@@ -215,7 +215,7 @@ const imageToDataURL = async (imgElement: HTMLImageElement): Promise<string> => 
         imgElement.onload = () => convertImage();
         imgElement.onerror = () => {
           console.warn(`Failed to load image for conversion: ${imgElement.src}`);
-          resolve('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
+          resolve(imgElement.src); // Fallback to original SVG
         };
       }
     } catch (err) {
@@ -297,8 +297,11 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
   await Promise.all(imagePromises);
   console.log('All images processed');
   
-  // Conservative delay for rendering - JPEG images need time to stabilize
-  await layoutSafeDelay(40, 75); // Increased delays to ensure JPEG images are fully stable (accelerated x2)
+  // Additional delay for image stabilization after processing
+  await delay(isDesktop ? 100 : 200); // Extra time for images to stabilize
+  
+  // Délai conservateur pour le rendu - les images JPEG ont besoin de temps pour se stabiliser
+  await delay(isDesktop ? 60 : 120); // Plus de temps sur mobile après changement de layout
 };
 
 // Helper function to scroll an element into view and wait for it to render
@@ -311,8 +314,8 @@ const scrollAndWaitForRender = async (element: HTMLElement) => {
     block: 'center',
   });
   
-  // Conservative wait for scroll and rendering to complete
-  await optimizedDelay(20, 60); // Extended delays to ensure JPEG images are stable (accelerated x2)
+  // Attendre que le scroll et le rendu soient complètement terminés
+  await delay(isDesktop ? 30 : 100); // Plus de temps sur mobile pour la stabilisation
   
   // Return a no-op cleanup function
   return () => {
@@ -419,10 +422,9 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
     }
     
     const cloneCanvas = await html2canvas(clone, {
-      scale: 2,
       useCORS: true,
       allowTaint: true,
-      backgroundColor: '#ffffff',
+      background: '#ffffff',
       width: width,
       height: height,
       x: 0,
@@ -431,24 +433,8 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
       windowHeight: height + 50,
       scrollX: 0,
       scrollY: 0,
-      foreignObjectRendering: false, // Disable foreignObject to improve compatibility
-      imageTimeout: 3000, // Timeout augmenté pour une meilleure compatibilité
       logging: false, // Disable verbose logging
-      onclone: (clonedDoc: any) => {
-        // Process images in the clone
-        Array.from(clonedDoc.querySelectorAll('img')).forEach(img => {
-          const image = img as HTMLImageElement;
-          image.loading = 'eager';
-          image.setAttribute('crossorigin', 'anonymous');
-          
-          // If the image has a srcset, remove it to avoid html2canvas issues
-          if (image.hasAttribute('srcset')) {
-            image.removeAttribute('srcset');
-          }
-        });
-        return Promise.resolve();
-      }
-    } as any);
+    } as unknown as any);
     
     // Cleanup
     if (document.body.contains(container)) {
@@ -510,45 +496,19 @@ const captureScreenshot = async (element: HTMLElement): Promise<HTMLCanvasElemen
         
         // Reliable capture settings for stable JPEG rendering
         const directCanvas = await html2canvas(element, {
-          scale: 2,
           useCORS: true,
           allowTaint: true,
-          backgroundColor: '#ffffff',
-          imageTimeout: 3000, // Timeout augmenté pour une meilleure compatibilité
+          background: '#ffffff',
           logging: false, // Disable verbose logging
-      foreignObjectRendering: false, // Keep disabled for stability
-      removeContainer: false, // Keep container for better stability
-      ignoreElements: (el: any) => {
-        // Skip some problematic elements
-        return (
-          el.tagName === 'IFRAME' || 
-          el.tagName === 'SCRIPT' ||
-          (el.tagName === 'DIV' && el.classList.contains('html2canvas-clone'))
-        );
-      },
-      onclone: (clonedDoc: any) => {
-        // Process all images in the clone
-        const clonedImages = clonedDoc.querySelectorAll('img');
-        
-        Array.from(clonedImages).forEach(img => {
-          const image = img as HTMLImageElement;
-          image.loading = 'eager';
-          image.setAttribute('crossorigin', 'anonymous');
-          
-          // Remove srcset attribute
-          if (image.hasAttribute('srcset')) {
-            image.removeAttribute('srcset');
-          }
-          
-          // Force visibility in clone
-          image.style.visibility = 'visible';
-          image.style.display = 'inline-block';
-          image.style.opacity = '1';
-        });
-        
-        return Promise.resolve();
-      }
-    } as any);
+          ignoreElements: (el: any) => {
+            // Skip some problematic elements
+            return (
+              el.tagName === 'IFRAME' || 
+              el.tagName === 'SCRIPT' ||
+              (el.tagName === 'DIV' && el.classList.contains('html2canvas-clone'))
+            );
+          },
+        } as unknown as any);
     
     // Restore original styles
     Array.from(allImages).forEach(img => {
@@ -799,7 +759,9 @@ export const useExportToPDF = () => {
 
     // Find the widest element to determine if we need landscape or larger format
     const maxElementWidth = Math.max(...elementDimensions.map(d => d.width));
+    // const maxElementHeight = Math.max(...elementDimensions.map(d => d.height)); // supprimé car inutilisé
     const maxElementWidthMm = maxElementWidth * pxToMm;
+    // const maxElementHeightMm = maxElementHeight * pxToMm; // supprimé car inutilisé
 
     // Définition du format de page (retour à la logique standard)
     let pageFormat: string | [number, number] = 'a4';
@@ -857,10 +819,10 @@ export const useExportToPDF = () => {
       let elementHeight = elementData.height * pxToMm;
       
       // Calculate scaling - be more conservative with scaling
-      let scale = 1;
+      let scale: any = 1;
       if (elementWidth > maxWidth || elementHeight > maxHeight) {
         scale = Math.min(maxWidth / elementWidth, maxHeight / elementHeight);
-        scale *= isMobile ? 0.72 : 1; // marge de sécurité plus forte sur mobile
+        scale *= isMobile ? 1 : 1; // marge de sécurité plus forte sur mobile
         elementWidth *= scale;
         elementHeight *= scale;
       }
@@ -937,17 +899,19 @@ export const useExportToPDF = () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         element.offsetHeight;
         
+        // Additional delay for image stabilization before html2canvas
+        await delay(100); // Extra time for images to fully render
+        
         // Reliable capture settings for stable JPEG rendering
         const canvas = await html2canvas(element, {
-          scale: captureScale,
           useCORS: true,
           allowTaint: true,
-          backgroundColor: '#ffffff',
-          imageTimeout: 5000, // More conservative timeout for reliable image loading
+          background: '#ffffff',
           logging: false,
-          foreignObjectRendering: false, // Keep disabled for stability
-          removeContainer: false, // Keep container for better stability
-        } as any);
+        });
+        
+        // Additional delay after html2canvas to ensure canvas is ready
+        await delay(50);
         
         // Convert to high quality JPEG (since images are already JPEG format)
         const imgData = canvas.toDataURL('image/jpeg', 0.98);
@@ -1065,35 +1029,19 @@ export const useExportToPDF = () => {
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           clone.offsetHeight;
           
+          // Additional delay for clone image stabilization
+          await delay(150); // Extra time for cloned images to fully render
+          
           // Reliable capture settings for stable JPEG rendering
           const canvas = await html2canvas(clone, {
-            scale: captureScale,
             useCORS: true,
             allowTaint: true,
-            backgroundColor: '#ffffff',
+            background: '#ffffff',
             logging: false,
-            imageTimeout: 5000, // More conservative timeout for reliable image loading
-            foreignObjectRendering: false, // Keep disabled for stability
-            removeContainer: false, // Keep container for better stability
-            onclone: (clonedDoc: any) => {
-              // Just ensure text elements are visible in the clone
-              Array.from(clonedDoc.querySelectorAll('p, div, span, h1, h2, h3, h4, h5, h6, li, td, th'))
-                .forEach(el => {
-                  (el as HTMLElement).style.visibility = 'visible';
-                  (el as HTMLElement).style.display = 'block';
-                  if ((el as HTMLElement).style.color === 'transparent' || 
-                      (el as HTMLElement).style.color === 'rgba(0, 0, 0, 0)') {
-                    (el as HTMLElement).style.color = '#000000';
-                  }
-                });
-              return Promise.resolve();
-            }
-          } as any);
+          });
           
-          // Clean up
-          if (document.body.contains(container)) {
-            document.body.removeChild(container);
-          }
+          // Additional delay after html2canvas to ensure canvas is ready
+          await delay(50);
           
           // Convert to high quality JPEG (since images are already JPEG format)
           const imgData = canvas.toDataURL('image/jpeg', 0.98);
@@ -1388,9 +1336,15 @@ export const useExportToPDF = () => {
     
     // Just prevent mobile text scaling without forcing sizes
     
-    // Force layout recalculation
+    // Forcer plusieurs recalculs de layout de manière séquentielle
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     document.body.offsetHeight;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    document.documentElement.offsetHeight;
+    
+    // Déclencher un redraw pour s'assurer que les changements visuels sont appliqués
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    document.body.scrollTop;
     
     // Return cleanup function
     return () => {
@@ -1422,9 +1376,17 @@ export const useExportToPDF = () => {
       document.body.style.fontSize = originalValues.bodyFontSize;
       document.documentElement.style.fontSize = originalValues.htmlFontSize;
       
-      // Force a reflow to apply the restoration
+      // Forcer plusieurs reflows pour appliquer complètement la restauration
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       document.body.offsetHeight;
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      document.documentElement.offsetHeight;
+      
+      // S'assurer que le viewport a été restauré
+      setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        document.body.scrollTop;
+      }, 50);
     };
   }, []);
 
@@ -1444,12 +1406,26 @@ export const useExportToPDF = () => {
       // Step 1: Switch to desktop layout if on mobile
       restoreLayout = temporarilySetDesktopLayout();
       
-      // Minimal wait for layout changes across all platforms
-      await delay(100); // Reduced layout timing
-      // Force reflow to ensure layout recalculation
+      // Attendre suffisamment pour que le basculement desktop soit complet
+      await delay(200); // Délai initial pour les changements de viewport
+      
+      // Forcer plusieurs recalculs de layout pour s'assurer de la stabilité
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       document.body.offsetHeight;
-      await delay(25); // Minimal stabilization delay
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      document.documentElement.offsetHeight;
+      
+      await delay(150); // Délai supplémentaire pour la stabilisation complète
+      
+      // Vérifier que le changement a bien pris effet
+      const currentWidth = window.innerWidth;
+      console.log(`Layout actuel après basculement: ${currentWidth}px`);
+      
+      // Délai final pour s'assurer que tous les éléments sont repositionnés
+      await delay(100);
+      
+      // Additional delay for complete layout stabilization
+      await delay(200); // Extra time for all elements to be fully positioned
       
       // Wait for web fonts if available (non-blocking) - optimized for both platforms
       if (document.fonts && document.fonts.ready) {
@@ -1485,12 +1461,28 @@ export const useExportToPDF = () => {
 
       // Unified element processing for consistent results across platforms
       // Process sequentially on all platforms for maximum consistency
-      for (const element of elements) {
+      for (let i = 0; i < elements.length; i++) {
+        const element = elements[i];
+        console.log(`Traitement de l'élément ${i + 1}/${elements.length}: ${element.id}`);
+        
+        // S'assurer que l'élément est stable dans le nouveau layout
+        await delay(50); // Délai pour que l'élément se repositionne
+        
         const cleanup = await scrollAndWaitForRender(element);
         await preloadImages(element);
         cleanup();
         
-        // Skip inter-element delay - not necessary
+        // Vérifier les dimensions finales de l'élément
+        const rect = element.getBoundingClientRect();
+        console.log(`Élément ${element.id} stabilisé: ${rect.width}x${rect.height}px`);
+        
+        // Additional delay for element stabilization
+        await delay(100); // Extra time for element to be fully ready
+        
+        // Petit délai entre les éléments pour la stabilité
+        if (i < elements.length - 1) {
+          await delay(25);
+        }
       }
 
       // Generate the enhanced PDF content - don't save file yet
@@ -1555,17 +1547,19 @@ export const useExportToPDF = () => {
             
             // Use existing approach to capture element
             try {
+              // Additional delay before capturing each element for PNG
+              await delay(100);
+              
               // Reliable settings for stable JPEG export
               const tempCanvas = await html2canvas(info.element, {
-                scale: 2, // Fixed scale for consistency
                 useCORS: true,
                 allowTaint: true,
-                backgroundColor: '#ffffff',
-                imageTimeout: 5000, // Timeout augmenté pour une meilleure compatibilité mobile
+                background: '#ffffff',
                 logging: false,
-                foreignObjectRendering: false, // Keep disabled for stability
-                removeContainer: false, // Keep container for better stability
-              } as any);
+              });
+              
+              // Additional delay after html2canvas for PNG
+              await delay(50);
               
               // Draw the element's canvas onto our main canvas
               const elementCtx = elementCanvas.getContext('2d');
@@ -1634,9 +1628,18 @@ export const useExportToPDF = () => {
     } finally {
       // Always restore layout before finishing
       if (restoreLayout) {
+        console.log('Restoration du layout mobile...');
         restoreLayout();
-        // Optimized wait for layout restoration
-        await optimizedDelay(25, 75); // Reduced mobile restoration delay (accelerated x2)
+        
+        // Attendre suffisamment pour que la restauration soit complète
+        await delay(200); // Délai pour la restauration du viewport mobile
+        
+        // Vérifier que la restauration a pris effet
+        const restoredWidth = window.innerWidth;
+        console.log(`Layout restauré: ${restoredWidth}px`);
+        
+        // Délai final de sécurité
+        await delay(100);
       }
       setIsExporting(false);
     }
