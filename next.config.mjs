@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // output: 'web' pour webapp, output: 'export' pour exportation ionic
+  // output: 'web' pour webapp, output: 'export' pour exportation
   output: 'export',
   async rewrites() {
     return [
