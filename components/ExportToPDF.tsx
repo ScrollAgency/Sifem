@@ -297,8 +297,8 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
   await Promise.all(imagePromises);
   console.log('All images processed');
   
-  // Conservative delay for rendering - JPEG images need time to stabilize
-  await layoutSafeDelay(40, 75); // Increased delays to ensure JPEG images are fully stable (accelerated x2)
+  // Délai conservateur pour le rendu - les images JPEG ont besoin de temps pour se stabiliser
+  await delay(isDesktop ? 60 : 120); // Plus de temps sur mobile après changement de layout
 };
 
 // Helper function to scroll an element into view and wait for it to render
@@ -311,8 +311,8 @@ const scrollAndWaitForRender = async (element: HTMLElement) => {
     block: 'center',
   });
   
-  // Conservative wait for scroll and rendering to complete
-  await optimizedDelay(20, 60); // Extended delays to ensure JPEG images are stable (accelerated x2)
+  // Attendre que le scroll et le rendu soient complètement terminés
+  await delay(isDesktop ? 30 : 100); // Plus de temps sur mobile pour la stabilisation
   
   // Return a no-op cleanup function
   return () => {
@@ -1388,9 +1388,15 @@ export const useExportToPDF = () => {
     
     // Just prevent mobile text scaling without forcing sizes
     
-    // Force layout recalculation
+    // Forcer plusieurs recalculs de layout de manière séquentielle
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     document.body.offsetHeight;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    document.documentElement.offsetHeight;
+    
+    // Déclencher un redraw pour s'assurer que les changements visuels sont appliqués
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    document.body.scrollTop;
     
     // Return cleanup function
     return () => {
@@ -1422,9 +1428,17 @@ export const useExportToPDF = () => {
       document.body.style.fontSize = originalValues.bodyFontSize;
       document.documentElement.style.fontSize = originalValues.htmlFontSize;
       
-      // Force a reflow to apply the restoration
+      // Forcer plusieurs reflows pour appliquer complètement la restauration
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       document.body.offsetHeight;
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      document.documentElement.offsetHeight;
+      
+      // S'assurer que le viewport a été restauré
+      setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        document.body.scrollTop;
+      }, 50);
     };
   }, []);
 
@@ -1444,12 +1458,23 @@ export const useExportToPDF = () => {
       // Step 1: Switch to desktop layout if on mobile
       restoreLayout = temporarilySetDesktopLayout();
       
-      // Minimal wait for layout changes across all platforms
-      await delay(100); // Reduced layout timing
-      // Force reflow to ensure layout recalculation
+      // Attendre suffisamment pour que le basculement desktop soit complet
+      await delay(200); // Délai initial pour les changements de viewport
+      
+      // Forcer plusieurs recalculs de layout pour s'assurer de la stabilité
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       document.body.offsetHeight;
-      await delay(25); // Minimal stabilization delay
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      document.documentElement.offsetHeight;
+      
+      await delay(150); // Délai supplémentaire pour la stabilisation complète
+      
+      // Vérifier que le changement a bien pris effet
+      const currentWidth = window.innerWidth;
+      console.log(`Layout actuel après basculement: ${currentWidth}px`);
+      
+      // Délai final pour s'assurer que tous les éléments sont repositionnés
+      await delay(100);
       
       // Wait for web fonts if available (non-blocking) - optimized for both platforms
       if (document.fonts && document.fonts.ready) {
@@ -1485,12 +1510,25 @@ export const useExportToPDF = () => {
 
       // Unified element processing for consistent results across platforms
       // Process sequentially on all platforms for maximum consistency
-      for (const element of elements) {
+      for (let i = 0; i < elements.length; i++) {
+        const element = elements[i];
+        console.log(`Traitement de l'élément ${i + 1}/${elements.length}: ${element.id}`);
+        
+        // S'assurer que l'élément est stable dans le nouveau layout
+        await delay(50); // Délai pour que l'élément se repositionne
+        
         const cleanup = await scrollAndWaitForRender(element);
         await preloadImages(element);
         cleanup();
         
-        // Skip inter-element delay - not necessary
+        // Vérifier les dimensions finales de l'élément
+        const rect = element.getBoundingClientRect();
+        console.log(`Élément ${element.id} stabilisé: ${rect.width}x${rect.height}px`);
+        
+        // Petit délai entre les éléments pour la stabilité
+        if (i < elements.length - 1) {
+          await delay(25);
+        }
       }
 
       // Generate the enhanced PDF content - don't save file yet
@@ -1634,9 +1672,18 @@ export const useExportToPDF = () => {
     } finally {
       // Always restore layout before finishing
       if (restoreLayout) {
+        console.log('Restoration du layout mobile...');
         restoreLayout();
-        // Optimized wait for layout restoration
-        await optimizedDelay(25, 75); // Reduced mobile restoration delay (accelerated x2)
+        
+        // Attendre suffisamment pour que la restauration soit complète
+        await delay(200); // Délai pour la restauration du viewport mobile
+        
+        // Vérifier que la restauration a pris effet
+        const restoredWidth = window.innerWidth;
+        console.log(`Layout restauré: ${restoredWidth}px`);
+        
+        // Délai final de sécurité
+        await delay(100);
       }
       setIsExporting(false);
     }
