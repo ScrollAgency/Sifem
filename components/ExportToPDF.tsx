@@ -99,7 +99,7 @@ const optimizeSVGsForCapture = (element: HTMLElement): (() => void) => {
     // Set missing dimensions based on viewBox if needed
     const viewBox = svg.getAttribute('viewBox');
     if (viewBox && (!svg.getAttribute('width') || !svg.getAttribute('height'))) {
-      const [x, y, vbWidth, vbHeight] = viewBox.split(' ').map(Number);
+      const [, , vbWidth, vbHeight] = viewBox.split(' ').map(Number);
       
       if (!svg.getAttribute('width')) {
         svg.setAttribute('width', String(vbWidth));
