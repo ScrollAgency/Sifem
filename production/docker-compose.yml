@@ -1,0 +1,20 @@
+name: ${PROJECT_NAME}-${PROJECT_ENVIRONNEMENT}
+services:
+  app:
+    image: ghcr.io/${GITHUB_ACTOR}/${PROJECT_NAME}-${PROJECT_ENVIRONNEMENT}:latest
+    container_name: ${PROJECT_NAME}-${PROJECT_ENVIRONNEMENT}
+    ports:
+      - "${PROJECT_PORT}:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    networks:
+      - ${PROJECT_NAME}-network
+    restart: unless-stopped
+
+networks:
+  production-pass-marche:
+    name: ${PROJECT_NAME}-network
+    driver: bridge
+    external: true

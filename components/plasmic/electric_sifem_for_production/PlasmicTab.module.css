@@ -1,0 +1,42 @@
+.tabs {
+  width: auto;
+  height: auto;
+  display: inline-flex;
+  flex-direction: row;
+  position: relative;
+  cursor: pointer;
+  padding: 16px 8px;
+}
+.tabs > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-left: calc(0px - 10px);
+  width: calc(100% + 10px);
+}
+.tabs > :global(.__wab_flex-container) > *,
+.tabs > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.tabs > :global(.__wab_flex-container) > picture > img,
+.tabs > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
+  margin-left: 10px;
+}
+.tabspressed {
+  cursor: pointer;
+  border-bottom: 2px solid var(--token-0PjPC8_C76gJ);
+}
+.tabshover {
+  cursor: pointer;
+}
+.slotTargetTabTitle3 {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(177, 129, 177, 1);
+  text-align: center;
+  line-height: 16px;
+  letter-spacing: 0em;
+}
+.slotTargetTabTitle3pressed {
+  font-weight: 600;
+  color: var(--token-0PjPC8_C76gJ);
+}

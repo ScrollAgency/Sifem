@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import FileList, { FileListRef } from '../components/FileList';
+import FileList, { FileListRef } from '../plasmic-library/jean/FileList/FileList';
 
 interface FileObject {
   name: string;

@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:14
+    container_name: electric-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: electric
+      POSTGRES_USER: electric
+      POSTGRES_PASSWORD: electric
+    ports:
+      - "54321:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    command:
+      - -c
+      - listen_addresses=*
+      - -c
+      - wal_level=logical
+
+  electric:
+    image: electricsql/electric:1.0.20
+    container_name: electric-sync
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://electric:electric@postgres:5432/electric?sslmode=disable
+      # ELECTRIC_SECRET: 9bc0f2cde375b7fe0edb1577beb94aaaef2b92a2aaf1d8383a23e664972965cc
+      #ELECTRIC_AUTH_MODE: none
+      ELECTRIC_INSECURE: true
+      HTTP_PORT: 3000
+      PG_PROXY_PORT: 65432
+    ports:
+      - "5133:3000"
+    restart: unless-stopped
+
+volumes:
+  pgdata:
