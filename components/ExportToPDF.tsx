@@ -30,8 +30,226 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const isMobileDevice = () => 
   window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-// Constante pour augmenter la taille des images sur desktop
-const IMAGE_SCALE_DESKTOP = 1.02;
+
+
+// Optimize SVG elements for better html2canvas rendering
+const optimizeSVGsForCapture = (element: HTMLElement): (() => void) => {
+  const svgs = element.querySelectorAll('svg');
+  const originalStyles = new Map();
+  
+  console.log(`Optimizing ${svgs.length} SVG(s) for export`);
+  
+  Array.from(svgs).forEach((svg, index) => {
+    const svgElement = svg as unknown as HTMLElement;
+    
+    // Store original values for restoration
+    const original = {
+      width: svg.getAttribute('width'),
+      height: svg.getAttribute('height'),
+      style: svg.getAttribute('style'),
+      viewBox: svg.getAttribute('viewBox'),
+      position: svgElement.style.position,
+      left: svgElement.style.left,
+      top: svgElement.style.top,
+      transform: svgElement.style.transform,
+      transformOrigin: svgElement.style.transformOrigin,
+      zIndex: svgElement.style.zIndex,
+    };
+    originalStyles.set(svg, original);
+    
+    console.log(`SVG ${index + 1}: Analyzing transforms`);
+    
+    // Extract transform values directly from SVG
+    const svgTransform = svgElement.style.transform;
+    let translateX = 0;
+    let translateY = 0;
+    
+    if (svgTransform && svgTransform !== 'none') {
+      console.log(`SVG ${index + 1}: Transform detected: ${svgTransform}`);
+      
+      // Parse translate3d
+      const translate3dMatch = svgTransform.match(/translate3d\(([^,]+),\s*([^,]+),\s*([^)]+)\)/);
+      if (translate3dMatch) {
+        translateX = parseFloat(translate3dMatch[1]) || 0;
+        translateY = parseFloat(translate3dMatch[2]) || 0;
+      }
+      
+      // Parse separate translateX/translateY
+      const translateXMatch = svgTransform.match(/translateX\(([^)]+)\)/);
+      if (translateXMatch) {
+        translateX += parseFloat(translateXMatch[1]) || 0;
+      }
+      
+      const translateYMatch = svgTransform.match(/translateY\(([^)]+)\)/);
+      if (translateYMatch) {
+        translateY += parseFloat(translateYMatch[1]) || 0;
+      }
+      
+      // Parse simple translate
+      const translateMatch = svgTransform.match(/translate\(([^,)]+)(?:,\s*([^)]+))?\)/);
+      if (translateMatch) {
+        translateX += parseFloat(translateMatch[1]) || 0;
+        translateY += parseFloat(translateMatch[2] || '0') || 0;
+      }
+    }
+    
+    console.log(`SVG ${index + 1}: Final position calculated X=${translateX}, Y=${translateY}`);
+    
+    // Set missing dimensions based on viewBox if needed
+    const viewBox = svg.getAttribute('viewBox');
+    if (viewBox && (!svg.getAttribute('width') || !svg.getAttribute('height'))) {
+      const [, , vbWidth, vbHeight] = viewBox.split(' ').map(Number);
+      
+      if (!svg.getAttribute('width')) {
+        svg.setAttribute('width', String(vbWidth));
+      }
+      
+      if (!svg.getAttribute('height')) {
+        svg.setAttribute('height', String(vbHeight));
+      }
+    }
+    
+        // Apply positioning fixes for transforms
+    if (translateX !== 0 || translateY !== 0) {
+      console.log(`SVG ${index + 1}: Applying position optimization`);
+      
+      // Remove all transforms
+      svgElement.style.transform = 'none';
+      svgElement.style.transformOrigin = 'initial';
+      
+      // Apply padding to parent container to avoid truncation
+      const parentElement = svg.parentElement;
+      if (parentElement) {
+        // Store original parent styles for restoration
+        const originalParentStyle = {
+          paddingLeft: parentElement.style.paddingLeft,
+          width: parentElement.style.width,
+          boxSizing: parentElement.style.boxSizing
+        };
+        svgElement.setAttribute('data-parent-original-style', JSON.stringify(originalParentStyle));
+        
+        // Apply padding to parent instead of margin to SVG
+        parentElement.style.paddingLeft = `${translateX}px`;
+        parentElement.style.boxSizing = 'border-box';
+        
+        // Ensure SVG stays within bounds
+        svgElement.style.maxWidth = `calc(100% - ${translateX}px)`;
+        svgElement.style.position = 'static';
+        
+        console.log(`SVG ${index + 1}: Applied parent padding: ${translateX}px`);
+      } else {
+        // Fallback if no parent element
+        svgElement.style.marginLeft = `${translateX}px`;
+        svgElement.style.marginTop = `${translateY}px`;
+        svgElement.style.maxWidth = `calc(100% - ${translateX}px)`;
+        svgElement.style.position = 'static';
+      }
+      
+      // Store values for debugging
+      svgElement.setAttribute('data-original-translate-x', String(translateX));
+      svgElement.setAttribute('data-original-translate-y', String(translateY));
+    }
+    
+    // Improve rendering quality
+    svgElement.style.imageRendering = 'auto';
+    svgElement.style.shapeRendering = 'auto';
+    
+    // Force visibility
+    svgElement.style.visibility = 'visible';
+    svgElement.style.opacity = '1';
+    svgElement.style.display = 'block';
+    
+    // Ensure SVG stays in document flow
+    if (svgElement.style.position !== 'absolute') {
+      svgElement.style.position = 'relative';
+    }
+    
+    console.log(`SVG ${index + 1}: Optimization complete`);
+  });
+  
+  // Return cleanup function to restore original state
+  return () => {
+    console.log('Restoring original SVG state');
+    Array.from(svgs).forEach((svg, index) => {
+      const original = originalStyles.get(svg);
+      if (original) {
+        // Restore attributes
+        if (original.width) {
+          svg.setAttribute('width', original.width);
+        } else {
+          svg.removeAttribute('width');
+        }
+        if (original.height) {
+          svg.setAttribute('height', original.height);
+        } else {
+          svg.removeAttribute('height');
+        }
+        if (original.style) {
+          svg.setAttribute('style', original.style);
+        } else {
+          svg.removeAttribute('style');
+        }
+        if (original.viewBox) {
+          svg.setAttribute('viewBox', original.viewBox);
+        } else {
+          svg.removeAttribute('viewBox');
+        }
+        
+        const svgElementRestore = svg as unknown as HTMLElement;
+        
+        // Restore CSS styles
+        svgElementRestore.style.position = original.position || '';
+        svgElementRestore.style.left = original.left || '';
+        svgElementRestore.style.top = original.top || '';
+        svgElementRestore.style.transform = original.transform || '';
+        svgElementRestore.style.transformOrigin = original.transformOrigin || '';
+        svgElementRestore.style.zIndex = original.zIndex || '';
+        
+        // Restore parent styles if modified
+        const parentStyleData = svg.getAttribute('data-parent-original-style');
+        if (parentStyleData && svg.parentElement) {
+          try {
+            const originalParentStyle = JSON.parse(parentStyleData);
+            const parent = svg.parentElement;
+            parent.style.paddingLeft = originalParentStyle.paddingLeft || '';
+            parent.style.width = originalParentStyle.width || '';
+            parent.style.boxSizing = originalParentStyle.boxSizing || '';
+          } catch (e) {
+            console.warn(`Error restoring parent styles:`, e);
+          }
+        }
+        
+        // Restore width if adjusted
+        if (svg.getAttribute('data-width-adjusted') === 'true') {
+          const originalWidth = svg.getAttribute('data-original-width');
+          if (originalWidth) {
+            svg.setAttribute('width', originalWidth);
+          }
+        }
+        
+        // Clean up added styles
+        svgElementRestore.style.removeProperty('image-rendering');
+        svgElementRestore.style.removeProperty('shape-rendering');
+        svgElementRestore.style.removeProperty('visibility');
+        svgElementRestore.style.removeProperty('opacity');
+        svgElementRestore.style.removeProperty('display');
+        svgElementRestore.style.removeProperty('margin-left');
+        svgElementRestore.style.removeProperty('margin-top');
+        svgElementRestore.style.removeProperty('max-width');
+        svgElementRestore.style.removeProperty('overflow');
+        
+        // Clean up data attributes
+        svg.removeAttribute('data-original-translate-x');
+        svg.removeAttribute('data-original-translate-y');
+        svg.removeAttribute('data-parent-original-style');
+        svg.removeAttribute('data-width-adjusted');
+        svg.removeAttribute('data-original-width');
+        
+        console.log(`SVG ${index + 1}: Restored`);
+      }
+    });
+  };
+};
 
 // Convert image to data URL with fallback
 const convertImageToDataURL = async (imgElement: HTMLImageElement): Promise<string> => {
@@ -152,21 +370,23 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
   
   await Promise.all(imagePromises);
   
-  // Wait for images to stabilize
-  await delay(isMobileDevice() ? 200 : 100);
-  console.log('All images processed');
+  // Wait for images to stabilize with longer delay
+  await delay(400);
+  
+  // Force additional reflows to ensure images are rendered
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  element.offsetHeight;
+  await delay(100);
+  
+  console.log('All images processed and stabilized');
 };
 
-// Scroll element into view and wait for render
-const scrollAndWaitForRender = async (element: HTMLElement) => {
-  const isDesktop = !isMobileDevice();
-  
-  element.scrollIntoView({
-    behavior: isDesktop ? 'auto' : 'smooth',
-    block: 'center',
-  });
-  
-  await delay(isDesktop ? 30 : 100);
+// Wait for element to render without scrolling
+const waitForElementRender = async (element: HTMLElement) => {
+  // Force reflow to ensure element is properly rendered
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  element.offsetHeight;
+  await delay(150);
   
   return () => {}; // No cleanup needed
 };
@@ -220,7 +440,6 @@ const generateEnhancedPDF = async (
   console.log('Starting enhanced PDF generation');
   
   const pxToMm = 25.4 / 96; // Convert pixels to millimeters
-  const isMobile = isMobileDevice();
 
   // Analyze elements to determine optimal page setup
   const elementDimensions = elements.map(element => {
@@ -294,11 +513,6 @@ const generateEnhancedPDF = async (
        scale = Math.min(maxWidth / elementWidth, maxHeight / elementHeight);
      }
      
-     // Augmenter le scale sur desktop pour une meilleure qualité
-     if (!isMobile) {
-       scale *= 1.1; // Facteur d'augmentation de 20% sur desktop
-     }
-     
      elementWidth *= scale;
      elementHeight *= scale;
     
@@ -348,35 +562,46 @@ const generateEnhancedPDF = async (
         element.style.backgroundColor = '#ffffff';
       }
       
-      // Wait for stabilization
-      await delay(isMobile ? 100 : 50);
+      // Wait for stabilization with longer delay
+      await delay(200);
       
-      // Force reflow
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      element.offsetHeight;
+      // Force multiple reflows to ensure complete rendering
+      for (let i = 0; i < 3; i++) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        element.offsetHeight;
+        await delay(50);
+      }
       
-      // Additional delay for images
-      await delay(100);
+      // Additional delay for images and final stabilization
+      await delay(300);
+      
+      // Optimize SVGs for better capture
+      const cleanupSVGs = optimizeSVGsForCapture(element);
+      await delay(50); // Small delay for SVG optimization to take effect
       
       // Capture with html2canvas
-      const canvas = await html2canvas(element, {
+      const captureOptions = {
         useCORS: true,
         allowTaint: true,
         background: '#ffffff',
         logging: false,
-      });
+        foreignObjectRendering: false,
+        imageTimeout: 15000,
+        removeContainer: true,
+      } as any;
       
-      await delay(50);
+      const canvas = await html2canvas(element, captureOptions);
+      
+      // Wait for canvas to be fully processed
+      await delay(150);
       
              const imgData = canvas.toDataURL('image/jpeg', 0.98);
        
-       // Calculer les dimensions finales des images avec le facteur d'échelle desktop
-       const finalImageWidth = !isMobile ? elementWidth * IMAGE_SCALE_DESKTOP : elementWidth;
-       const finalImageHeight = !isMobile ? elementHeight * IMAGE_SCALE_DESKTOP : elementHeight;
-       
-       // Ajuster la position pour centrer l'image agrandie
-       const finalX = !isMobile ? x - ((finalImageWidth - elementWidth) / 2) : x;
-       const finalY = !isMobile ? y - ((finalImageHeight - elementHeight) / 2) : y;
+       // Use same dimensions on mobile and desktop
+       const finalImageWidth = elementWidth;
+       const finalImageHeight = elementHeight;
+       const finalX = x;
+       const finalY = y;
        
        // Add to PDF
        pdf.addImage(
@@ -399,6 +624,9 @@ const generateEnhancedPDF = async (
         }
       });
       element.style.backgroundColor = originalBg;
+      
+      // Restore SVG original attributes
+      cleanupSVGs();
       
       console.log('Element captured successfully');
       success = true;
@@ -467,8 +695,8 @@ const temporarilySetDesktopLayout = () => {
     document.head.appendChild(viewportMeta);
   }
   
-  // Set fixed desktop viewport
-  const targetWidth = 1200;
+  // Set fixed desktop viewport with higher resolution
+  const targetWidth = 1920;
   viewportMeta.content = `width=${targetWidth}, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no`;
   
   // Inject desktop styles
@@ -558,24 +786,36 @@ export const useExportToPDF = () => {
     try {
       console.log('Starting export with element IDs:', elementIds);
       
+      // Scroll to top of page for consistent export experience
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+      
+      // Wait for scroll to complete
+      await delay(300);
+      
       // Switch to desktop layout if on mobile
       restoreLayout = temporarilySetDesktopLayout();
       
-      // Wait for layout changes to take effect
-      await delay(200);
+      // Wait for layout changes to take effect (increased delay)
+      await delay(500);
       
-      // Force layout recalculations
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      document.body.offsetHeight;
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      document.documentElement.offsetHeight;
-      
-      await delay(150);
+      // Force multiple layout recalculations
+      for (let i = 0; i < 3; i++) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        document.body.offsetHeight;
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        document.documentElement.offsetHeight;
+        await delay(100);
+      }
       
       const currentWidth = window.innerWidth;
       console.log(`Current layout after switch: ${currentWidth}px`);
       
-      await delay(200);
+      // Additional stabilization delay
+      await delay(400);
       
       // Wait for web fonts
       if (document.fonts && document.fonts.ready) {
@@ -613,19 +853,27 @@ export const useExportToPDF = () => {
         const element = elements[i];
         console.log(`Processing element ${i + 1}/${elements.length}: ${element.id}`);
         
-        await delay(50);
+        await delay(100);
         
-        const cleanup = await scrollAndWaitForRender(element);
+        const cleanup = await waitForElementRender(element);
         await preloadImages(element);
         cleanup();
+        
+        // Wait for element to fully stabilize after image loading
+        await delay(300);
+        
+        // Force additional reflows for this specific element
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        element.offsetHeight;
+        await delay(100);
         
         const rect = element.getBoundingClientRect();
         console.log(`Element ${element.id} stabilized: ${rect.width}x${rect.height}px`);
         
-        await delay(100);
+        await delay(150);
         
         if (i < elements.length - 1) {
-          await delay(25);
+          await delay(50);
         }
       }
 
@@ -683,15 +931,18 @@ export const useExportToPDF = () => {
                 allowTaint: true,
                 background: '#ffffff',
                 logging: false,
-              });
+                foreignObjectRendering: false,
+                imageTimeout: 15000,
+                removeContainer: true,
+              } as any);
               
               await delay(50);
               
-                             // Calculer les dimensions avec le facteur d'échelle pour PNG
-               const pngImageWidth = !isMobileDevice() ? info.width * IMAGE_SCALE_DESKTOP : info.width;
-               const pngImageHeight = !isMobileDevice() ? info.height * IMAGE_SCALE_DESKTOP : info.height;
-               const pngX = !isMobileDevice() ? margins - ((pngImageWidth - info.width) / 2) : margins;
-               const pngY = !isMobileDevice() ? info.y - ((pngImageHeight - info.height) / 2) : info.y;
+              // Use same dimensions on mobile and desktop
+              const pngImageWidth = info.width;
+              const pngImageHeight = info.height;
+              const pngX = margins;
+              const pngY = info.y;
                
                // Draw scaled element
                ctx.drawImage(
@@ -762,12 +1013,21 @@ export const useExportToPDF = () => {
         console.log('Restoring mobile layout...');
         restoreLayout();
         
+        // Give more time for mobile layout restoration
+        await delay(400);
+        
+        // Force reflows after restoration
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        document.body.offsetHeight;
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        document.documentElement.offsetHeight;
+        
         await delay(200);
         
         const restoredWidth = window.innerWidth;
         console.log(`Layout restored: ${restoredWidth}px`);
         
-        await delay(100);
+        await delay(200);
       }
       setIsExporting(false);
     }
