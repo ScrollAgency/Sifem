@@ -34,6 +34,8 @@
     "next": "14.2.26",
     "plasmic": "^1.0.3",
     "plasmic-supabase": "^0.4.1",
+    "posthog-js": "^1.255.1",
+    "posthog-node": "^5.1.1",
     "react": "^18",
     "react-dom": "^18"
   },
