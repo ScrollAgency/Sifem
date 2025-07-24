@@ -11,6 +11,7 @@ interface ExportOptions {
   format?: 'pdf' | 'png';
   orientation?: 'portrait' | 'landscape';
   autoResize?: boolean;
+  autoShare?: boolean; // Nouveau paramètre pour contrôler le partage automatique
 }
 
 interface ExportToPDFProps {
@@ -19,6 +20,7 @@ interface ExportToPDFProps {
   format?: 'pdf' | 'png';
   orientation?: 'portrait' | 'landscape';
   autoResize?: boolean;
+  autoShare?: boolean; // Nouveau paramètre pour contrôler le partage automatique
   onExport?: () => void;
   className?: string;
 }
@@ -453,12 +455,13 @@ const getPlatformDirectory = async (): Promise<Directory> => {
   }
 };
 
-// Save file to native filesystem and share
+// Save file to native filesystem and optionally share
 const saveFileNative = async (
   data: string | Blob, 
   fileName: string, 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  mimeType: string
+  mimeType: string,
+  autoShare: boolean = false
 ): Promise<void> => {
   try {
     console.log('Sauvegarde native du fichier:', fileName);
@@ -525,38 +528,47 @@ const saveFileNative = async (
       }
     }
 
-    // Share the file
-    await Share.share({
-      title: 'Exporter le fichier',
-      text: `Partager ${fileName}`,
-      url: result.uri,
-      dialogTitle: 'Partager le fichier exporté'
-    });
+    // Share the file only if autoShare is enabled
+    if (autoShare) {
+      await Share.share({
+        title: 'Exporter le fichier',
+        text: `Partager ${fileName}`,
+        url: result.uri,
+        dialogTitle: 'Partager le fichier exporté'
+      });
 
-    console.log('Fichier partagé avec succès');
+      console.log('Fichier partagé avec succès');
+    } else {
+      console.log('Fichier sauvegardé avec succès - partage automatique désactivé');
+    }
   } catch (error) {
     console.error('Erreur lors de la sauvegarde native:', error);
     
-    // Fallback: try to share the data directly
-    try {
-      if (data instanceof Blob) {
-        const dataUrl = await new Promise<string>((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.readAsDataURL(data);
-        });
-        
-        await Share.share({
-          title: 'Exporter le fichier',
-          text: `Partager ${fileName}`,
-          url: dataUrl,
-          dialogTitle: 'Partager le fichier exporté'
-        });
-        
-        console.log('Fichier partagé directement via URL de données');
+    // Fallback: try to share the data directly (only if autoShare is enabled)
+    if (autoShare) {
+      try {
+        if (data instanceof Blob) {
+          const dataUrl = await new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.readAsDataURL(data);
+          });
+          
+          await Share.share({
+            title: 'Exporter le fichier',
+            text: `Partager ${fileName}`,
+            url: dataUrl,
+            dialogTitle: 'Partager le fichier exporté'
+          });
+          
+          console.log('Fichier partagé directement via URL de données');
+        }
+      } catch (shareError) {
+        console.error('Erreur lors du partage de fallback:', shareError);
+        throw new Error(`Impossible de sauvegarder le fichier: ${error}`);
       }
-    } catch (shareError) {
-      console.error('Erreur lors du partage de fallback:', shareError);
+    } else {
+      console.log('Erreur de sauvegarde mais partage automatique désactivé');
       throw new Error(`Impossible de sauvegarder le fichier: ${error}`);
     }
   }
@@ -585,10 +597,11 @@ const saveFileWeb = (
 const saveFile = async (
   data: string | Blob, 
   fileName: string, 
-  mimeType: string
+  mimeType: string,
+  autoShare: boolean = false
 ): Promise<void> => {
   if (isNativePlatform()) {
-    await saveFileNative(data, fileName, mimeType);
+    await saveFileNative(data, fileName, mimeType, autoShare);
   } else {
     if (data instanceof Blob) {
       saveFileWeb(data, fileName, mimeType);
@@ -1036,7 +1049,8 @@ export const useExportToPDF = () => {
     fileName = 'export',
     format = 'pdf',
     orientation = 'portrait',
-    autoResize = true
+    autoResize = true,
+    autoShare = false // Default to false - just save without auto-sharing
   }: ExportOptions) => {
     setIsExporting(true);
     let restoreLayout: (() => void) | null = null;
@@ -1247,7 +1261,7 @@ export const useExportToPDF = () => {
           const blob = await new Promise<Blob>((resolve) => 
             canvas.toBlob(b => resolve(b!), 'image/png')
           );
-          await saveFile(blob, `${fileName}.png`, 'image/png');
+          await saveFile(blob, `${fileName}.png`, 'image/png', autoShare);
           
           console.log('Export PNG terminé avec succès');
         } catch (pngError) {
@@ -1256,12 +1270,12 @@ export const useExportToPDF = () => {
           
           // Fallback to PDF
           const blob = pdfDoc.output('blob');
-          await saveFile(blob, `${fileName}.pdf`, 'application/pdf');
+          await saveFile(blob, `${fileName}.pdf`, 'application/pdf', autoShare);
         }
       } else {
         // Save PDF
         const blob = pdfDoc.output('blob');
-        await saveFile(blob, `${fileName}.pdf`, 'application/pdf');
+        await saveFile(blob, `${fileName}.pdf`, 'application/pdf', autoShare);
       }
       
       console.log('Export terminé avec succès');
@@ -1308,6 +1322,7 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
     format = 'pdf',
     orientation = 'portrait',
     autoResize = true,
+    autoShare = false, // Default to false - just save without auto-sharing
     onExport,
   }, 
   ref
@@ -1322,6 +1337,7 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
       format,
       orientation,
       autoResize,
+      autoShare,
       ...options
     })
   }));
