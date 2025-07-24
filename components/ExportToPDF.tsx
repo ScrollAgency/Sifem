@@ -529,6 +529,7 @@ const saveFileNative = async (
     }
 
     // Share the file only if requested
+    console.log('Vérification du partage - shareFile:', shareFile, 'URI:', result.uri);
     if (shareFile) {
       await Share.share({
         title: 'Exporter le fichier',
@@ -1050,13 +1051,14 @@ export const useExportToPDF = () => {
     format = 'pdf',
     orientation = 'portrait',
     autoResize = true,
-    shareFile = false
+    shareFile = false // Par défaut, téléchargement simple (sans partage)
   }: ExportOptions) => {
     setIsExporting(true);
     let restoreLayout: (() => void) | null = null;
     
     try {
       console.log('Début de l\'export avec les IDs d\'éléments:', elementIds);
+      console.log('Plateforme native:', isNativePlatform(), 'Partage activé:', shareFile);
       
       // Scroll to top of page for consistent export experience
       window.scrollTo({
@@ -1322,7 +1324,7 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
     format = 'pdf',
     orientation = 'portrait',
     autoResize = true,
-    shareFile = false,
+    shareFile = false, // Par défaut, téléchargement simple (sans partage)
     onExport,
   }, 
   ref
