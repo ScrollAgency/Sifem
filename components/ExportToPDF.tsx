@@ -439,10 +439,17 @@ const isNativePlatform = (): boolean => {
 
 // Get platform-specific directory for file storage
 const getPlatformDirectory = async (): Promise<Directory> => {
-  if (Capacitor.getPlatform() === 'ios') {
+  const platform = Capacitor.getPlatform();
+  
+  if (platform === 'ios') {
     return Directory.Documents;
+  } else if (platform === 'android') {
+    // Sur Android, utiliser Cache ou Data au lieu d'ExternalStorage
+    // Ces répertoires ne nécessitent pas de permissions spéciales
+    return Directory.Cache;
   } else {
-    return Directory.ExternalStorage;
+    // Fallback pour autres plateformes
+    return Directory.Data;
   }
 };
 
@@ -475,17 +482,48 @@ const saveFileNative = async (
       base64Data = data.includes(',') ? data.split(',')[1] : data;
     }
 
-    const directory = await getPlatformDirectory();
+    let directory = await getPlatformDirectory();
+    let result;
     
-    // Write file to device
-    const result = await Filesystem.writeFile({
-      path: fileName,
-      data: base64Data,
-      directory: directory,
-      encoding: Encoding.UTF8
-    });
-
-    console.log('Fichier sauvegardé avec succès:', result.uri);
+    // Essayer d'abord avec le répertoire principal
+    try {
+      result = await Filesystem.writeFile({
+        path: fileName,
+        data: base64Data,
+        directory: directory,
+        encoding: Encoding.UTF8
+      });
+      
+      console.log('Fichier sauvegardé avec succès:', result.uri);
+    } catch (firstError) {
+      console.warn('Échec avec le premier répertoire, essai avec Data:', firstError);
+      
+      // Si ça échoue, essayer avec Directory.Data
+      directory = Directory.Data;
+      try {
+        result = await Filesystem.writeFile({
+          path: fileName,
+          data: base64Data,
+          directory: directory,
+          encoding: Encoding.UTF8
+        });
+        
+        console.log('Fichier sauvegardé avec succès (Data):', result.uri);
+      } catch (secondError) {
+        console.warn('Échec avec Directory.Data, essai avec Documents:', secondError);
+        
+        // Dernier essai avec Directory.Documents
+        directory = Directory.Documents;
+        result = await Filesystem.writeFile({
+          path: fileName,
+          data: base64Data,
+          directory: directory,
+          encoding: Encoding.UTF8
+        });
+        
+        console.log('Fichier sauvegardé avec succès (Documents):', result.uri);
+      }
+    }
 
     // Share the file
     await Share.share({
@@ -514,6 +552,8 @@ const saveFileNative = async (
           url: dataUrl,
           dialogTitle: 'Partager le fichier exporté'
         });
+        
+        console.log('Fichier partagé directement via URL de données');
       }
     } catch (shareError) {
       console.error('Erreur lors du partage de fallback:', shareError);
