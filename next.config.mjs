@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   // output: 'web' pour webapp, output: 'export' pour exportation - push
-  output: 'web',
+  output: 'export',
   async rewrites() {
     return [
       // Essai avec app.posthog.com pour les assets statiques

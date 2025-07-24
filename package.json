@@ -1,6 +1,6 @@
 {
   "name": "tmp-cpa",
-  "version": "0.1.0",
+  "version": "1.2",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
@@ -13,7 +13,10 @@
   "dependencies": {
     "@capacitor/android": "^7.2.0",
     "@capacitor/core": "^7.2.0",
+    "@capacitor/device": "^7.0.1",
+    "@capacitor/filesystem": "^7.1.2",
     "@capacitor/ios": "^7.2.0",
+    "@capacitor/share": "^7.0.1",
     "@plasmicapp/loader-nextjs": "^1.0.419",
     "@supabase/supabase-js": "^2.50.3",
     "cookies-next": "^4.1.1",
