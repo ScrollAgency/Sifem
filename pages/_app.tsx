@@ -1,12 +1,21 @@
 import type { AppProps } from 'next/app';
 import { useEffect } from 'react';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Router } from 'next/router';
+import { useRouter } from "next/router";
+import { withAuthProtection } from "../components/withAuthProtection";
+import { PUBLIC_ROUTES } from "../utils/publicRoutes";
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { LocaleProvider } from '@/contexts/LocaleContext';
 
 export default function App({ Component, pageProps }: AppProps) {
+
+  const router = useRouter();
+  const isPublic = PUBLIC_ROUTES.some(route =>
+    new RegExp(`^${route.replace("[recovery_token]", ".*")}$`).test(router.pathname)
+  );
+
+  const ComponentToRender = isPublic ? Component : withAuthProtection(Component);
+
   useEffect(() => {
     if (!process.env.NEXT_PUBLIC_POSTHOG_KEY) return;
     
@@ -32,7 +41,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <PostHogProvider client={posthog}>
       <LocaleProvider>
-        <Component {...pageProps} />
+        <ComponentToRender {...pageProps} />
       </LocaleProvider>
     </PostHogProvider>
   );
