@@ -28,7 +28,7 @@ jobs:
         run: |
           echo "date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
           echo "myapp=sifem" >> $GITHUB_ENV
-          echo "environnement=electric" >> $GITHUB_ENV
+          echo "environnement=electric-vps" >> $GITHUB_ENV
 
       # Étape 25 : Configurer QEMU pour la construction multiplateforme
       - name: Set up QEMU
