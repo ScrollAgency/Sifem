@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
 
 networks:
-  production-pass-marche:
+  production-sifem-network:
     name: ${PROJECT_NAME}-network
     driver: bridge
     external: true

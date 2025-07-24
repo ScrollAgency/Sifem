@@ -28,7 +28,7 @@ jobs:
         run: |
           echo "date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
           echo "myapp=sifem" >> $GITHUB_ENV
-          echo "environnement=electric-vps" >> $GITHUB_ENV
+          echo "environnement=electric" >> $GITHUB_ENV
 
       # Étape 25 : Configurer QEMU pour la construction multiplateforme
       - name: Set up QEMU
@@ -63,6 +63,8 @@ jobs:
             ghcr.io/${{ env.REPO_NAME }}-${{ env.environnement }}:latest
           build-args: |
             CACHEBUST=${{ github.sha }}  # Cache-busting
+            NEXT_PUBLIC_PLASMIC_PROJECT_ID=${{ secrets.NEXT_PUBLIC_PLASMIC_PROJECT_ID }}
+            NEXT_PUBLIC_PLASMIC_PROJECT_TOKEN=${{ secrets.NEXT_PUBLIC_PLASMIC_PROJECT_TOKEN }}
             NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
             NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 

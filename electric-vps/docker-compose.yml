@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
 
 networks:
-  staging-pass-marche:
+  sifem-network:
     name: ${PROJECT_NAME}-network
     driver: bridge
     external: true
