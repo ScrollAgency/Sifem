@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicLabel,
   DefaultLabelProps
-} from "./plasmic/electric_sifem_for_production/PlasmicLabel";
+} from "./plasmic/copy_of_sifem_production_for_update_electric/PlasmicLabel";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can

@@ -1,5 +1,5 @@
 module.exports = {
-  service: "http://localhost:5133/v1",
+  service: "http://localhost:5133",
   out: "src/generated/client",
   databaseUrl: "postgresql://electric:electric@localhost:54321/electric?sslmode=disable",
   clientPath: "src/generated/client",

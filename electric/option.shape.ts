@@ -1,12 +1,16 @@
-// electric/option.shape.ts
-import { defineShape } from 'electric-sql/client'
+import { ShapeStream, Shape } from '@electric-sql/client';
 
-export default defineShape('option', [
-  'id',
-  'created_at',
-  'name_fr',
-  'name_en',
-  'lesion_id',
-  'image_trauma',
-  'face',
-])
+const optionStream = new ShapeStream({
+  url: 'http://localhost:5133/v1/shape',  // adapte si besoin
+  params: {
+    table: 'option',
+  },
+});
+
+const optionShape = new Shape(optionStream);
+
+export async function getOptionRows() {
+  return await optionShape.rows;
+}
+
+export default optionShape;

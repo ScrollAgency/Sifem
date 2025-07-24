@@ -1,8 +1,16 @@
-// electric/submission.shape.ts
-import { defineShape } from 'electric-sql/client'
+import { ShapeStream, Shape } from '@electric-sql/client';
 
-export default defineShape('submission', [
-  'id',
-  'created_at',
-  'updated_at',
-])
+const submissionStream = new ShapeStream({
+  url: 'http://localhost:5133/v1/shape',  // adapte si besoin
+  params: {
+    table: 'submission',
+  },
+});
+
+const submissionShape = new Shape(submissionStream);
+
+export async function getSubmissionRows() {
+  return await submissionShape.rows;
+}
+
+export default submissionShape;

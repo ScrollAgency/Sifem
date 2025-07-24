@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   PlasmicSwitch,
   DefaultSwitchProps
-} from "./plasmic/electric_sifem_for_production/PlasmicSwitch";
+} from "./plasmic/copy_of_sifem_production_for_update_electric/PlasmicSwitch";
 
 import { SwitchRef } from "@plasmicapp/react-web";
 

@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicTextInput,
   DefaultTextInputProps
-} from "./plasmic/electric_sifem_for_production/PlasmicTextInput";
+} from "./plasmic/copy_of_sifem_production_for_update_electric/PlasmicTextInput";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can

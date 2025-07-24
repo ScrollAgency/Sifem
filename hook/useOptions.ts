@@ -11,8 +11,8 @@ export function useOptions() {
 
   useEffect(() => {
     const stream = new ShapeStream({
-      url: "http://localhost:5133/v1/shape",
-      params: { table: "option" },  // <-- adapter le nom de la table ici
+      url: "http://localhost:3007/api/proxy-electric?table=option&offset=-1",
+      params: { table: "option" },
     });
 
     const shape = new Shape(stream);

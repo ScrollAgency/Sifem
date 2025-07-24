@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicBtmNavbar,
   DefaultBtmNavbarProps
-} from "./plasmic/electric_sifem_for_production/PlasmicBtmNavbar";
+} from "./plasmic/copy_of_sifem_production_for_update_electric/PlasmicBtmNavbar";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined

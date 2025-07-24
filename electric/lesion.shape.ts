@@ -1,21 +1,18 @@
-// electric/lesion.shape.ts
-import { defineShape } from 'electric-sql/client'
+import { ShapeStream, Shape } from '@electric-sql/client';
 
-export default defineShape('lesion', [
-  'id',
-  'name_fr',
-  'name_en',
-  'category_fr',
-  'category_en',
-  'image_fr',
-  'video_fr',
-  'macro_category_fr',
-  'multi_step',
-  'next_step',
-  'previous_step',
-  'image_en',
-  'video_en',
-  'image_trauma',
-  'face',
-  'has_options',
-])
+const lesionStream = new ShapeStream({
+  url: 'http://localhost:5133/v1/shape',  // adapte si besoin (ton URL Electric)
+  params: {
+    table: 'lesion',
+  },
+});
+
+const lesionShape = new Shape(lesionStream);
+
+// Optionnel : fonction pour récupérer les données synchronisées dès que prêtes
+export async function getLesionRows() {
+  return await lesionShape.rows;
+}
+
+// Export du Shape pour s’abonner ailleurs
+export default lesionShape;
