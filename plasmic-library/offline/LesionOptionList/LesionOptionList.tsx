@@ -1,7 +1,7 @@
 import React from "react";
-import { useLesions } from "../../../hook/useLesions";
-import { useOptions } from "../../../hook/useOptions";
-import { LesionOptionProvider } from "../../../contexts/LesionOptionContext";
+import { useLesions } from "@/hook/useLesions";
+import { useOptions } from "@/hook/useOptions";
+import { LesionOptionProvider } from "@/contexts/LesionOptionContext";
 
 type Lesion = {
   id: number;
@@ -39,8 +39,8 @@ function doesFilterMatch(
 }
 
 export const LesionOptionList: React.FC<{
-  lesions?: Lesion[];
-  options?: Option[];
+  lesions?: Lesion[] | { data: Lesion[]; loading: boolean };
+  options?: Option[] | { data: Option[]; loading: boolean };
   children?: React.ReactNode;
 
   matchFilters?: MatchFilters;
@@ -72,13 +72,29 @@ export const LesionOptionList: React.FC<{
   order = "asc",
   visibilityCondition,
 }) => {
-  const fetchedLesions = useLesions();
-  const fetchedOptions = useOptions();
+  // Hooks fetch
+  const { data: fetchedLesions, loading: loadingLesions } = useLesions();
+  const { data: fetchedOptions, loading: loadingOptions } = useOptions();
 
-  let finalLesions = lesions ?? fetchedLesions;
-  const finalOptions = options ?? fetchedOptions;
+  // Extract lesions data and loading state from props or fallback
+  const lesionsData = Array.isArray(lesions)
+    ? lesions
+    : lesions?.data ?? [];
+  const optionsData = Array.isArray(options)
+    ? options
+    : options?.data ?? [];
 
-   // Construire un tableau des filtres valides
+  const isLoading = loadingLesions || loadingOptions || (lesions && 'loading' in lesions && lesions.loading) || (options && 'loading' in options && options.loading);
+
+  if (isLoading) {
+    return <div>Chargement...</div>;
+  }
+
+  // Prioritize lesions & options props if provided, else fetched data
+  let finalLesions = lesionsData.length > 0 ? lesionsData : fetchedLesions;
+  const finalOptions = optionsData.length > 0 ? optionsData : fetchedOptions;
+
+  // Construire un tableau des filtres valides
   const filters = [
     filterColumn1 && filterOperator1 && filterValue1
       ? { column: filterColumn1, operator: filterOperator1, value: filterValue1 }
@@ -93,12 +109,7 @@ export const LesionOptionList: React.FC<{
       const results = filters.map(({ column, operator, value }) =>
         doesFilterMatch(lesion, column, operator, value)
       );
-      if (matchFilters === "all") {
-        return results.every(Boolean);
-      } else {
-        // "any"
-        return results.some(Boolean);
-      }
+      return matchFilters === "all" ? results.every(Boolean) : results.some(Boolean);
     });
   }
 
