@@ -11,7 +11,7 @@ export function useOptions() {
 
   useEffect(() => {
     const stream = new ShapeStream({
-      url: "http://localhost:3000/api/proxy-electric?table=option&offset=-1",
+      url: "https://electric-sifem.agence-scroll.com/api/proxy-electric?table=option&offset=-1",
       params: { table: "option" },
     });
 
