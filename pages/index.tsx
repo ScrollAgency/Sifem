@@ -2,9 +2,9 @@
 // This file is owned by you, feel free to edit as you see fit.
 import * as React from "react";
 import { PageParamsProvider as PageParamsProvider__ } from "@plasmicapp/react-web/lib/host";
-import GlobalContextsProvider from "../components/plasmic/copy_of_sifem_production_for_update_electric/PlasmicGlobalContextsProvider";
-import { LocaleContextProvider } from "../components/plasmic/copy_of_sifem_production_for_update_electric/PlasmicGlobalVariant__Locale";
-import { PlasmicHomepage } from "../components/plasmic/copy_of_sifem_production_for_update_electric/PlasmicHomepage";
+import GlobalContextsProvider from "../components/plasmic/sifem/PlasmicGlobalContextsProvider";
+import { LocaleContextProvider } from "../components/plasmic/sifem/PlasmicGlobalVariant__Locale";
+import { PlasmicHomepage } from "../components/plasmic/sifem/PlasmicHomepage";
 import { useRouter } from "next/router";
 
 function Homepage() {

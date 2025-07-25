@@ -6,6 +6,7 @@ import { PUBLIC_ROUTES } from "../utils/publicRoutes";
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { LocaleProvider } from '@/contexts/LocaleContext';
+import { DataProvider } from "@/contexts/DataContext";
 
 export default function App({ Component, pageProps }: AppProps) {
 
@@ -41,7 +42,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <PostHogProvider client={posthog}>
       <LocaleProvider>
-        <Component {...pageProps} />
+        <DataProvider>
+          <Component {...pageProps} />
+        </DataProvider>
       </LocaleProvider>
     </PostHogProvider>
   );

@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-  const baseUrl = 'http://electric-sync:3000/v1/shape'; // nom du service Docker
+  const baseUrl = `http://${process.env.PROXY_URL}/v1/shape`;
   const url = new URL(baseUrl);
 
   Object.entries(req.query).forEach(([key, value]) => {
@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       body: req.method !== 'GET' && req.body ? JSON.stringify(req.body) : undefined,
     });
 
-    const headersToExpose = ['electric-offset', 'electric-handle', 'electric-schema'];
+    const headersToExpose = ['electric-offset', 'electric-handle', 'electric-schema', 'electric-cursor'];
     headersToExpose.forEach(header => {
       const val = electricRes.headers.get(header);
       if (val) {
@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     res.setHeader('Access-Control-Expose-Headers', headersToExpose.join(', '));
-    res.setHeader('Access-Control-Allow-Origin', '*'); // ou ton domaine spécifique
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 

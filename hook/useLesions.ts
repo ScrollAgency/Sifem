@@ -9,21 +9,28 @@ type Lesion = {
   status?: string;
 };
 
-export function useLesions(): Lesion[] {
+export function useLesions(): { data: Lesion[]; loading: boolean } {
   const [lesions, setLesions] = useState<Lesion[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
+  const url = isLocalhost
+    ? "http://localhost:3006/api/proxy-electric?table=lesion&offset=-1"
+    : "https://electric-sifem.agence-scroll.com/api/proxy-electric?table=lesion&offset=-1";
 
   useEffect(() => {
-    const stream = new ShapeStream({
-      url: "https://electric-sifem.agence-scroll.com/api/proxy-electric?table=lesion&offset=-1",
-      params: { table: "lesion" },
-    });
-
+    const stream = new ShapeStream({ url });
     const shape = new Shape(stream);
 
-    shape.rows.then((rows) => setLesions(rows as Lesion[]));
+    shape.rows.then((rows) => {
+      const sorted = (rows as Lesion[]).sort((a, b) => a.id - b.id);
+      setLesions(sorted);
+      setLoading(false);
+    });
 
     const unsubscribe = shape.subscribe(({ rows }) => {
-      setLesions(rows as Lesion[]);
+      const sorted = (rows as Lesion[]).sort((a, b) => a.id - b.id);
+      setLesions(sorted);
     });
 
     return () => {
@@ -31,5 +38,6 @@ export function useLesions(): Lesion[] {
     };
   }, []);
 
-  return lesions;
+  return { data: lesions, loading };
 }
+

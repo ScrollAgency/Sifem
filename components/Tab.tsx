@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicTab,
   DefaultTabProps
-} from "./plasmic/copy_of_sifem_production_for_update_electric/PlasmicTab";
+} from "./plasmic/sifem/PlasmicTab";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined

@@ -1,18 +1,16 @@
 import * as React from "react";
 import { useRouter } from "next/router";
-import GlobalContextsProvider from "../components/plasmic/copy_of_sifem_production_for_update_electric/PlasmicGlobalContextsProvider";
-import { LocaleContextProvider } from "../components/plasmic/copy_of_sifem_production_for_update_electric/PlasmicGlobalVariant__Locale";
+import GlobalContextsProvider from "../components/plasmic/sifem/PlasmicGlobalContextsProvider";
+import { LocaleContextProvider } from "../components/plasmic/sifem/PlasmicGlobalVariant__Locale";
 import { PageParamsProvider } from "@plasmicapp/react-web/lib/host";
-import { PlasmicDataSourceContextProvider } from "@plasmicapp/react-web";
-import { PlasmicBilan } from "../components/plasmic/copy_of_sifem_production_for_update_electric/PlasmicBilan";
-
-import { useLesions } from "../hook/useLesions";
-import { useOptions } from "../hook/useOptions";
+import { PlasmicBilan } from "../components/plasmic/sifem/PlasmicBilan";
+import { useData } from "@/contexts/DataContext";
 
 function Bilan() {
   const router = useRouter();
-  const lesions = useLesions();
-  const options = useOptions();
+  const { lesions, options, loading } = useData();
+
+  if (loading) return <div>Chargement...</div>;
 
   const queries = {
     getLesions: { data: lesions },
@@ -31,4 +29,3 @@ function Bilan() {
 }
 
 export default Bilan;
-

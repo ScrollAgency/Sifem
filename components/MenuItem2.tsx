@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicMenuItem2,
   DefaultMenuItem2Props
-} from "./plasmic/copy_of_sifem_production_for_update_electric/PlasmicMenuItem2";
+} from "./plasmic/sifem/PlasmicMenuItem2";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can

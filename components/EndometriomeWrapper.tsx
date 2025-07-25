@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicEndometriomeWrapper,
   DefaultEndometriomeWrapperProps
-} from "./plasmic/copy_of_sifem_production_for_update_electric/PlasmicEndometriomeWrapper";
+} from "./plasmic/sifem/PlasmicEndometriomeWrapper";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined

@@ -15,7 +15,7 @@ export default function Document() {
         
         {/* Métadonnées de base */}
         <meta name="theme-color" content="#000000" />
-        <meta name="description" content="Application Plasmic" />
+        <meta name="description" content="Évaluation de l’endométriose pelvienne profonde" />
       </Head>
       <body>
         <Main />

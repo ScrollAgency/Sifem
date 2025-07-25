@@ -6,18 +6,23 @@ type Option = {
   name_fr: string;
 };
 
-export function useOptions() {
+export function useOptions(): { data: Option[]; loading: boolean } {
   const [options, setOptions] = useState<Option[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
+  const url = isLocalhost
+    ? "http://localhost:3006/api/proxy-electric?table=option&offset=-1"
+    : "https://electric-sifem.agence-scroll.com/api/proxy-electric?table=option&offset=-1";
 
   useEffect(() => {
-    const stream = new ShapeStream({
-      url: "https://electric-sifem.agence-scroll.com/api/proxy-electric?table=option&offset=-1",
-      params: { table: "option" },
-    });
-
+    const stream = new ShapeStream({ url });
     const shape = new Shape(stream);
 
-    shape.rows.then(rows => setOptions(rows as Option[]));
+    shape.rows.then((rows) => {
+      setOptions(rows as Option[]);
+      setLoading(false);
+    });
 
     const unsubscribe = shape.subscribe(({ rows }) => {
       setOptions(rows as Option[]);
@@ -28,5 +33,5 @@ export function useOptions() {
     };
   }, []);
 
-  return options;
+  return { data: options, loading };
 }

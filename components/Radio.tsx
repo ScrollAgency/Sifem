@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicRadio,
   DefaultRadioProps
-} from "./plasmic/copy_of_sifem_production_for_update_electric/PlasmicRadio";
+} from "./plasmic/sifem/PlasmicRadio";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can

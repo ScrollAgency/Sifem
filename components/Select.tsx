@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicSelect,
   DefaultSelectProps
-} from "./plasmic/copy_of_sifem_production_for_update_electric/PlasmicSelect";
+} from "./plasmic/sifem/PlasmicSelect";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can

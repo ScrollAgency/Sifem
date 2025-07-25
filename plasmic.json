@@ -858,1007 +858,22 @@
       "customFunctions": []
     },
     {
-      "projectId": "jdGpMnKMqZhB3E56S7s31E",
-      "projectApiToken": "BIDaABCAEGzmDoFJJtUNy5mRKC1TgoTM4S29vuMfnmSlE4eziBmZZvj7OH8KOckn8zi7gfcepfYI69036Bw",
-      "projectName": "Electric Sifem for Production",
-      "version": "latest",
-      "cssFilePath": "plasmic/electric_sifem_for_production/plasmic.module.css",
-      "components": [
-        {
-          "id": "yRdQ6nCRUCfD",
-          "name": "Homepage",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicHomepage.tsx",
-          "importSpec": {
-            "modulePath": "../pages/index.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicHomepage.module.css",
-          "scheme": "blackbox",
-          "componentType": "page",
-          "path": "/"
-        },
-        {
-          "id": "Jm6Gnqw3Xb6Y",
-          "name": "Checkbox",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicCheckbox.tsx",
-          "importSpec": {
-            "modulePath": "Checkbox.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicCheckbox.module.css",
-          "scheme": "blackbox",
-          "componentType": "component",
-          "plumeType": "checkbox"
-        },
-        {
-          "id": "EQB74Mlk8maB",
-          "name": "Button",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicButton.tsx",
-          "importSpec": {
-            "modulePath": "Button.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicButton.module.css",
-          "scheme": "blackbox",
-          "componentType": "component",
-          "plumeType": "button"
-        },
-        {
-          "id": "CNvCpIu9p4BU",
-          "name": "Radio",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicRadio.tsx",
-          "importSpec": {
-            "modulePath": "Radio.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicRadio.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "lpeTFVjFm3wV",
-          "name": "Switch",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicSwitch.tsx",
-          "importSpec": {
-            "modulePath": "Switch.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicSwitch.module.css",
-          "scheme": "blackbox",
-          "componentType": "component",
-          "plumeType": "switch"
-        },
-        {
-          "id": "ntE7az8SojAE",
-          "name": "Label",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicLabel.tsx",
-          "importSpec": {
-            "modulePath": "Label.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicLabel.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "tCsfCtJVvahK",
-          "name": "TextInput",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicTextInput.tsx",
-          "importSpec": {
-            "modulePath": "TextInput.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicTextInput.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "bu_uuy5nmryI",
-          "name": "TextAreaInput",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicTextAreaInput.tsx",
-          "importSpec": {
-            "modulePath": "TextAreaInput.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicTextAreaInput.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "Gawfpx0EAMXy",
-          "name": "Description",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicDescription.tsx",
-          "importSpec": {
-            "modulePath": "Description.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicDescription.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "Gb44VeaKIga4",
-          "name": "TextField",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicTextField.tsx",
-          "importSpec": {
-            "modulePath": "TextField.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicTextField.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "41kncarkuUQZ",
-          "name": "MenuItem",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicMenuItem.tsx",
-          "importSpec": {
-            "modulePath": "MenuItem.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicMenuItem.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "-S8gliWzwnEf",
-          "name": "MenuSection",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicMenuSection.tsx",
-          "importSpec": {
-            "modulePath": "MenuSection.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicMenuSection.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "TSxb47r3fPT6",
-          "name": "MenuPopover",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicMenuPopover.tsx",
-          "importSpec": {
-            "modulePath": "MenuPopover.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicMenuPopover.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "PqNGeES_8SPV",
-          "name": "Select",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicSelect.tsx",
-          "importSpec": {
-            "modulePath": "Select.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicSelect.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "BwloLoutGE6h",
-          "name": "Navbar",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicNavbar.tsx",
-          "importSpec": {
-            "modulePath": "Navbar.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicNavbar.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "oA5z8Zvm3N7w",
-          "name": "Historique",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicHistorique.tsx",
-          "importSpec": {
-            "modulePath": "../pages/historique.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicHistorique.module.css",
-          "scheme": "blackbox",
-          "componentType": "page",
-          "path": "/historique"
-        },
-        {
-          "id": "TX6NTKsKzQ-j",
-          "name": "SifemTitleWrapper",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicSifemTitleWrapper.tsx",
-          "importSpec": {
-            "modulePath": "SifemTitleWrapper.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicSifemTitleWrapper.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "Bo8FFqKa5GNo",
-          "name": "Bilan",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicBilan.tsx",
-          "importSpec": {
-            "modulePath": "../pages/bilan.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicBilan.module.css",
-          "scheme": "blackbox",
-          "componentType": "page",
-          "path": "/bilan"
-        },
-        {
-          "id": "gpadwdHRaX2H",
-          "name": "Tab",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicTab.tsx",
-          "importSpec": {
-            "modulePath": "Tab.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicTab.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "gRRqjsh033Ca",
-          "name": "CheckboxWrapper",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicCheckboxWrapper.tsx",
-          "importSpec": {
-            "modulePath": "CheckboxWrapper.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicCheckboxWrapper.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "ncJJsk0--hS3",
-          "name": "Dropdown",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicDropdown.tsx",
-          "importSpec": {
-            "modulePath": "Dropdown.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicDropdown.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "6PQurzi-yrLi",
-          "name": "EndometriomeWrapper",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicEndometriomeWrapper.tsx",
-          "importSpec": {
-            "modulePath": "EndometriomeWrapper.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicEndometriomeWrapper.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "3eu65Jx8on-O",
-          "name": "BtmNavbarTile",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicBtmNavbarTile.tsx",
-          "importSpec": {
-            "modulePath": "BtmNavbarTile.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicBtmNavbarTile.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "4Tp9u1b_CBYB",
-          "name": "BtmNavbar",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicBtmNavbar.tsx",
-          "importSpec": {
-            "modulePath": "BtmNavbar.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicBtmNavbar.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "mgeI7HP7VE7B",
-          "name": "Select2",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicSelect2.tsx",
-          "importSpec": {
-            "modulePath": "Select2.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicSelect2.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "Ly_RfSfi2QCw",
-          "name": "MenuItem2",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicMenuItem2.tsx",
-          "importSpec": {
-            "modulePath": "MenuItem2.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicMenuItem2.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "2lt4CTJQDg0y",
-          "name": "MenuSection2",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicMenuSection2.tsx",
-          "importSpec": {
-            "modulePath": "MenuSection2.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicMenuSection2.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "ewFiQRRwx3tq",
-          "name": "Label2",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicLabel2.tsx",
-          "importSpec": {
-            "modulePath": "Label2.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicLabel2.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "PwFkvOOSz02u",
-          "name": "Description2",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicDescription2.tsx",
-          "importSpec": {
-            "modulePath": "Description2.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicDescription2.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "gTNrlrIdnuGC",
-          "name": "MenuPopover2",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicMenuPopover2.tsx",
-          "importSpec": {
-            "modulePath": "MenuPopover2.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicMenuPopover2.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "JEaeP7jUENgl",
-          "name": "Lexique",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicLexique.tsx",
-          "importSpec": {
-            "modulePath": "../pages/lexique.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicLexique.module.css",
-          "scheme": "blackbox",
-          "componentType": "page",
-          "path": "/lexique"
-        },
-        {
-          "id": "f90N-Eb7BOFR",
-          "name": "Faq",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicFaq.tsx",
-          "importSpec": {
-            "modulePath": "../pages/FAQ.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicFaq.module.css",
-          "scheme": "blackbox",
-          "componentType": "page",
-          "path": "/FAQ"
-        },
-        {
-          "id": "QTQ3W516bpwq",
-          "name": "Button2",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicButton2.tsx",
-          "importSpec": {
-            "modulePath": "Button2.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicButton2.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "KnD_ioEvAONZ",
-          "name": "Modal",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicModal.tsx",
-          "importSpec": {
-            "modulePath": "Modal.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicModal.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "vCE-rDIpvw_E",
-          "name": "SliderThumb",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicSliderThumb.tsx",
-          "importSpec": {
-            "modulePath": "SliderThumb.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicSliderThumb.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "JMgNFe6x6TFy",
-          "name": "Slider",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicSlider.tsx",
-          "importSpec": {
-            "modulePath": "Slider.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicSlider.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "ItLK4-4xJvsg",
-          "name": "Ressources",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicRessources.tsx",
-          "importSpec": {
-            "modulePath": "../pages/ressources.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicRessources.module.css",
-          "scheme": "blackbox",
-          "componentType": "page",
-          "path": "/ressources"
-        },
-        {
-          "id": "tkhdnta3HWTg",
-          "name": "Contact",
-          "type": "managed",
-          "projectId": "jdGpMnKMqZhB3E56S7s31E",
-          "renderModuleFilePath": "plasmic/electric_sifem_for_production/PlasmicContact.tsx",
-          "importSpec": {
-            "modulePath": "../pages/contact.tsx"
-          },
-          "cssFilePath": "plasmic/electric_sifem_for_production/PlasmicContact.module.css",
-          "scheme": "blackbox",
-          "componentType": "page",
-          "path": "/contact"
-        }
-      ],
-      "icons": [
-        {
-          "id": "mrDKc7R3WlVx",
-          "name": "IconsaxLinearHambergermenuIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__IconsaxLinearHambergermenu.tsx"
-        },
-        {
-          "id": "OzFyoYAnM45G",
-          "name": "OutlinedIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Outlined.tsx"
-        },
-        {
-          "id": "yjXiERDbPACo",
-          "name": "Outlined2Icon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Outlined2.tsx"
-        },
-        {
-          "id": "H7Sr5IxbXDmk",
-          "name": "PlusIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Plus.tsx"
-        },
-        {
-          "id": "kIzBP5ddCB9d",
-          "name": "CheckSvgIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__CheckSvg.tsx"
-        },
-        {
-          "id": "vEwGzpqOOiJG",
-          "name": "IconIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Icon.tsx"
-        },
-        {
-          "id": "36FConMGWAOi",
-          "name": "CircleIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Circle.tsx"
-        },
-        {
-          "id": "PCJ8zxKwfSeA",
-          "name": "ChevronDownIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__ChevronDown.tsx"
-        },
-        {
-          "id": "AZAjSD4KL3HM",
-          "name": "SquareSvgIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__SquareSvg.tsx"
-        },
-        {
-          "id": "rAW3GnrJKdk2",
-          "name": "SquareCheckFilledSvgIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__SquareCheckFilledSvg.tsx"
-        },
-        {
-          "id": "ZwM0lflfpFgc",
-          "name": "SquareMinusSvgIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__SquareMinusSvg.tsx"
-        },
-        {
-          "id": "rTiE4aCYLCmn",
-          "name": "ArrowCircleLeftIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__ArrowCircleLeft.tsx"
-        },
-        {
-          "id": "ib3feTbUkNXK",
-          "name": "CheckIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Check.tsx"
-        },
-        {
-          "id": "pcPCQDPSgwMK",
-          "name": "XIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__X.tsx"
-        },
-        {
-          "id": "_WeR5AhZ6xpi",
-          "name": "ChevronDown2Icon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__ChevronDown2.tsx"
-        },
-        {
-          "id": "dayeVm6A3kHQ",
-          "name": "PlayIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Play.tsx"
-        },
-        {
-          "id": "AzHY7YrhjYUl",
-          "name": "X2Icon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__X2.tsx"
-        },
-        {
-          "id": "4i75PzLcifd2",
-          "name": "Vector5SvgIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Vector5Svg.tsx"
-        },
-        {
-          "id": "Wdey4Oj0xtyF",
-          "name": "Vector6SvgIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Vector6Svg.tsx"
-        },
-        {
-          "id": "wxEbLDW1G452",
-          "name": "CaretDownIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__CaretDown.tsx"
-        },
-        {
-          "id": "dDpb8a4bXYuy",
-          "name": "Icon3Icon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Icon3.tsx"
-        },
-        {
-          "id": "txwg6eHs0Ma5",
-          "name": "Ellipse15Icon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Ellipse15.tsx"
-        },
-        {
-          "id": "aE4PvAPL0l0m",
-          "name": "TriangleIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Triangle.tsx"
-        },
-        {
-          "id": "xb2Rh1vMXH5T",
-          "name": "FilePdfIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__FilePdf.tsx"
-        },
-        {
-          "id": "y1XPg0dY5XVh",
-          "name": "FilePngIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__FilePng.tsx"
-        },
-        {
-          "id": "9CHWX4y0zC23",
-          "name": "Vector7SvgIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Vector7Svg.tsx"
-        },
-        {
-          "id": "QqV1tgzX4zBk",
-          "name": "Vector8SvgIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Vector8Svg.tsx"
-        },
-        {
-          "id": "_jTFsEbW1lhT",
-          "name": "Checkbox1SvgIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Checkbox1Svg.tsx"
-        },
-        {
-          "id": "yUuzALrMucwn",
-          "name": "Checkbox3SvgIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Checkbox3Svg.tsx"
-        },
-        {
-          "id": "RBH4XqQLQy2d",
-          "name": "Checkbox2SvgIcon",
-          "moduleFilePath": "plasmic/electric_sifem_for_production/icons/PlasmicIcon__Checkbox2Svg.tsx"
-        }
-      ],
-      "images": [
-        {
-          "id": "gW83vJgixk2B",
-          "name": "image 2",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image2.png"
-        },
-        {
-          "id": "WaS3pLb7RdTJ",
-          "name": "image 1",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image1.png"
-        },
-        {
-          "id": "wEfNpetZIscO",
-          "name": "image 5",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image5.png"
-        },
-        {
-          "id": "KoGsPJFEjYmz",
-          "name": "image 4",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image4.png"
-        },
-        {
-          "id": "dP7cVjUaZEuf",
-          "name": "filled",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/filled.svg"
-        },
-        {
-          "id": "F6hb_I7hC6Y_",
-          "name": "filled 2",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/filled2.svg"
-        },
-        {
-          "id": "otLjTAnuBNCm",
-          "name": "filled 3",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/filled3.svg"
-        },
-        {
-          "id": "-m13RXAErj7d",
-          "name": "filled 4",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/filled4.svg"
-        },
-        {
-          "id": "3liQv0cCqMjU",
-          "name": "filled 5",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/filled5.svg"
-        },
-        {
-          "id": "aHRiAZ4AWJiq",
-          "name": "filled 6",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/filled6.svg"
-        },
-        {
-          "id": "RzXwfK-NqxFB",
-          "name": "filled 7",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/filled7.svg"
-        },
-        {
-          "id": "ehQBXyoWHlrl",
-          "name": "filled 8",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/filled8.svg"
-        },
-        {
-          "id": "MtvH0JuOBtGS",
-          "name": "filled 9",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/filled9.svg"
-        },
-        {
-          "id": "ayB6spwVM4xG",
-          "name": "image 6",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image6.png"
-        },
-        {
-          "id": "BMyC5a9WlaNo",
-          "name": "image 23.png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image23Png.png"
-        },
-        {
-          "id": "L8WCMX81qZxX",
-          "name": "image 2.png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image2Png.png"
-        },
-        {
-          "id": "CC2B5MCGQDIK",
-          "name": "image 53.png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image53Png.png"
-        },
-        {
-          "id": "ArkCDO0xflTq",
-          "name": "image 53 (1).png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image531Png.png"
-        },
-        {
-          "id": "PhS8lt8E3tN8",
-          "name": "image 54.png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image54Png.png"
-        },
-        {
-          "id": "UuGonbCF1kyy",
-          "name": "lésion gauche (test) (1).png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/lesionGaucheTest1Png.png"
-        },
-        {
-          "id": "x_XtsJqFnoDF",
-          "name": "test lésion droit.png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/testLesionDroitPng.png"
-        },
-        {
-          "id": "jv1q8mOkBET6",
-          "name": "sag plexus.jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/sagPlexusJpg.jpg"
-        },
-        {
-          "id": "JCMQutub_Fyg",
-          "name": "Organes.jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/organesJpg.jpg"
-        },
-        {
-          "id": "nB2hkxcYXUs-",
-          "name": "logo dPEI Pocket.png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/logoDPeiPocketPng.png"
-        },
-        {
-          "id": "dzXchKO2wgbl",
-          "name": "Group 17.jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/group17Jpg.jpg"
-        },
-        {
-          "id": "XZvqfKNg9l4c",
-          "name": "image2 1.png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image21Png.png"
-        },
-        {
-          "id": "iZs1lPeQGXdL",
-          "name": "image2 1.jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image21Jpg.jpg"
-        },
-        {
-          "id": "U0meZaXE_K8i",
-          "name": "sag plexus.png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/sagPlexusPng.png"
-        },
-        {
-          "id": "rqB75jvOQGcV",
-          "name": "image2 1 (1).png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image211Png.png"
-        },
-        {
-          "id": "5es4wtIm06F2",
-          "name": "Frame 52 1.png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/frame521Png.png"
-        },
-        {
-          "id": "0y7bUdkbUKH7",
-          "name": "Frame 52 1 (1).png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/frame5211Png.png"
-        },
-        {
-          "id": "K9gIMcPcjYH8",
-          "name": "Compartiments_FR.jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/compartimentsFrJpg.jpg"
-        },
-        {
-          "id": "Ritpe_dlt7Wn",
-          "name": "Compartiments_EN.jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/compartimentsEnJpg.jpg"
-        },
-        {
-          "id": "USO_IvgzK2GC",
-          "name": "image1.jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image1Jpg.jpg"
-        },
-        {
-          "id": "wdvVBowHETg1",
-          "name": "image2.png 2",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image2Png2.png"
-        },
-        {
-          "id": "S4GSPZrvmnqu",
-          "name": "image3.jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image3Jpg.jpg"
-        },
-        {
-          "id": "4tr0_dwMHBl_",
-          "name": "image1.png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image1Png.png"
-        },
-        {
-          "id": "ZHqqzNsICZtj",
-          "name": "image2 (1).png 2",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image21Png2.png"
-        },
-        {
-          "id": "-qjwu-n91JtN",
-          "name": "image3.png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image3Png.png"
-        },
-        {
-          "id": "j818Uo4a4dtb",
-          "name": "ESUR-logo.png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/esurLogoPng.png"
-        },
-        {
-          "id": "CLvsq-zuMLh2",
-          "name": "image 1.png 2",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image1Png2.png"
-        },
-        {
-          "id": "4eSL7N22nS-p",
-          "name": "ESUR-logo 1.png",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/esurLogo1Png.png"
-        },
-        {
-          "id": "PhSNPCuB33L3",
-          "name": "img.jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/imgJpg.jpg"
-        },
-        {
-          "id": "vUMhH_m6SHqQ",
-          "name": "img (2).jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/img2Jpg.jpg"
-        },
-        {
-          "id": "g2PyeEBd7D7b",
-          "name": "img (1).jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/img1Jpg.jpg"
-        },
-        {
-          "id": "PWR9vzHmtLiI",
-          "name": "image1 (1).jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image11Jpg.jpg"
-        },
-        {
-          "id": "aIc7s4vPzmYp",
-          "name": "ESUR-logo 1.jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/esurLogo1Jpg.jpg"
-        },
-        {
-          "id": "_FEOXrz7Mo9D",
-          "name": "image 1 (1) 1.jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/image111Jpg.jpg"
-        },
-        {
-          "id": "vOWzYgllGgkb",
-          "name": "ESRU 1.jpg",
-          "filePath": "../public/plasmic/electric_sifem_for_production/images/esru1Jpg.jpg"
-        }
-      ],
-      "indirect": false,
-      "globalContextsFilePath": "plasmic/electric_sifem_for_production/PlasmicGlobalContextsProvider.tsx",
-      "splitsProviderFilePath": "",
-      "codeComponents": [
-        {
-          "id": "GrRhNnsbklov",
-          "name": "PlasmicHead",
-          "displayName": "hostless-plasmic-head",
-          "componentImportPath": "@plasmicapp/react-web"
-        },
-        {
-          "id": "6TVTwiAXxVrZ",
-          "name": "Fetcher",
-          "displayName": "plasmic-data-source-fetcher",
-          "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
-        },
-        {
-          "id": "wOAc_ISk_a82",
-          "name": "LocaleToggleWrapper",
-          "displayName": "LocaleToggleWrapper",
-          "componentImportPath": "@plasmic-library/jean/LocaleToggleWrapper/LocaleToggleWrapper"
-        },
-        {
-          "id": "dtuZ9UjE4cWg",
-          "name": "ExportToPDF",
-          "displayName": "ExportToPDF",
-          "componentImportPath": "@plasmic-library/jean/ExportToPDF/ExportToPDF"
-        },
-        {
-          "id": "4IJsrSUfDN_L",
-          "name": "FileList",
-          "displayName": "FileList",
-          "componentImportPath": "@plasmic-library/jean/FileList/FileList"
-        },
-        {
-          "id": "Kac1M3QxGsMJ",
-          "name": "LesionOptionList",
-          "displayName": "LesionOptionList",
-          "componentImportPath": "@plasmic-library/offline/LesionOptionList/LesionOptionList"
-        },
-        {
-          "id": "dUnI8BDi9FNv",
-          "name": "LesionsList",
-          "displayName": "LesionsList",
-          "componentImportPath": "@plasmic-library/offline/LesionsList/LesionsList"
-        },
-        {
-          "id": "Dq7xBHj6icko",
-          "name": "SupabaseProvider",
-          "displayName": "SupabaseProvider",
-          "componentImportPath": "plasmic-supabase"
-        },
-        {
-          "id": "3Jx4CVYebRuS",
-          "name": "SupabaseUppyUploader",
-          "displayName": "SupabaseUppyUploader",
-          "componentImportPath": "plasmic-supabase"
-        },
-        {
-          "id": "6fGnLgkU2THU",
-          "name": "SupabaseStorageGetSignedUrl",
-          "displayName": "SupabaseStorageGetSignedUrl",
-          "componentImportPath": "plasmic-supabase"
-        },
-        {
-          "id": "bxVY4KkUQdvJ",
-          "name": "SupabaseUserGlobalContext",
-          "displayName": "SupabaseUserGlobalContext",
-          "componentImportPath": "plasmic-supabase"
-        }
-      ],
-      "customFunctions": [],
-      "jsBundleThemes": []
-    },
-    {
       "projectId": "jND4haQkMjdpXVH9tN144R",
       "projectApiToken": "qvrGzMNiIUWsx8HiqM5TuZKzI45RWBa9xee5GzUsErvGNEkkdHsM2catTghRpz1ufSwWEK5AwrXsGyXygZ5A",
       "projectName": "Copy of Sifem Production for update electric",
       "version": "latest",
-      "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/plasmic.module.css",
+      "cssFilePath": "plasmic/sifem/plasmic.module.css",
       "components": [
         {
           "id": "knCNw6BBRKM8",
           "name": "Homepage",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicHomepage.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicHomepage.tsx",
           "importSpec": {
             "modulePath": "../pages/index.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicHomepage.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicHomepage.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/"
@@ -1868,11 +883,11 @@
           "name": "Checkbox",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicCheckbox.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicCheckbox.tsx",
           "importSpec": {
             "modulePath": "Checkbox.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicCheckbox.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicCheckbox.module.css",
           "scheme": "blackbox",
           "componentType": "component",
           "plumeType": "checkbox"
@@ -1882,11 +897,11 @@
           "name": "Button",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicButton.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicButton.tsx",
           "importSpec": {
             "modulePath": "Button.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicButton.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicButton.module.css",
           "scheme": "blackbox",
           "componentType": "component",
           "plumeType": "button"
@@ -1896,11 +911,11 @@
           "name": "Radio",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicRadio.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicRadio.tsx",
           "importSpec": {
             "modulePath": "Radio.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicRadio.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicRadio.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -1909,11 +924,11 @@
           "name": "Switch",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicSwitch.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicSwitch.tsx",
           "importSpec": {
             "modulePath": "Switch.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicSwitch.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicSwitch.module.css",
           "scheme": "blackbox",
           "componentType": "component",
           "plumeType": "switch"
@@ -1923,11 +938,11 @@
           "name": "Label",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicLabel.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicLabel.tsx",
           "importSpec": {
             "modulePath": "Label.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicLabel.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicLabel.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -1936,11 +951,11 @@
           "name": "TextInput",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicTextInput.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicTextInput.tsx",
           "importSpec": {
             "modulePath": "TextInput.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicTextInput.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicTextInput.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -1949,11 +964,11 @@
           "name": "TextAreaInput",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicTextAreaInput.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicTextAreaInput.tsx",
           "importSpec": {
             "modulePath": "TextAreaInput.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicTextAreaInput.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicTextAreaInput.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -1962,11 +977,11 @@
           "name": "Description",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicDescription.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicDescription.tsx",
           "importSpec": {
             "modulePath": "Description.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicDescription.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicDescription.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -1975,11 +990,11 @@
           "name": "TextField",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicTextField.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicTextField.tsx",
           "importSpec": {
             "modulePath": "TextField.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicTextField.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicTextField.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -1988,11 +1003,11 @@
           "name": "MenuItem",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicMenuItem.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicMenuItem.tsx",
           "importSpec": {
             "modulePath": "MenuItem.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicMenuItem.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicMenuItem.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2001,11 +1016,11 @@
           "name": "MenuSection",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicMenuSection.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicMenuSection.tsx",
           "importSpec": {
             "modulePath": "MenuSection.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicMenuSection.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicMenuSection.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2014,11 +1029,11 @@
           "name": "MenuPopover",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicMenuPopover.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicMenuPopover.tsx",
           "importSpec": {
             "modulePath": "MenuPopover.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicMenuPopover.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicMenuPopover.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2027,11 +1042,11 @@
           "name": "Select",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicSelect.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicSelect.tsx",
           "importSpec": {
             "modulePath": "Select.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicSelect.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicSelect.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2040,11 +1055,11 @@
           "name": "Navbar",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicNavbar.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicNavbar.tsx",
           "importSpec": {
             "modulePath": "Navbar.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicNavbar.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicNavbar.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2053,11 +1068,11 @@
           "name": "Historique",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicHistorique.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicHistorique.tsx",
           "importSpec": {
             "modulePath": "../pages/historique.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicHistorique.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicHistorique.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/historique"
@@ -2067,11 +1082,11 @@
           "name": "SifemTitleWrapper",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicSifemTitleWrapper.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicSifemTitleWrapper.tsx",
           "importSpec": {
             "modulePath": "SifemTitleWrapper.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicSifemTitleWrapper.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicSifemTitleWrapper.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2080,11 +1095,11 @@
           "name": "Bilan",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicBilan.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicBilan.tsx",
           "importSpec": {
             "modulePath": "../pages/bilan.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicBilan.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicBilan.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/bilan"
@@ -2094,11 +1109,11 @@
           "name": "Tab",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicTab.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicTab.tsx",
           "importSpec": {
             "modulePath": "Tab.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicTab.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicTab.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2107,11 +1122,11 @@
           "name": "CheckboxWrapper",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicCheckboxWrapper.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicCheckboxWrapper.tsx",
           "importSpec": {
             "modulePath": "CheckboxWrapper.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicCheckboxWrapper.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicCheckboxWrapper.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2120,11 +1135,11 @@
           "name": "Dropdown",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicDropdown.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicDropdown.tsx",
           "importSpec": {
             "modulePath": "Dropdown.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicDropdown.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicDropdown.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2133,11 +1148,11 @@
           "name": "EndometriomeWrapper",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicEndometriomeWrapper.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicEndometriomeWrapper.tsx",
           "importSpec": {
             "modulePath": "EndometriomeWrapper.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicEndometriomeWrapper.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicEndometriomeWrapper.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2146,11 +1161,11 @@
           "name": "BtmNavbarTile",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicBtmNavbarTile.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicBtmNavbarTile.tsx",
           "importSpec": {
             "modulePath": "BtmNavbarTile.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicBtmNavbarTile.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicBtmNavbarTile.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2159,11 +1174,11 @@
           "name": "BtmNavbar",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicBtmNavbar.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicBtmNavbar.tsx",
           "importSpec": {
             "modulePath": "BtmNavbar.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicBtmNavbar.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicBtmNavbar.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2172,11 +1187,11 @@
           "name": "Select2",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicSelect2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicSelect2.tsx",
           "importSpec": {
             "modulePath": "Select2.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicSelect2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicSelect2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2185,11 +1200,11 @@
           "name": "MenuItem2",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicMenuItem2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicMenuItem2.tsx",
           "importSpec": {
             "modulePath": "MenuItem2.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicMenuItem2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicMenuItem2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2198,11 +1213,11 @@
           "name": "MenuSection2",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicMenuSection2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicMenuSection2.tsx",
           "importSpec": {
             "modulePath": "MenuSection2.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicMenuSection2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicMenuSection2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2211,11 +1226,11 @@
           "name": "Label2",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicLabel2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicLabel2.tsx",
           "importSpec": {
             "modulePath": "Label2.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicLabel2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicLabel2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2224,11 +1239,11 @@
           "name": "Description2",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicDescription2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicDescription2.tsx",
           "importSpec": {
             "modulePath": "Description2.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicDescription2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicDescription2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2237,11 +1252,11 @@
           "name": "MenuPopover2",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicMenuPopover2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicMenuPopover2.tsx",
           "importSpec": {
             "modulePath": "MenuPopover2.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicMenuPopover2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicMenuPopover2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2250,11 +1265,11 @@
           "name": "Lexique",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicLexique.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicLexique.tsx",
           "importSpec": {
             "modulePath": "../pages/lexique.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicLexique.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicLexique.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/lexique"
@@ -2264,11 +1279,11 @@
           "name": "Faq",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicFaq.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicFaq.tsx",
           "importSpec": {
             "modulePath": "../pages/FAQ.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicFaq.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicFaq.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/FAQ"
@@ -2278,11 +1293,11 @@
           "name": "Button2",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicButton2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicButton2.tsx",
           "importSpec": {
             "modulePath": "Button2.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicButton2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicButton2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2291,11 +1306,11 @@
           "name": "Modal",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicModal.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicModal.tsx",
           "importSpec": {
             "modulePath": "Modal.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicModal.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicModal.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2304,11 +1319,11 @@
           "name": "SliderThumb",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicSliderThumb.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicSliderThumb.tsx",
           "importSpec": {
             "modulePath": "SliderThumb.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicSliderThumb.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicSliderThumb.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2317,11 +1332,11 @@
           "name": "Slider",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicSlider.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicSlider.tsx",
           "importSpec": {
             "modulePath": "Slider.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicSlider.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicSlider.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2330,11 +1345,11 @@
           "name": "Ressources",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicRessources.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicRessources.tsx",
           "importSpec": {
             "modulePath": "../pages/ressources.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicRessources.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicRessources.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/ressources"
@@ -2344,11 +1359,11 @@
           "name": "Contact",
           "type": "managed",
           "projectId": "jND4haQkMjdpXVH9tN144R",
-          "renderModuleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicContact.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicContact.tsx",
           "importSpec": {
             "modulePath": "../pages/contact.tsx"
           },
-          "cssFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicContact.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicContact.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/contact"
@@ -2358,538 +1373,538 @@
         {
           "id": "vishBEZtblLT",
           "name": "IconsaxLinearHambergermenuIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__IconsaxLinearHambergermenu.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__IconsaxLinearHambergermenu.tsx"
         },
         {
           "id": "onJSuJ-UsmVv",
           "name": "OutlinedIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Outlined.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Outlined.tsx"
         },
         {
           "id": "IxlSCRM5Bs1y",
           "name": "Outlined2Icon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Outlined2.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Outlined2.tsx"
         },
         {
           "id": "Und1G8nFhNc4",
           "name": "PlusIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Plus.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Plus.tsx"
         },
         {
           "id": "umpGfCAaGpna",
           "name": "CheckSvgIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__CheckSvg.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__CheckSvg.tsx"
         },
         {
           "id": "kj2DLaVP_RvL",
           "name": "IconIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Icon.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Icon.tsx"
         },
         {
           "id": "eVrPdv7mk5Yy",
           "name": "CircleIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Circle.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Circle.tsx"
         },
         {
           "id": "nKWApul0bZY3",
           "name": "ChevronDownIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__ChevronDown.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__ChevronDown.tsx"
         },
         {
           "id": "RdJHKHpa3U1a",
           "name": "SquareSvgIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__SquareSvg.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__SquareSvg.tsx"
         },
         {
           "id": "AIMlFAb-m3wO",
           "name": "SquareCheckFilledSvgIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__SquareCheckFilledSvg.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__SquareCheckFilledSvg.tsx"
         },
         {
           "id": "mk8-3iTc0odg",
           "name": "SquareMinusSvgIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__SquareMinusSvg.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__SquareMinusSvg.tsx"
         },
         {
           "id": "co1BeHPDadwu",
           "name": "ArrowCircleLeftIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__ArrowCircleLeft.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__ArrowCircleLeft.tsx"
         },
         {
           "id": "rW_1uCT0-ykW",
           "name": "CheckIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Check.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Check.tsx"
         },
         {
           "id": "Wjpvnvf5EaP8",
           "name": "XIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__X.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__X.tsx"
         },
         {
           "id": "08BiLdZO2D1X",
           "name": "ChevronDown2Icon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__ChevronDown2.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__ChevronDown2.tsx"
         },
         {
           "id": "HRBvkkSK4tnZ",
           "name": "PlayIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Play.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Play.tsx"
         },
         {
           "id": "b0iyMdH1A7Zs",
           "name": "X2Icon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__X2.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__X2.tsx"
         },
         {
           "id": "ofl8ybeCRRjG",
           "name": "Vector5SvgIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Vector5Svg.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Vector5Svg.tsx"
         },
         {
           "id": "TXLzmRvDuqzb",
           "name": "Vector6SvgIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Vector6Svg.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Vector6Svg.tsx"
         },
         {
           "id": "eR_hoiqtE1OD",
           "name": "CaretDownIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__CaretDown.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__CaretDown.tsx"
         },
         {
           "id": "a9eo764NRP_V",
           "name": "Icon3Icon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Icon3.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Icon3.tsx"
         },
         {
           "id": "udNYLloEiR7P",
           "name": "Ellipse15Icon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Ellipse15.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Ellipse15.tsx"
         },
         {
           "id": "6IwrEVvEO8mo",
           "name": "TriangleIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Triangle.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Triangle.tsx"
         },
         {
           "id": "kFLrJrk4kJYR",
           "name": "FilePdfIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__FilePdf.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__FilePdf.tsx"
         },
         {
           "id": "inkbqaqtV3Is",
           "name": "FilePngIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__FilePng.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__FilePng.tsx"
         },
         {
           "id": "OXUeNYMN91cI",
           "name": "Vector7SvgIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Vector7Svg.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Vector7Svg.tsx"
         },
         {
           "id": "ZhSyl4l2ionI",
           "name": "Vector8SvgIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Vector8Svg.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Vector8Svg.tsx"
         },
         {
           "id": "HOKDuEl8uqzf",
           "name": "Checkbox1SvgIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Checkbox1Svg.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Checkbox1Svg.tsx"
         },
         {
           "id": "L3UrmdEuprp6",
           "name": "Checkbox3SvgIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Checkbox3Svg.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Checkbox3Svg.tsx"
         },
         {
           "id": "xMZ1bSh4-Lfl",
           "name": "Checkbox2SvgIcon",
-          "moduleFilePath": "plasmic/copy_of_sifem_production_for_update_electric/icons/PlasmicIcon__Checkbox2Svg.tsx"
+          "moduleFilePath": "plasmic/sifem/icons/PlasmicIcon__Checkbox2Svg.tsx"
         }
       ],
       "images": [
         {
           "id": "tZlFf-Ji0FOE",
           "name": "image 2",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image2.png"
+          "filePath": "../public/plasmic/sifem/images/image2.png"
         },
         {
           "id": "39zTg4IlRlaC",
           "name": "image 1",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image1.png"
+          "filePath": "../public/plasmic/sifem/images/image1.png"
         },
         {
           "id": "lzkMk9R0f6S5",
           "name": "image 5",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image5.png"
+          "filePath": "../public/plasmic/sifem/images/image5.png"
         },
         {
           "id": "6d7xHa_2YkyP",
           "name": "image 4",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image4.png"
+          "filePath": "../public/plasmic/sifem/images/image4.png"
         },
         {
           "id": "afCcJbSIClWh",
           "name": "filled",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/filled.svg"
+          "filePath": "../public/plasmic/sifem/images/filled.svg"
         },
         {
           "id": "u0-GHDxwjuxl",
           "name": "filled 2",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/filled2.svg"
+          "filePath": "../public/plasmic/sifem/images/filled2.svg"
         },
         {
           "id": "bemzemh2wwNh",
           "name": "filled 3",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/filled3.svg"
+          "filePath": "../public/plasmic/sifem/images/filled3.svg"
         },
         {
           "id": "KJVZlPaZMLUP",
           "name": "filled 4",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/filled4.svg"
+          "filePath": "../public/plasmic/sifem/images/filled4.svg"
         },
         {
           "id": "CdjJYlayxeYV",
           "name": "filled 5",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/filled5.svg"
+          "filePath": "../public/plasmic/sifem/images/filled5.svg"
         },
         {
           "id": "qQUH9yBfGvUX",
           "name": "filled 6",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/filled6.svg"
+          "filePath": "../public/plasmic/sifem/images/filled6.svg"
         },
         {
           "id": "n68IZafktk1N",
           "name": "filled 7",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/filled7.svg"
+          "filePath": "../public/plasmic/sifem/images/filled7.svg"
         },
         {
           "id": "dYN2b_MVpEqL",
           "name": "filled 8",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/filled8.svg"
+          "filePath": "../public/plasmic/sifem/images/filled8.svg"
         },
         {
           "id": "9hqoeT_q-_iS",
           "name": "filled 9",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/filled9.svg"
+          "filePath": "../public/plasmic/sifem/images/filled9.svg"
         },
         {
           "id": "s8chgPdQA7a6",
           "name": "image 6",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image6.png"
+          "filePath": "../public/plasmic/sifem/images/image6.png"
         },
         {
           "id": "pslZfG2l8oiU",
           "name": "image 23.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image23Png.png"
+          "filePath": "../public/plasmic/sifem/images/image23Png.png"
         },
         {
           "id": "Joheb_VuENrc",
           "name": "image 2.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image2Png.png"
+          "filePath": "../public/plasmic/sifem/images/image2Png.png"
         },
         {
           "id": "aGJINcCRJhfw",
           "name": "image 53.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image53Png.png"
+          "filePath": "../public/plasmic/sifem/images/image53Png.png"
         },
         {
           "id": "lYe2I_HFZzTY",
           "name": "image 53 (1).png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image531Png.png"
+          "filePath": "../public/plasmic/sifem/images/image531Png.png"
         },
         {
           "id": "xcRYn-oDjxM1",
           "name": "image 54.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image54Png.png"
+          "filePath": "../public/plasmic/sifem/images/image54Png.png"
         },
         {
           "id": "o8NqsopWcmC9",
           "name": "lésion gauche (test) (1).png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/lesionGaucheTest1Png.png"
+          "filePath": "../public/plasmic/sifem/images/lesionGaucheTest1Png.png"
         },
         {
           "id": "BMWAix7GvqVJ",
           "name": "test lésion droit.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/testLesionDroitPng.png"
+          "filePath": "../public/plasmic/sifem/images/testLesionDroitPng.png"
         },
         {
           "id": "Oep3ODg4kwh7",
           "name": "sag plexus.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/sagPlexusJpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/sagPlexusJpg.jpg"
         },
         {
           "id": "U1V4Iy9Ij-Aj",
           "name": "Organes.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/organesJpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/organesJpg.jpg"
         },
         {
           "id": "g26aixKoFlqg",
           "name": "logo dPEI Pocket.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/logoDPeiPocketPng.png"
+          "filePath": "../public/plasmic/sifem/images/logoDPeiPocketPng.png"
         },
         {
           "id": "Q1sdNBfPFZA_",
           "name": "Group 17.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/group17Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/group17Jpg.jpg"
         },
         {
           "id": "f5EuvY2ko0qn",
           "name": "image2 1.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image21Png.png"
+          "filePath": "../public/plasmic/sifem/images/image21Png.png"
         },
         {
           "id": "BYyBFTVwuGY-",
           "name": "image2 1.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image21Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/image21Jpg.jpg"
         },
         {
           "id": "baInt1LFIInL",
           "name": "sag plexus.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/sagPlexusPng.png"
+          "filePath": "../public/plasmic/sifem/images/sagPlexusPng.png"
         },
         {
           "id": "34VbwF-c4I4e",
           "name": "image2 1 (1).png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image211Png.png"
+          "filePath": "../public/plasmic/sifem/images/image211Png.png"
         },
         {
           "id": "oDWgDTPqfdmR",
           "name": "Frame 52 1.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/frame521Png.png"
+          "filePath": "../public/plasmic/sifem/images/frame521Png.png"
         },
         {
           "id": "5et0mOF4I_Pv",
           "name": "Frame 52 1 (1).png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/frame5211Png.png"
+          "filePath": "../public/plasmic/sifem/images/frame5211Png.png"
         },
         {
           "id": "zuSR2OCYzU_J",
           "name": "Compartiments_FR.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/compartimentsFrJpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/compartimentsFrJpg.jpg"
         },
         {
           "id": "QCV156UT9ZX4",
           "name": "Compartiments_EN.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/compartimentsEnJpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/compartimentsEnJpg.jpg"
         },
         {
           "id": "1ExJTdpJja0d",
           "name": "image1.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image1Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/image1Jpg.jpg"
         },
         {
           "id": "DtXvDHOlJu3O",
           "name": "image2.png 2",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image2Png2.png"
+          "filePath": "../public/plasmic/sifem/images/image2Png2.png"
         },
         {
           "id": "-9pOZsq0heDu",
           "name": "image3.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image3Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/image3Jpg.jpg"
         },
         {
           "id": "dvRRSS9ZSZXB",
           "name": "image1.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image1Png.png"
+          "filePath": "../public/plasmic/sifem/images/image1Png.png"
         },
         {
           "id": "YSG6JTsKXjz9",
           "name": "image2 (1).png 2",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image21Png2.png"
+          "filePath": "../public/plasmic/sifem/images/image21Png2.png"
         },
         {
           "id": "yGw8ftk_JeXp",
           "name": "image3.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image3Png.png"
+          "filePath": "../public/plasmic/sifem/images/image3Png.png"
         },
         {
           "id": "1rODY5I1di6g",
           "name": "ESUR-logo.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/esurLogoPng.png"
+          "filePath": "../public/plasmic/sifem/images/esurLogoPng.png"
         },
         {
           "id": "fyTBK4jDiVNb",
           "name": "image 1.png 2",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image1Png2.png"
+          "filePath": "../public/plasmic/sifem/images/image1Png2.png"
         },
         {
           "id": "UX0G_9IGCt3m",
           "name": "ESUR-logo 1.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/esurLogo1Png.png"
+          "filePath": "../public/plasmic/sifem/images/esurLogo1Png.png"
         },
         {
           "id": "sZzLkvWBEgh7",
           "name": "img.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/imgJpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/imgJpg.jpg"
         },
         {
           "id": "UXdf9HwJgX7E",
           "name": "img (2).jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/img2Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/img2Jpg.jpg"
         },
         {
           "id": "vBV61zNcGLS1",
           "name": "img (1).jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/img1Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/img1Jpg.jpg"
         },
         {
           "id": "LXWPoIEfuTum",
           "name": "image1 (1).jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image11Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/image11Jpg.jpg"
         },
         {
           "id": "QQoTuR8kSHp2",
           "name": "ESUR-logo 1.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/esurLogo1Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/esurLogo1Jpg.jpg"
         },
         {
           "id": "PEBpU0oV0ojA",
           "name": "image 1 (1) 1.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image111Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/image111Jpg.jpg"
         },
         {
           "id": "OCC2DCI7vjzc",
           "name": "ESRU 1.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/esru1Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/esru1Jpg.jpg"
         },
         {
           "id": "X5xaJ6A8PTqs",
           "name": "ChatGPT Image 11 juil. 2025, 09_58_17.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/chatGptImage11Juil2025095817Png.png"
+          "filePath": "../public/plasmic/sifem/images/chatGptImage11Juil2025095817Png.png"
         },
         {
           "id": "QOKDG-DGeFdc",
           "name": "image (1).png 3",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image1Png3.png"
+          "filePath": "../public/plasmic/sifem/images/image1Png3.png"
         },
         {
           "id": "yte8S_sVn2X3",
           "name": "logo_sifem_1024x1024 (1) 1.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/logoSifem1024X102411Png.png"
+          "filePath": "../public/plasmic/sifem/images/logoSifem1024X102411Png.png"
         },
         {
           "id": "RsY1dmL05WWH",
           "name": "image (1) 1.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image11Png.png"
+          "filePath": "../public/plasmic/sifem/images/image11Png.png"
         },
         {
           "id": "W5wyblw3nSBM",
           "name": "logo_sifem_160x160.png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/logoSifem160X160Png.png"
+          "filePath": "../public/plasmic/sifem/images/logoSifem160X160Png.png"
         },
         {
           "id": "Hz6xJoUu-uFS",
           "name": "image (1) 1 (1).png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/image111Png.png"
+          "filePath": "../public/plasmic/sifem/images/image111Png.png"
         },
         {
           "id": "Uj1RsIJTmOyk",
           "name": "im1_new.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im1NewJpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/im1NewJpg.jpg"
         },
         {
           "id": "bMjZPyYc1yDJ",
           "name": "ima2_new.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/ima2NewJpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/ima2NewJpg.jpg"
         },
         {
           "id": "bDWWs6EhSkFR",
           "name": "im3_new.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im3NewJpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/im3NewJpg.jpg"
         },
         {
           "id": "dyO5TNK4nhw4",
           "name": "logo_sifem_160x160 (1).png",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/logoSifem160X1601Png.png"
+          "filePath": "../public/plasmic/sifem/images/logoSifem160X1601Png.png"
         },
         {
           "id": "7AhboPsQMT6r",
           "name": "im1_new@2x.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im1New2XJpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/im1New2XJpg.jpg"
         },
         {
           "id": "_j9Pujpz5g34",
           "name": "ima2_new@2x.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/ima2New2XJpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/ima2New2XJpg.jpg"
         },
         {
           "id": "M_bOQBgcwTlE",
           "name": "im3_new@2x.jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im3New2XJpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/im3New2XJpg.jpg"
         },
         {
           "id": "aX-IG10c2vzP",
           "name": "im1_new (2).jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im1New2Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/im1New2Jpg.jpg"
         },
         {
           "id": "fZIyR-Tlwpfa",
           "name": "ima2_new (2).jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/ima2New2Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/ima2New2Jpg.jpg"
         },
         {
           "id": "allVBeBCOta1",
           "name": "im3_new (1).jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im3New1Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/im3New1Jpg.jpg"
         },
         {
           "id": "OXu59WqITSJi",
           "name": "im3_new (2).jpg",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im3New2Jpg.jpg"
+          "filePath": "../public/plasmic/sifem/images/im3New2Jpg.jpg"
         },
         {
           "id": "NSxTrEv6xs7R",
           "name": "im1_new.jpg 2",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im1NewJpg2.jpg"
+          "filePath": "../public/plasmic/sifem/images/im1NewJpg2.jpg"
         },
         {
           "id": "SFFv9wbQsZSM",
           "name": "im3_new.jpg 2",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im3NewJpg2.jpg"
+          "filePath": "../public/plasmic/sifem/images/im3NewJpg2.jpg"
         },
         {
           "id": "m3jvroJaFoMr",
           "name": "ima2_new.jpg 2",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/ima2NewJpg2.jpg"
+          "filePath": "../public/plasmic/sifem/images/ima2NewJpg2.jpg"
         },
         {
           "id": "9oMqRx84h_Cu",
           "name": "im1_new.jpg 3",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im1NewJpg3.jpg"
+          "filePath": "../public/plasmic/sifem/images/im1NewJpg3.jpg"
         },
         {
           "id": "ulLcwkbnHddb",
           "name": "ima2_new.jpg 3",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/ima2NewJpg3.jpg"
+          "filePath": "../public/plasmic/sifem/images/ima2NewJpg3.jpg"
         },
         {
           "id": "CmoihmRtXviB",
           "name": "im3_new.jpg 3",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im3NewJpg3.jpg"
+          "filePath": "../public/plasmic/sifem/images/im3NewJpg3.jpg"
         },
         {
           "id": "RJnL3F5qjvLD",
           "name": "im1_new.jpg 4",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im1NewJpg4.jpg"
+          "filePath": "../public/plasmic/sifem/images/im1NewJpg4.jpg"
         },
         {
           "id": "Sj3msaYys12B",
           "name": "im1_new.jpg 5",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im1NewJpg5.jpg"
+          "filePath": "../public/plasmic/sifem/images/im1NewJpg5.jpg"
         },
         {
           "id": "8oBjcoNUvLNu",
           "name": "ima2_new.jpg 4",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/ima2NewJpg4.jpg"
+          "filePath": "../public/plasmic/sifem/images/ima2NewJpg4.jpg"
         },
         {
           "id": "wvHD8F8AWi9P",
           "name": "im3_new.jpg 4",
-          "filePath": "../public/plasmic/copy_of_sifem_production_for_update_electric/images/im3NewJpg4.jpg"
+          "filePath": "../public/plasmic/sifem/images/im3NewJpg4.jpg"
         }
       ],
       "indirect": false,
-      "globalContextsFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicGlobalContextsProvider.tsx",
+      "globalContextsFilePath": "plasmic/sifem/PlasmicGlobalContextsProvider.tsx",
       "splitsProviderFilePath": "",
       "codeComponents": [
         {
@@ -2956,13 +1971,13 @@
         "id": "GgzDd8Lo95PQ",
         "name": "Screen",
         "projectId": "jND4haQkMjdpXVH9tN144R",
-        "contextFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicGlobalVariant__Screen.tsx"
+        "contextFilePath": "plasmic/sifem/PlasmicGlobalVariant__Screen.tsx"
       },
       {
         "id": "KemWC_IXZp7Y",
         "name": "Locale",
         "projectId": "jND4haQkMjdpXVH9tN144R",
-        "contextFilePath": "plasmic/copy_of_sifem_production_for_update_electric/PlasmicGlobalVariant__Locale.tsx"
+        "contextFilePath": "plasmic/sifem/PlasmicGlobalVariant__Locale.tsx"
       }
     ]
   },
