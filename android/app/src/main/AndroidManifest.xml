@@ -37,6 +37,15 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     
+    <!-- Permissions pour accès aux dossiers publics -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
+                     android:maxSdkVersion="28" />
+    
+    <!-- Pour Android 11+ : accès aux téléchargements -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" 
+                     tools:ignore="ScopedStorage" />
+    
     <!-- Permissions de stockage uniquement pour les anciennes versions Android si nécessaire -->
     <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="28" /> -->
     <!-- Note: Nous utilisons maintenant uniquement les répertoires cache/data de l'app qui ne nécessitent pas de permissions -->

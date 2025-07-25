@@ -12,7 +12,7 @@ const config: CapacitorConfig = {
       enabled: true,
     },
     Filesystem: {
-      requestPermissions: false  // Utilise les répertoires sans permissions
+      requestPermissions: true  // Maintenant qu'on a les permissions, on les demande
     },
     Share: {
       enabled: true
