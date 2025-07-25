@@ -6,6 +6,17 @@ const config: CapacitorConfig = {
   webDir: 'out',
   server: {
     androidScheme: 'https'
+  },
+  plugins: {
+    CapacitorHttp: {
+      enabled: true,
+    },
+    Filesystem: {
+      requestPermissions: false  // Utilise les répertoires sans permissions
+    },
+    Share: {
+      enabled: true
+    }
   }
 };
 

@@ -8,7 +8,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:requestLegacyExternalStorage="true">
+        android:requestLegacyExternalStorage="false"
+        android:preserveLegacyExternalStorage="false">
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation"
             android:name=".MainActivity"
@@ -31,17 +32,12 @@
         </provider>
     </application>
 
-    <!-- Permissions -->
+    <!-- Permissions essentielles -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     
-    <!-- Permissions de stockage - compatibles avec toutes les versions Android -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
-                     android:maxSdkVersion="28" />
-    
-    <!-- Pour Android 11+ si nécessaire -->
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" 
-                     tools:ignore="ScopedStorage" />
+    <!-- Permissions de stockage uniquement pour les anciennes versions Android si nécessaire -->
+    <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="28" /> -->
+    <!-- Note: Nous utilisons maintenant uniquement les répertoires cache/data de l'app qui ne nécessitent pas de permissions -->
 </manifest>
