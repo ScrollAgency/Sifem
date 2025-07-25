@@ -14,7 +14,7 @@ export function useLesions(): Lesion[] {
 
   useEffect(() => {
     const stream = new ShapeStream({
-      url: "https://electric-sifem.agence-scroll.com/api/proxy-electric?table=lesion&offset=-1",
+      url: "http://localhost:3000/api/proxy-electric?table=lesion&offset=-1",
       params: { table: "lesion" },
     });
 
