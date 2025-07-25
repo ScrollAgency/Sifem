@@ -1,7 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const baseUrl = 'http://localhost:5133/v1/shape';
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.status(200).end();
+    return;
+  }
+
+  const baseUrl = 'http://electric-sync:3000/v1/shape'; // nom du service Docker
   const url = new URL(baseUrl);
 
   Object.entries(req.query).forEach(([key, value]) => {
@@ -24,6 +32,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     res.setHeader('Access-Control-Expose-Headers', headersToExpose.join(', '));
+    res.setHeader('Access-Control-Allow-Origin', '*'); // ou ton domaine spécifique
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
     const data = await electricRes.json();
     res.status(electricRes.status).json(data);
