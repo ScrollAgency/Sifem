@@ -11,7 +11,6 @@ interface ExportOptions {
   format?: 'pdf' | 'png';
   orientation?: 'portrait' | 'landscape';
   autoResize?: boolean;
-  shareFile?: boolean;
 }
 
 interface ExportToPDFProps {
@@ -20,7 +19,6 @@ interface ExportToPDFProps {
   format?: 'pdf' | 'png';
   orientation?: 'portrait' | 'landscape';
   autoResize?: boolean;
-  shareFile?: boolean;
   onExport?: () => void;
   className?: string;
 }
@@ -444,26 +442,23 @@ const getPlatformDirectory = async (): Promise<Directory> => {
   const platform = Capacitor.getPlatform();
   
   if (platform === 'ios') {
-    // Sur iOS, utiliser ExternalStorage pour un accès utilisateur
-    // Cela correspond au stockage externe accessible via l'app Files
-    return Directory.ExternalStorage;
+    return Directory.Documents;
   } else if (platform === 'android') {
-    // Sur Android, utiliser ExternalStorage pour un accès utilisateur
-    // Directory.ExternalStorage correspond au stockage externe incluant Downloads
-    return Directory.ExternalStorage;
+    // Sur Android, utiliser Cache ou Data au lieu d'ExternalStorage
+    // Ces répertoires ne nécessitent pas de permissions spéciales
+    return Directory.Cache;
   } else {
     // Fallback pour autres plateformes
     return Directory.Data;
   }
 };
 
-// Save file to native filesystem and optionally share
+// Save file to native filesystem and share
 const saveFileNative = async (
   data: string | Blob, 
   fileName: string, 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  mimeType: string,
-  shareFile: boolean = false
+  mimeType: string
 ): Promise<void> => {
   try {
     console.log('Sauvegarde native du fichier:', fileName);
@@ -530,56 +525,38 @@ const saveFileNative = async (
       }
     }
 
-    // Share the file only if requested
-    console.log('Vérification du partage - shareFile:', shareFile, 'URI:', result.uri);
-    if (shareFile) {
-      await Share.share({
-        title: 'Exporter le fichier',
-        text: `Partager ${fileName}`,
-        url: result.uri,
-        dialogTitle: 'Partager le fichier exporté'
-      });
+    // Share the file
+    await Share.share({
+      title: 'Exporter le fichier',
+      text: `Partager ${fileName}`,
+      url: result.uri,
+      dialogTitle: 'Partager le fichier exporté'
+    });
 
-      console.log('Fichier partagé avec succès');
-    } else {
-      console.log('Fichier téléchargé avec succès (pas de partage)');
-      
-      // Afficher une notification pour informer l'utilisateur
-      if (Capacitor.getPlatform() === 'android') {
-        // Sur Android, afficher une alerte avec le chemin du fichier
-        alert(`Fichier exporté avec succès !\n\nChemin : ${result.uri}\n\nLe fichier a été sauvegardé dans le stockage externe (Downloads).`);
-      } else if (Capacitor.getPlatform() === 'ios') {
-        // Sur iOS, afficher une alerte
-        alert(`Fichier exporté avec succès !\n\nLe fichier a été sauvegardé dans le stockage externe accessible via l'application Files.`);
-      }
-    }
+    console.log('Fichier partagé avec succès');
   } catch (error) {
     console.error('Erreur lors de la sauvegarde native:', error);
     
-    // Fallback: try to share the data directly only if shareFile is true
-    if (shareFile) {
-      try {
-        if (data instanceof Blob) {
-          const dataUrl = await new Promise<string>((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.readAsDataURL(data);
-          });
-          
-          await Share.share({
-            title: 'Exporter le fichier',
-            text: `Partager ${fileName}`,
-            url: dataUrl,
-            dialogTitle: 'Partager le fichier exporté'
-          });
-          
-          console.log('Fichier partagé directement via URL de données');
-        }
-      } catch (shareError) {
-        console.error('Erreur lors du partage de fallback:', shareError);
-        throw new Error(`Impossible de sauvegarder le fichier: ${error}`);
+    // Fallback: try to share the data directly
+    try {
+      if (data instanceof Blob) {
+        const dataUrl = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(data);
+        });
+        
+        await Share.share({
+          title: 'Exporter le fichier',
+          text: `Partager ${fileName}`,
+          url: dataUrl,
+          dialogTitle: 'Partager le fichier exporté'
+        });
+        
+        console.log('Fichier partagé directement via URL de données');
       }
-    } else {
+    } catch (shareError) {
+      console.error('Erreur lors du partage de fallback:', shareError);
       throw new Error(`Impossible de sauvegarder le fichier: ${error}`);
     }
   }
@@ -608,11 +585,10 @@ const saveFileWeb = (
 const saveFile = async (
   data: string | Blob, 
   fileName: string, 
-  mimeType: string,
-  shareFile: boolean = false
+  mimeType: string
 ): Promise<void> => {
   if (isNativePlatform()) {
-    await saveFileNative(data, fileName, mimeType, shareFile);
+    await saveFileNative(data, fileName, mimeType);
   } else {
     if (data instanceof Blob) {
       saveFileWeb(data, fileName, mimeType);
@@ -636,8 +612,7 @@ const generateEnhancedPDF = async (
   orientation: 'portrait' | 'landscape', 
   fileName: string, 
   save: boolean, 
-  autoResize: boolean = true,
-  shareFile: boolean = false
+  autoResize: boolean = true
 ): Promise<jsPDF> => {
   console.log('Starting enhanced PDF generation');
   
@@ -848,11 +823,11 @@ const generateEnhancedPDF = async (
     currentY += elementHeight + 5;
   }
   
-        if (save) {
-        // Save the PDF using universal save method
-        const blob = pdf.output('blob');
-        await saveFile(blob, `${fileName}.pdf`, 'application/pdf', shareFile);
-      }
+  if (save) {
+    // Save the PDF using universal save method
+    const blob = pdf.output('blob');
+    await saveFile(blob, `${fileName}.pdf`, 'application/pdf');
+  }
   
   return pdf;
 };
@@ -1061,15 +1036,13 @@ export const useExportToPDF = () => {
     fileName = 'export',
     format = 'pdf',
     orientation = 'portrait',
-    autoResize = true,
-    shareFile = false // Par défaut, téléchargement simple (sans partage)
+    autoResize = true
   }: ExportOptions) => {
     setIsExporting(true);
     let restoreLayout: (() => void) | null = null;
     
     try {
       console.log('Début de l\'export avec les IDs d\'éléments:', elementIds);
-      console.log('Plateforme native:', isNativePlatform(), 'Partage activé:', shareFile);
       
       // Scroll to top of page for consistent export experience
       window.scrollTo({
@@ -1193,7 +1166,7 @@ export const useExportToPDF = () => {
       });
 
       // Generate PDF
-      const pdfDoc = await generateEnhancedPDF(elements, orientation, fileName, false, autoResize, shareFile);
+      const pdfDoc = await generateEnhancedPDF(elements, orientation, fileName, false, autoResize);
       
       if (format === 'png') {
         console.log('Conversion en PNG');
@@ -1274,7 +1247,7 @@ export const useExportToPDF = () => {
           const blob = await new Promise<Blob>((resolve) => 
             canvas.toBlob(b => resolve(b!), 'image/png')
           );
-          await saveFile(blob, `${fileName}.png`, 'image/png', shareFile);
+          await saveFile(blob, `${fileName}.png`, 'image/png');
           
           console.log('Export PNG terminé avec succès');
         } catch (pngError) {
@@ -1283,12 +1256,12 @@ export const useExportToPDF = () => {
           
           // Fallback to PDF
           const blob = pdfDoc.output('blob');
-          await saveFile(blob, `${fileName}.pdf`, 'application/pdf', shareFile);
+          await saveFile(blob, `${fileName}.pdf`, 'application/pdf');
         }
       } else {
         // Save PDF
         const blob = pdfDoc.output('blob');
-        await saveFile(blob, `${fileName}.pdf`, 'application/pdf', shareFile);
+        await saveFile(blob, `${fileName}.pdf`, 'application/pdf');
       }
       
       console.log('Export terminé avec succès');
@@ -1335,7 +1308,6 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
     format = 'pdf',
     orientation = 'portrait',
     autoResize = true,
-    shareFile = false, // Par défaut, téléchargement simple (sans partage)
     onExport,
   }, 
   ref
@@ -1350,7 +1322,6 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
       format,
       orientation,
       autoResize,
-      shareFile,
       ...options
     })
   }));
