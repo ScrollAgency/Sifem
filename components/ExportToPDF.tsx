@@ -446,9 +446,9 @@ const getPlatformDirectory = async (): Promise<Directory> => {
   if (platform === 'ios') {
     return Directory.Documents;
   } else if (platform === 'android') {
-    // Sur Android, utiliser Cache ou Data au lieu d'ExternalStorage
-    // Ces répertoires ne nécessitent pas de permissions spéciales
-    return Directory.Cache;
+    // Sur Android, utiliser Documents pour un accès utilisateur
+    // Directory.Documents est accessible via le gestionnaire de fichiers
+    return Directory.Documents;
   } else {
     // Fallback pour autres plateformes
     return Directory.Data;
@@ -541,6 +541,15 @@ const saveFileNative = async (
       console.log('Fichier partagé avec succès');
     } else {
       console.log('Fichier téléchargé avec succès (pas de partage)');
+      
+      // Afficher une notification pour informer l'utilisateur
+      if (Capacitor.getPlatform() === 'android') {
+        // Sur Android, afficher une alerte avec le chemin du fichier
+        alert(`Fichier exporté avec succès !\n\nChemin : ${result.uri}\n\nVous pouvez accéder au fichier via votre gestionnaire de fichiers Android.`);
+      } else if (Capacitor.getPlatform() === 'ios') {
+        // Sur iOS, afficher une alerte
+        alert(`Fichier exporté avec succès !\n\nLe fichier a été sauvegardé dans l'application Files.`);
+      }
     }
   } catch (error) {
     console.error('Erreur lors de la sauvegarde native:', error);
