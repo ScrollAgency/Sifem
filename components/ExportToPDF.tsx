@@ -444,11 +444,13 @@ const getPlatformDirectory = async (): Promise<Directory> => {
   const platform = Capacitor.getPlatform();
   
   if (platform === 'ios') {
-    return Directory.Documents;
+    // Sur iOS, utiliser ExternalStorage pour un accès utilisateur
+    // Cela correspond au stockage externe accessible via l'app Files
+    return Directory.ExternalStorage;
   } else if (platform === 'android') {
-    // Sur Android, utiliser Documents pour un accès utilisateur
-    // Directory.Documents est accessible via le gestionnaire de fichiers
-    return Directory.Documents;
+    // Sur Android, utiliser ExternalStorage pour un accès utilisateur
+    // Directory.ExternalStorage correspond au stockage externe incluant Downloads
+    return Directory.ExternalStorage;
   } else {
     // Fallback pour autres plateformes
     return Directory.Data;
@@ -545,10 +547,10 @@ const saveFileNative = async (
       // Afficher une notification pour informer l'utilisateur
       if (Capacitor.getPlatform() === 'android') {
         // Sur Android, afficher une alerte avec le chemin du fichier
-        alert(`Fichier exporté avec succès !\n\nChemin : ${result.uri}\n\nVous pouvez accéder au fichier via votre gestionnaire de fichiers Android.`);
+        alert(`Fichier exporté avec succès !\n\nChemin : ${result.uri}\n\nLe fichier a été sauvegardé dans le stockage externe (Downloads).`);
       } else if (Capacitor.getPlatform() === 'ios') {
         // Sur iOS, afficher une alerte
-        alert(`Fichier exporté avec succès !\n\nLe fichier a été sauvegardé dans l'application Files.`);
+        alert(`Fichier exporté avec succès !\n\nLe fichier a été sauvegardé dans le stockage externe accessible via l'application Files.`);
       }
     }
   } catch (error) {
