@@ -486,27 +486,31 @@ const saveFileNative = async (
     } catch (permissionError) {
       console.warn('❌ Erreur lors de la demande de permissions:', permissionError);
     }
-  } else if (platform === 'ios') {
-    // Pour iOS, Documents est généralement accessible
-    try {
-      const result = await Filesystem.writeFile({
-        path: fileName,
-        data: base64Data,
-        directory: Directory.Documents,
-        encoding: Encoding.UTF8
-      });
-      
-      console.log(`✅ SUCCÈS! Fichier sauvegardé iOS:`, result.uri);
-      return;
-      
-    } catch (error) {
-      console.warn('❌ Échec sauvegarde iOS Documents:', error);
-    }
-  }
+     } else if (platform === 'ios') {
+     // Stratégie unifiée iOS : Essayer Documents puis fallback vers partage
+     console.log('🍎 iOS détecté - Tentative sauvegarde Documents...');
+     
+     try {
+       const result = await Filesystem.writeFile({
+         path: fileName,
+         data: base64Data,
+         directory: Directory.Documents,
+         encoding: Encoding.UTF8
+       });
+       
+       console.log(`✅ SUCCÈS! Fichier sauvegardé iOS Documents:`, result.uri);
+       console.log('📁 Fichier accessible via app "Fichiers" > "Sur mon iPhone" > dPEI Pocket');
+       return;
+       
+     } catch (error) {
+       console.warn('❌ Échec sauvegarde iOS Documents:', error);
+       console.log('🔄 Fallback iOS: Utilisation du partage natif...');
+     }
+   }
   
-     // STRATÉGIE 2: Méthode recommandée Android moderne - Sauvegarde + Partage via URI
-   console.log('💡 Stratégie optimale Android: Sauvegarde dans cache puis partage via URI...');
-   console.log('📌 Android moderne (10+) privilégie cette approche pour la sécurité');
+           // STRATÉGIE 2: Sauvegarde + Partage via URI (Android/iOS moderne)
+    console.log(`💡 Stratégie optimale ${platform}: Sauvegarde dans cache puis partage via URI...`);
+    console.log('📌 Approche moderne privilégiée pour la sécurité et compatibilité');
   
   try {
     // Sauvegarder d'abord dans le cache de l'app
@@ -519,21 +523,34 @@ const saveFileNative = async (
     
     console.log('✅ Fichier sauvegardé dans cache temporaire:', cacheResult.uri);
     
-         // Maintenant partager via l'URI local (pas data URL)
-     await Share.share({
-       title: '📥 Exporter le fichier',
-       text: `✨ Export réussi ! Choisir où sauvegarder:\n\n"${fileName}"\n\n📁 Enregistrer dans fichiers → Downloads\n☁️ Drive/OneDrive → Cloud\n📱 WhatsApp → Partager`,
-       url: cacheResult.uri,  // Utiliser l'URI local au lieu de data URL
-       dialogTitle: `📥 Télécharger ${fileName}`
-     });
+                   // Maintenant partager via l'URI local (pas data URL)
+      const shareMessage = platform === 'ios' 
+        ? `✨ Export réussi ! Choisir où sauvegarder:\n\n"${fileName}"\n\n📁 Enregistrer dans Fichiers → Documents\n☁️ iCloud/Drive → Cloud\n📧 Mail → Joindre\n📱 Messages → Partager`
+        : `✨ Export réussi ! Choisir où sauvegarder:\n\n"${fileName}"\n\n📁 Enregistrer dans fichiers → Downloads\n☁️ Drive/OneDrive → Cloud\n📱 WhatsApp → Partager`;
+        
+      await Share.share({
+        title: '📥 Exporter le fichier',
+        text: shareMessage,
+        url: cacheResult.uri,  // Utiliser l'URI local au lieu de data URL
+        dialogTitle: `📥 Télécharger ${fileName}`
+      });
      
-     console.log('🎉 Dialogue de téléchargement Android ouvert');
-     console.log('💡 L\'utilisateur peut maintenant choisir la destination:');
-     console.log('   • 📁 "Enregistrer dans les fichiers" → Downloads');  
-     console.log('   • ☁️ "Drive" → Google Drive');
-     console.log('   • 📧 "Gmail" → Joindre à un email');
-     console.log('   • 📱 "WhatsApp" → Partager via messagerie');
-     console.log('   • etc...');
+           console.log(`🎉 Dialogue de téléchargement ${platform} ouvert`);
+      console.log('💡 L\'utilisateur peut maintenant choisir la destination:');
+      
+      if (platform === 'ios') {
+        console.log('   • 📁 "Enregistrer dans Fichiers" → Documents iOS');
+        console.log('   • ☁️ "iCloud Drive" → Cloud Apple');
+        console.log('   • 📧 "Mail" → Joindre à un email');
+        console.log('   • 📱 "Messages" → Partager via iMessage');
+        console.log('   • etc...');
+      } else {
+        console.log('   • 📁 "Enregistrer dans les fichiers" → Downloads');  
+        console.log('   • ☁️ "Drive" → Google Drive');
+        console.log('   • 📧 "Gmail" → Joindre à un email');
+        console.log('   • 📱 "WhatsApp" → Partager via messagerie');
+        console.log('   • etc...');
+      }
     return; // Succès, sortir
     
   } catch (cacheError) {
