@@ -4,6 +4,15 @@ const nextConfig = {
 
   async rewrites() {
     return [
+      // Redirections pour SEO
+      {
+        source: '/robots.txt',
+        destination: '/api/robots.txt',
+      },
+      {
+        source: '/sitemap.xml',
+        destination: '/api/sitemap.xml',
+      },
       // Essai avec app.posthog.com pour les assets statiques
       {
         source: '/ingest/static/:path*',
