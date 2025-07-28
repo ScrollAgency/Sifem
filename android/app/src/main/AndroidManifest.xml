@@ -37,14 +37,19 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     
-    <!-- Permissions pour accès aux dossiers publics -->
+    <!-- Permissions pour téléchargement dans Downloads/Documents -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
                      android:maxSdkVersion="28" />
     
-    <!-- Pour Android 11+ : accès aux téléchargements -->
+    <!-- Pour Android 11+ : accès aux téléchargements - Nécessite justification pour Play Store -->
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" 
                      tools:ignore="ScopedStorage" />
+                     
+    <!-- Alternative pour Android 10+ : Accès média -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     
     <!-- Permissions de stockage uniquement pour les anciennes versions Android si nécessaire -->
     <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="28" /> -->

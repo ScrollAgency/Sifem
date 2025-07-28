@@ -11,7 +11,6 @@ interface ExportOptions {
   format?: 'pdf' | 'png';
   orientation?: 'portrait' | 'landscape';
   autoResize?: boolean;
-  autoShare?: boolean; // Contrôle si le fichier est automatiquement partagé après export
 }
 
 interface ExportToPDFProps {
@@ -20,7 +19,6 @@ interface ExportToPDFProps {
   format?: 'pdf' | 'png';
   orientation?: 'portrait' | 'landscape';
   autoResize?: boolean;
-  autoShare?: boolean; // Contrôle si le fichier est automatiquement partagé après export
   onExport?: () => void;
   className?: string;
 }
@@ -441,125 +439,106 @@ const isNativePlatform = (): boolean => {
 
 
 
-// Save file to native filesystem with optional sharing
+// Save file natively with download priority
 const saveFileNative = async (
   data: string | Blob, 
   fileName: string, 
-  mimeType: string,
-  autoShare: boolean = false
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  mimeType: string
 ): Promise<void> => {
-  try {
-    console.log('Sauvegarde native du fichier:', fileName);
-    
-    let base64Data: string;
-    
-    // Convert data to base64
-    if (data instanceof Blob) {
-      base64Data = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const result = reader.result as string;
-          // Remove data URL prefix if present
-          const base64 = result.includes(',') ? result.split(',')[1] : result;
-          resolve(base64);
-        };
-        reader.readAsDataURL(data);
-      });
-    } else {
-      // If data is already base64 string, clean it
-      base64Data = data.includes(',') ? data.split(',')[1] : data;
-    }
+  console.log('🔄 Tentative de téléchargement natif:', fileName);
+  
+  let base64Data: string;
+  
+  // Convert data to base64
+  if (data instanceof Blob) {
+    base64Data = await new Promise<string>((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        const base64 = result.includes(',') ? result.split(',')[1] : result;
+        resolve(base64);
+      };
+      reader.readAsDataURL(data);
+    });
+  } else {
+    base64Data = data.includes(',') ? data.split(',')[1] : data;
+  }
 
-    const platform = Capacitor.getPlatform();
-    let result;
+  const platform = Capacitor.getPlatform();
+  
+  // STRATÉGIE 1: Demander les permissions et tenter les dossiers publics
+  if (platform === 'android') {
+    console.log('📱 Android détecté - Vérification des permissions...');
     
-    // Stratégie de répertoires selon la plateforme pour éviter les permissions
-    const directories = platform === 'android' 
-      ? [Directory.Cache, Directory.Data]  // Android : seulement les répertoires sûrs
-      : [Directory.Documents, Directory.Cache, Directory.Data]; // iOS : Documents en premier
-    
-    let lastError: Error | null = null;
-    
-    // Essayer chaque répertoire jusqu'à ce qu'un fonctionne
-    for (let i = 0; i < directories.length; i++) {
-      const directory = directories[i];
-      
-      try {
-        console.log(`Tentative de sauvegarde dans ${directory}...`);
-        
-        result = await Filesystem.writeFile({
-          path: fileName,
-          data: base64Data,
-          directory: directory,
-          encoding: Encoding.UTF8
-        });
-        
-        console.log(`Fichier sauvegardé avec succès dans ${directory}:`, result.uri);
-        break; // Succès, sortir de la boucle
-        
-      } catch (error) {
-        lastError = error as Error;
-        console.warn(`Échec avec ${directory}:`, error);
-        
-        // Si ce n'est pas le dernier répertoire, continuer
-        if (i < directories.length - 1) {
-          continue;
-        } else {
-          // Dernière tentative échouée, propager l'erreur
-          throw lastError;
-        }
-      }
-    }
-
-    // Vérifier que nous avons bien un résultat
-    if (!result) {
-      throw new Error('Aucun répertoire accessible pour la sauvegarde');
-    }
-
-    if (autoShare) {
-      // Share the file
-      await Share.share({
-        title: 'Exporter le fichier',
-        text: `Partager ${fileName}`,
-        url: result.uri,
-        dialogTitle: 'Partager le fichier exporté'
-      });
-
-      console.log('Fichier partagé avec succès');
-    } else {
-      console.log('Fichier sauvegardé sans partage automatique:', result.uri);
-      
-      // Pour Android, afficher un toast ou notification que le fichier a été sauvegardé
-      if (Capacitor.getPlatform() === 'android') {
-        console.log(`Fichier sauvegardé dans le répertoire de l'application: ${fileName}`);
-        // Note: Pour informer l'utilisateur, vous pourriez ajouter un toast/notification ici
-      }
-    }
-  } catch (error) {
-    console.error('Erreur lors de la sauvegarde native:', error);
-    
-    // Fallback: try to share the data directly if file writing failed
     try {
-      if (data instanceof Blob) {
-        const dataUrl = await new Promise<string>((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.readAsDataURL(data);
-        });
-        
-        await Share.share({
-          title: 'Exporter le fichier',
-          text: `Partager ${fileName}`,
-          url: dataUrl,
-          dialogTitle: 'Partager le fichier exporté'
-        });
-        
-        console.log('Fichier partagé directement via URL de données (fallback)');
-      }
-    } catch (shareError) {
-      console.error('Erreur lors du partage de fallback:', shareError);
-      throw new Error(`Impossible de sauvegarder le fichier: ${error}. Partage échoué: ${shareError}`);
+      // Demander les permissions de manière explicite
+      console.log('🔐 Demande des permissions de stockage...');
+      const permissions = await Filesystem.requestPermissions();
+      console.log('📋 Statut des permissions:', permissions);
+      
+             if (permissions.publicStorage === 'granted') {
+         console.log('✅ Permissions accordées mais Android moderne bloque l\'accès direct');
+         console.log('🔄 Passage immédiat à la stratégie de partage (plus fiable)');
+       } else {
+         console.warn('⚠️ Permissions refusées ou non disponibles:', permissions.publicStorage);
+       }
+    } catch (permissionError) {
+      console.warn('❌ Erreur lors de la demande de permissions:', permissionError);
     }
+  } else if (platform === 'ios') {
+    // Pour iOS, Documents est généralement accessible
+    try {
+      const result = await Filesystem.writeFile({
+        path: fileName,
+        data: base64Data,
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8
+      });
+      
+      console.log(`✅ SUCCÈS! Fichier sauvegardé iOS:`, result.uri);
+      return;
+      
+    } catch (error) {
+      console.warn('❌ Échec sauvegarde iOS Documents:', error);
+    }
+  }
+  
+     // STRATÉGIE 2: Méthode recommandée Android moderne - Sauvegarde + Partage via URI
+   console.log('💡 Stratégie optimale Android: Sauvegarde dans cache puis partage via URI...');
+   console.log('📌 Android moderne (10+) privilégie cette approche pour la sécurité');
+  
+  try {
+    // Sauvegarder d'abord dans le cache de l'app
+    const cacheResult = await Filesystem.writeFile({
+      path: fileName,
+      data: base64Data,
+      directory: Directory.Cache,
+      encoding: Encoding.UTF8
+    });
+    
+    console.log('✅ Fichier sauvegardé dans cache temporaire:', cacheResult.uri);
+    
+         // Maintenant partager via l'URI local (pas data URL)
+     await Share.share({
+       title: '📥 Exporter le fichier',
+       text: `✨ Export réussi ! Choisir où sauvegarder:\n\n"${fileName}"\n\n📁 Enregistrer dans fichiers → Downloads\n☁️ Drive/OneDrive → Cloud\n📱 WhatsApp → Partager`,
+       url: cacheResult.uri,  // Utiliser l'URI local au lieu de data URL
+       dialogTitle: `📥 Télécharger ${fileName}`
+     });
+     
+     console.log('🎉 Dialogue de téléchargement Android ouvert');
+     console.log('💡 L\'utilisateur peut maintenant choisir la destination:');
+     console.log('   • 📁 "Enregistrer dans les fichiers" → Downloads');  
+     console.log('   • ☁️ "Drive" → Google Drive');
+     console.log('   • 📧 "Gmail" → Joindre à un email');
+     console.log('   • 📱 "WhatsApp" → Partager via messagerie');
+     console.log('   • etc...');
+    return; // Succès, sortir
+    
+  } catch (cacheError) {
+    console.error('❌ ÉCHEC TOTAL de toutes les stratégies:', cacheError);
+    throw new Error(`Impossible de télécharger le fichier. Toutes les méthodes ont échoué. Erreur: ${cacheError instanceof Error ? cacheError.message : 'Erreur inconnue'}`);
   }
 };
 
@@ -586,11 +565,10 @@ const saveFileWeb = (
 const saveFile = async (
   data: string | Blob, 
   fileName: string, 
-  mimeType: string,
-  autoShare: boolean = false
+  mimeType: string
 ): Promise<void> => {
   if (isNativePlatform()) {
-    await saveFileNative(data, fileName, mimeType, autoShare);
+    await saveFileNative(data, fileName, mimeType);
   } else {
     if (data instanceof Blob) {
       saveFileWeb(data, fileName, mimeType);
@@ -1038,8 +1016,7 @@ export const useExportToPDF = () => {
     fileName = 'export',
     format = 'pdf',
     orientation = 'portrait',
-    autoResize = true,
-    autoShare = false
+    autoResize = true
   }: ExportOptions) => {
     setIsExporting(true);
     let restoreLayout: (() => void) | null = null;
@@ -1250,7 +1227,7 @@ export const useExportToPDF = () => {
           const blob = await new Promise<Blob>((resolve) => 
             canvas.toBlob(b => resolve(b!), 'image/png')
           );
-          await saveFile(blob, `${fileName}.png`, 'image/png', autoShare);
+          await saveFile(blob, `${fileName}.png`, 'image/png');
           
           console.log('Export PNG terminé avec succès');
         } catch (pngError) {
@@ -1259,12 +1236,12 @@ export const useExportToPDF = () => {
           
           // Fallback to PDF
           const blob = pdfDoc.output('blob');
-          await saveFile(blob, `${fileName}.pdf`, 'application/pdf', autoShare);
+          await saveFile(blob, `${fileName}.pdf`, 'application/pdf');
         }
       } else {
         // Save PDF
         const blob = pdfDoc.output('blob');
-        await saveFile(blob, `${fileName}.pdf`, 'application/pdf', autoShare);
+        await saveFile(blob, `${fileName}.pdf`, 'application/pdf');
       }
       
       console.log('Export terminé avec succès');
@@ -1311,7 +1288,6 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
     format = 'pdf',
     orientation = 'portrait',
     autoResize = true,
-    autoShare = false,
     onExport,
   }, 
   ref
@@ -1326,7 +1302,6 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
       format,
       orientation,
       autoResize,
-      autoShare,
       ...options
     })
   }));

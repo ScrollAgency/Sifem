@@ -12,7 +12,8 @@ const config: CapacitorConfig = {
       enabled: true,
     },
     Filesystem: {
-      requestPermissions: true  // Maintenant qu'on a les permissions, on les demande
+      requestPermissions: true,  // Demander les permissions pour accès Downloads
+      androidRequestLegacyExternalStorage: true  // Support Android ancien
     },
     Share: {
       enabled: true
