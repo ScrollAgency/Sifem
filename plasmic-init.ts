@@ -42,7 +42,8 @@ PLASMIC.registerComponent(LocaleToggleWrapper, {
       ],
       displayName: 'Set locale'
     }
-  }
+  },
+  importPath: './components/LocaleToggleWrapper'
 });
 
 // Register ExportToPDF component with proper refActions
@@ -101,7 +102,8 @@ PLASMIC.registerComponent(ExportToPDF, {
       description: 'Trigger export of the specified elements',
       argTypes: []
     }
-  }
+  },
+  importPath: './components/ExportToPDF'
 });
 
 // Register FileList component
