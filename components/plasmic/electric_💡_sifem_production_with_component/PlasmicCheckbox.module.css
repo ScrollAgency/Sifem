@@ -1,0 +1,322 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+  min-width: 0;
+}
+.root > :global(.__wab_flex-container) {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-top: calc(0px - 2px);
+  height: calc(100% + 2px);
+}
+.root > :global(.__wab_flex-container) > *,
+.root > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.root > :global(.__wab_flex-container) > picture > img,
+.root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
+  margin-top: 2px;
+}
+.root___focusVisibleWithin {
+  outline: none;
+}
+.root:focus-within {
+  outline: none;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  background: #f5eff580;
+  min-width: 0;
+  border-radius: 16px;
+}
+.content > :global(.__wab_flex-container) {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  min-width: 0;
+  margin-top: calc(0px - 4px);
+  height: calc(100% + 4px);
+}
+.content > :global(.__wab_flex-container) > *,
+.content > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.content > :global(.__wab_flex-container) > picture > img,
+.content
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-top: 4px;
+}
+.contentisChecked {
+  background: #fce8ef;
+}
+.mainCheck {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.mainCheck > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-left: calc(0px - 16px);
+  width: calc(100% + 16px);
+}
+.mainCheck > :global(.__wab_flex-container) > *,
+.mainCheck > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.mainCheck > :global(.__wab_flex-container) > picture > img,
+.mainCheck
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: 16px;
+}
+.left {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  background: none;
+  min-width: 0;
+  padding: 16px;
+}
+.left > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-left: calc(0px - 16px);
+  width: calc(100% + 16px);
+}
+.left > :global(.__wab_flex-container) > *,
+.left > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.left > :global(.__wab_flex-container) > picture > img,
+.left > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
+  margin-left: 16px;
+}
+.leftisChecked {
+  background: none;
+}
+.leftsecond {
+  margin-left: calc(32px + 16px) !important;
+}
+.icon {
+  display: flex;
+  transition-property: all;
+  transition-duration: 0.2s;
+  align-items: center;
+  justify-content: center;
+  -webkit-transition-property: all;
+  -webkit-transition-duration: 0.2s;
+}
+.root .icon___focusVisibleWithin {
+  box-shadow: 0px 0px 0px 3px var(--token-CnD0A70p4yXh);
+  outline: none;
+  border-radius: 2px;
+}
+.root:focus-within .icon {
+  box-shadow: 0px 0px 0px 3px var(--token-CnD0A70p4yXh);
+  outline: none;
+  border-radius: 2px;
+}
+.svg__au3X1 {
+  position: relative;
+  object-fit: cover;
+  color: var(--token-L6gIeDurCV2e);
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.svgisChecked__au3X1DlbRy {
+  color: var(--token-eLV2RJqGpj53);
+}
+.svgisIndeterminate__au3X1CYx7Q {
+  color: var(--token-CnD0A70p4yXh);
+}
+.root .svg___focusVisibleWithin__au3X10Pevv {
+  outline: none;
+}
+.root:focus-within .svg__au3X1 {
+  outline: none;
+}
+.root:hover .svg__au3X1 {
+  color: var(--token-J90PnRsO1l3a);
+}
+.rootisDisabled:hover .svgisDisabled__au3X1Wn6TT {
+  color: #dbdbd7;
+}
+.rootisChecked:hover .svgisChecked__au3X1DlbRy {
+  color: var(--token-eLV2RJqGpj53);
+}
+.rootisIndeterminate:hover .svgisIndeterminate__au3X1CYx7Q {
+  color: var(--token-J90PnRsO1l3a);
+}
+.svg__aVm5G {
+  position: relative;
+  object-fit: cover;
+  color: var(--token-eLV2RJqGpj53);
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: none;
+}
+.svgisDisabled__aVm5Gwn6TT {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.svgisChecked__aVm5GdlbRy {
+  color: var(--token-eLV2RJqGpj53);
+}
+.svgisIndeterminate__aVm5GcYx7Q {
+  color: var(--token-CnD0A70p4yXh);
+}
+.root .svg___focusVisibleWithin__aVm5G0Pevv {
+  outline: none;
+}
+.root:focus-within .svg__aVm5G {
+  outline: none;
+}
+.root:hover .svg__aVm5G {
+  color: var(--token-J90PnRsO1l3a);
+}
+.rootisDisabled:hover .svgisDisabled__aVm5Gwn6TT {
+  color: #dbdbd7;
+}
+.rootisChecked:hover .svgisChecked__aVm5GdlbRy {
+  color: #0081f1;
+}
+.rootisIndeterminate:hover .svgisIndeterminate__aVm5GcYx7Q {
+  color: #0081f1;
+}
+.labelContainer {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+.root .labelContainer___focusVisibleWithin {
+  outline: none;
+}
+.root:focus-within .labelContainer {
+  outline: none;
+}
+.slotTargetChildren {
+  white-space: pre-wrap;
+}
+.slotTargetChildrensecond {
+  font-size: 14px;
+}
+.root .slotTargetChildren___focusVisibleWithin > *,
+.root .slotTargetChildren___focusVisibleWithin > :global(.__wab_slot) > *,
+.root
+  .slotTargetChildren___focusVisibleWithin
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > *,
+.root
+  .slotTargetChildren___focusVisibleWithin
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > *,
+.root .slotTargetChildren___focusVisibleWithin > picture > img,
+.root
+  .slotTargetChildren___focusVisibleWithin
+  > :global(.__wab_slot)
+  > picture
+  > img,
+.root
+  .slotTargetChildren___focusVisibleWithin
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > picture
+  > img,
+.root
+  .slotTargetChildren___focusVisibleWithin
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  outline: none;
+}
+.root:focus-within .slotTargetChildren > *,
+.root:focus-within .slotTargetChildren > :global(.__wab_slot) > *,
+.root:focus-within
+  .slotTargetChildren
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > *,
+.root:focus-within
+  .slotTargetChildren
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > *,
+.root:focus-within .slotTargetChildren > picture > img,
+.root:focus-within .slotTargetChildren > :global(.__wab_slot) > picture > img,
+.root:focus-within
+  .slotTargetChildren
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > picture
+  > img,
+.root:focus-within
+  .slotTargetChildren
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  outline: none;
+}
+.freeBox__gvmzk {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  justify-content: flex-start;
+  align-items: center;
+}
+.text__qurSj {
+  font-size: var(--token-y4LShkvNm3R9);
+}
+.img {
+  object-fit: cover;
+  max-width: 100%;
+  align-self: center;
+  margin-top: calc(16px + 4px) !important;
+  margin-right: 16px;
+  margin-bottom: 16px;
+  margin-left: 16px;
+}
+.img > picture > img {
+  object-fit: cover;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .img {
+    margin-top: calc(16px + 4px) !important;
+  }
+}
+.imgisChecked {
+  margin-top: calc(16px + 4px) !important;
+}

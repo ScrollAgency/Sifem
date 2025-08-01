@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicSifemTitleWrapper,
   DefaultSifemTitleWrapperProps
-} from "./plasmic/sifem/PlasmicSifemTitleWrapper";
+} from "./plasmic/electric_\uD83D\uDCA1_sifem_production_with_component/PlasmicSifemTitleWrapper";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined

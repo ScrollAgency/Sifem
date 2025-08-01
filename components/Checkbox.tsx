@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   PlasmicCheckbox,
   DefaultCheckboxProps
-} from "./plasmic/sifem/PlasmicCheckbox";
+} from "./plasmic/electric_\uD83D\uDCA1_sifem_production_with_component/PlasmicCheckbox";
 
 import { CheckboxRef } from "@plasmicapp/react-web";
 
