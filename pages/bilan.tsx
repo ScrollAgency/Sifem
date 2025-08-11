@@ -12,6 +12,11 @@ function Bilan() {
 
   if (loading) return <div>Chargement...</div>;
 
+  const queries = {
+    getLesions: { data: lesions },
+    getOptions: { data: options },
+  };
+
   return (
     <LocaleContextProvider value={undefined}>
       <GlobalContextsProvider>

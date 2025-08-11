@@ -43,6 +43,9 @@ const withPWAPlugin = withPWA({
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
+  fallbacks: {
+    document: '/offline.html',
+  },
 });
 
 export default withPWAPlugin(baseConfig);
