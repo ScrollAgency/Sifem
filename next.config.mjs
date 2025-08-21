@@ -2,6 +2,7 @@ import withPWA from 'next-pwa';
 
 /** @type {import('next').NextConfig} */
 const baseConfig = {
+  output: 'export',
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
@@ -35,7 +36,7 @@ const baseConfig = {
   },
 
   skipTrailingSlashRedirect: true,
-  output: 'standalone',
+  //output: 'standalone',
 };
 
 const withPWAPlugin = withPWA({

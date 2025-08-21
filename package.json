@@ -8,7 +8,11 @@
     "start": "next start -p 3007",
     "lint": "next lint",
     "build:ios": "next build && npx cap sync ios",
-    "build:android": "next build && npx cap sync android"
+    "build:android": "next build && npx cap sync android",
+    "build:static": "next build",
+    "cap:copy": "npx cap copy",
+    "cap:sync": "npx cap sync",
+    "build:native": "npm run build:static && npm run cap:copy"
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
