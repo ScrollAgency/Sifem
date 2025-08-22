@@ -1,55 +1,134 @@
-name: Build iOS
+
+name: Build iOS & Deploy Electric
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, electric_sql ]
   pull_request:
     branches: [ main ]
 
+env:
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+  NEXT_PUBLIC_PLASMIC_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_PLASMIC_PROJECT_ID }}
+  NEXT_PUBLIC_PLASMIC_PROJECT_TOKEN: ${{ secrets.NEXT_PUBLIC_PLASMIC_PROJECT_TOKEN }}
+
 jobs:
-  build-ios:
-    runs-on: macos-latest
-    
+  # build-ios:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '20'
+  #         cache: 'npm'
+  #     - name: Install dependencies
+  #       run: npm ci
+  #     - name: Build web app
+  #       run: npm run build
+  #       env:
+  #         NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  #         NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+  #         NEXT_PUBLIC_PLASMIC_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_PLASMIC_PROJECT_ID }}
+  #         NEXT_PUBLIC_PLASMIC_PROJECT_TOKEN: ${{ secrets.NEXT_PUBLIC_PLASMIC_PROJECT_TOKEN }}
+  #     - name: Install Capacitor CLI
+  #       run: npm install -g @capacitor/cli
+  #     - name: Sync Capacitor
+  #       run: npx cap sync ios
+  #     - name: Setup Xcode
+  #       uses: maxim-lobanov/setup-xcode@v1
+  #       with:
+  #         xcode-version: latest-stable
+  #     - name: Build iOS (Archive)
+  #       run: |
+  #         cd ios/App
+  #         xcodebuild archive \
+  #           -workspace App.xcworkspace \
+  #           -scheme App \
+  #           -archivePath App.xcarchive \
+  #           -configuration Release \
+  #           CODE_SIGN_STYLE=Manual
+  #     # Pour uploader vers App Store, ajoutez vos certificats dans GitHub Secrets
+  #     # - name: Export & Upload to App Store
+  #     #   env:
+  #     #     APPLE_ID: ${{ secrets.APPLE_ID }}
+  #     #     APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+  #     #   run: |
+  #     #     # Commandes d'export et upload
+
+  deploy-electric:
+    name: Deploy electric instance
+    runs-on: ubuntu-latest
+    #needs: build-ios
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
-    - name: Build web app
-      run: npm run build
-    
-    - name: Install Capacitor CLI
-      run: npm install -g @capacitor/cli
-    
-    - name: Sync Capacitor
-      run: npx cap sync ios
-    
-    - name: Setup Xcode
-      uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: latest-stable
-    
-    - name: Build iOS (Archive)
-      run: |
-        cd ios/App
-        xcodebuild archive \
-          -workspace App.xcworkspace \
-          -scheme App \
-          -archivePath App.xcarchive \
-          -configuration Release \
-          CODE_SIGN_STYLE=Manual
-    
-    # Pour uploader vers App Store, ajoutez vos certificats dans GitHub Secrets
-    # - name: Export & Upload to App Store
-    #   env:
-    #     APPLE_ID: ${{ secrets.APPLE_ID }}
-    #     APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-    #   run: |
-    #     # Commandes d'export et upload 
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts  
+      - name: Get current date and set app name
+        run: |
+          echo "date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+          echo "myapp=sifem" >> $GITHUB_ENV
+          echo "environnement=elektrionic_sifem" >> $GITHUB_ENV
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+      - name: Extract repository name in lowercase
+        id: repo_name
+        run: echo "REPO_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: ./
+          file: ./elektrionic_sifem/Dockerfile
+          tags: |
+            ghcr.io/gael-pri/${{ env.myapp }}-${{ env.environnement }}:${{ github.sha }}
+            ghcr.io/gael-pri/${{ env.myapp }}-${{ env.environnement }}:latest
+          build-args: |
+            CACHEBUST=${{ github.sha }}
+            NEXT_PUBLIC_PLASMIC_PROJECT_ID=${{ secrets.NEXT_PUBLIC_PLASMIC_PROJECT_ID }}
+            NEXT_PUBLIC_PLASMIC_PROJECT_TOKEN=${{ secrets.NEXT_PUBLIC_PLASMIC_PROJECT_TOKEN }}
+            NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      - name: Authenticate Docker on the server
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "
+            echo ${{ secrets.GHCR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          "
+      - name: Deploy Staging on vps
+        run: |
+          ssh  -o StrictHostKeyChecking=no -T ubuntu@${{ secrets.SERVER_IP }} "
+            cd ${{ env.myapp }}/${{ env.environnement }} &&
+            docker compose -f docker-compose.yml pull &&
+            docker compose -f docker-compose.yml up -d
+          "
+      - name: Clean up Docker on staging Server
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "
+            echo 'Starting Docker cleanup...' &&
+            echo 'Before cleanup:' &&
+            df -h &&
+            docker system prune -a --force &&
+            docker image prune -a --force &&
+            docker volume prune --force &&
+            docker network prune --force &&
+            echo 'After cleanup:' &&
+            df -h &&
+            echo 'Docker cleanup completed successfully.'
+          "
+    concurrency:
+      group: docker-build-${{ github.ref }}
+      cancel-in-progress: true

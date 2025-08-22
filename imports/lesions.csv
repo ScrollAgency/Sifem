@@ -1,0 +1,53 @@
+id,name_fr,name_en,category_fr,category_en,image_fr,video_fr,macro_category_fr,multi_step,next_step,previous_step,image_en,video_en,image_trauma,face,has_options
+60,Vagin / Cloison Rectovaginale,Vagina / Rectovaginal Space,Médiocentral,Mediocentral,image_fr/VaginaRVS_FR.jpg,video_fr/vagin.mp4,Profonde,false,null,null,image_en/VaginaRVS_EN.jpg,null,Cloison_rectovaginale.png,null,false
+2,Implant Péritonéal Unique,Single Peritoneal Implant,Superficielle,Superficial,null,null,null,false,null,null,null,null,null,null,false
+3,Implants Péritonéaux Multiples,Multiple Peritoneal Implants,Superficielle,Superficial,null,null,null,false,null,null,null,null,null,null,false
+11,Hématosalpinx Endométriosique,Endometriotic Hematosalpinx,Annexielle > côté gauche,Adnexal > left side,null,null,null,true,null,Annexielle > côté droit,null,null,hematosalpinx.png,gauche,false
+9,Microendométriome,Microendometrioma,Annexielle > côté gauche,Adnexal > left side,null,null,null,true,null,Annexielle > côté droit,null,null,microendometriome.png,gauche,false
+7,Kissing Ovaries,Kissing Ovaries,Superficielle,Superficial,null,null,null,false,null,null,null,null,null,null,false
+17,Hématosalpinx Endométriosique,Endometriotic Hematosalpinx,Annexielle > côté droit,Adnexal > right side,null,null,null,true,Annexielle > côté gauche,null,null,null,hematosalpinx.png,droite,false
+12,Fossette Ovarienne,Ovarian Fossa,Annexielle > côté gauche,Adnexal > left side,null,null,null,true,null,Annexielle > côté droit,null,null,fossette_ovarienne.png,gauche,false
+13,Hydrosalpinx Associé,Associated Hydrosalpinx,Annexielle > côté gauche,Adnexal > left side,null,null,null,true,null,Annexielle > côté droit,null,null,hydrosalpinx_associe.png,gauche,false
+4,Adhérence(s),Adhesion,Superficielle,Superficial,null,null,null,false,null,null,null,null,null,null,false
+21,Ligament Rond Distal,Distal Round Ligament,Antérolatéral droit,Right anterolateral,image_fr/Ligament_rond_D.jpg,video_fr/rond_distal.mp4,Profonde,true,Antérolatéral gauche,null,image_en/Ligament_rond_D.jpg,null,Ligament_rond_distal.png,droite,false
+22,Espace périvésical,Perivesical Space,Antérolatéral droit,Right anterolateral,image_fr/Espace_perivesical_D.jpg,video_fr/perivesical.mp4,Profonde,true,Antérolatéral gauche,null,image_en/Espace_perivesical_D.jpg,null,Espace_perivesical.png,droite,false
+18,Fossette Ovarienne,Ovarian Fossa,Annexielle > côté droit,Adnexal > right side,null,null,null,true,Annexielle > côté gauche,null,null,null,fossette_ovarienne.png,droite,false
+19,Hydrosalpinx Associé,Associated Hydrosalpinx,Annexielle > côté droit,Adnexal > right side,null,null,null,true,Annexielle > côté gauche,null,null,null,hydrosalpinx_associe.png,droite,false
+15,Microendométriome,Microendometrioma,Annexielle > côté droit,Adnexal > right side,null,null,null,true,Annexielle > côté gauche,null,null,null,microendometriome.png,droite,false
+52,null,null,Profonde,Deep,null,null,null,false,null,null,null,null,null,null,false
+16,Endométriome (>1 cm),Endometrioma (>1 cm),Annexielle > côté droit,Adnexal > right side,null,null,null,true,Annexielle > côté gauche,null,null,null,null,droite,true
+10,Endométriome (>1 cm),Endometrioma (>1 cm),Annexielle > côté gauche,Adnexal > left side,null,null,null,true,null,Annexielle > côté droit,null,null,null,gauche,true
+57,Faux Kyste Péritonéal,Pseudocyst Peritoneal,Superficielle,Superficial,null,null,null,false,null,null,null,null,null,null,false
+61,Myomètre Externe,Outer Myometrium,Médiocentral,Mediocentral,image_fr/rup_ea.jpg,video_fr/myom_externe.mp4,Profonde,false,null,null,image_en/rup_ea.jpg,null,null,null,false
+32,Paroi Pelvienne ML (+/- Nerf Obturateur),Pelvic Wall (including +/- Obturator Nerve),Médiolatéral gauche,Left mediolateral,image_fr/Obturateur_G.jpg,video_fr/paroi_pelvienne_ML.mp4,Profonde,true,null,Médiolatéral droit,image_en/Obturateur_G.jpg,null,Obturateur.png,gauche,false
+30,Paramètre Médiolatéral,Mediolateral Parametrium,Médiolatéral gauche,Left mediolateral,image_fr/Parametre_mediolateral_G.jpg,video_fr/parametre_ML.mp4,Profonde,true,null,Médiolatéral droit,image_en/Parametre_mediolateral_G.jpg,null,Parametre_mediolateral.png,gauche,false
+29,Paroi Pelvienne ML (+/- Nerf Obturateur),Pelvic Wall (including +/- Obturator Nerve),Médiolatéral droit,Right mediolateral,image_fr/Obturateur_D.jpg,video_fr/paroi_pelvienne_ML.mp4,Profonde,true,Médiolatéral gauche,null,image_en/Obturateur_D.jpg,null,Obturateur.png,droite,false
+53,Adénomyose Interne,Internal Adenomyosis,Pathologies associées,Associated pathologies,null,null,Profonde,null,null,null,null,null,null,null,false
+36,Paroi Pelvienne PL (+/- Nerf Sciatique),Pelvic Wall (including +/- Sciatic Nerve),Postérolatéral droit,Right posterolateral,image_fr/Sciatique_D.jpg,video_fr/Paroi_pelvienne_PL.mp4,Profonde,true,Postérolatéral gauche,null,image_en/Sciatique_D.jpg,null,Sciatique.png,droite,false
+39,"Paroi Pelvienne PL (S3, S4)","Pelvic Wall (S3, S4 levels)",Postérolatéral gauche,Left posterolateral,image_fr/Pelvic_wall_S3_S4_levels_DG.jpg,video_fr/Paroi_pelvienne_PL.mp4,Profonde,true,null,Postérolatéral droit,image_en/Pelvic_wall_S3_S4_levels_DG.jpg,null,Paroi_pelvienne_S3_S4.png,gauche,false
+34,Lame Sacro-Rectale,Sacro-Rectal Ligament,Postérolatéral droit,Right posterolateral,image_fr/Lame_D.jpg,video_fr/parametre_PL.mp4,Profonde,true,Postérolatéral gauche,null,image_en/Lame_D.jpg,null,Lame.png,droite,false
+27,Paramètre Médiolatéral,Mediolateral Parametrium,Médiolatéral droit,Right mediolateral,image_fr/Parametre_mediolateral_D.jpg,video_fr/parametre_ML.mp4,Profonde,true,Médiolatéral gauche,null,image_en/Parametre_mediolateral_D.jpg,null,Parametre_mediolateral.png,droite,false
+26,Nerf Fémoral,Femoral Nerve,Antérolatéral gauche,Left anterolateral,image_fr/Nerf_femoral_G.jpg,null,Profonde,true,null,Antérolatéral droit,image_en/Nerf_femoral_G.jpg,null,Nerf_femoral.png,gauche,false
+35,"Paroi Pelvienne PL (S3, S4)","Pelvic Wall (S3, S4 levels)",Postérolatéral droit,Right posterolateral,image_fr/Pelvic_wall_S3_S4_levels_DG.jpg,video_fr/Paroi_pelvienne_PL.mp4,Profonde,true,Postérolatéral gauche,null,image_en/Pelvic_wall_S3_S4_levels_DG.jpg,null,Paroi_pelvienne_S3_S4.png,droite,false
+23,Nerf Fémoral,Femoral Nerve,Antérolatéral droit,Right anterolateral,image_fr/Nerf_femoral_D.jpg,null,Profonde,true,Antérolatéral gauche,null,image_en/Nerf_femoral_D.jpg,null,Nerf_femoral.png,droite,false
+31,Uretère,Ureter,Médiolatéral gauche,Left mediolateral,image_fr/Uretere_DG.jpg,video_fr/uretere.mp4,Profonde,true,null,Médiolatéral droit,image_en/Uretere_DG.jpg,null,Ureter.png,gauche,false
+58,Peritoneal Pocket,Peritoneal Pocket,Superficielle,Superficial,null,null,null,false,null,null,null,null,null,null,false
+40,Paroi Pelvienne PL (+/- Nerf Sciatique),Pelvic Wall (including +/- Sciatic Nerve),Postérolatéral gauche,Left posterolateral,image_fr/Sciatique_G.jpg,video_fr/Paroi_pelvienne_PL.mp4,Profonde,true,null,Postérolatéral droit,image_en/Sciatique_G.jpg,null,Sciatique.png,gauche,false
+38,Lame Sacro-Rectale,Sacro-Rectal Ligament,Postérolatéral gauche,Left posterolateral,image_fr/Lame_G.jpg,video_fr/parametre_PL.mp4,Profonde,true,null,Postérolatéral droit,image_en/Lame_G.jpg,null,Lame.png,gauche,false
+33,LUS Distal,Distal LUS,Postérolatéral droit,Right posterolateral,image_fr/LUS_distal_D.jpg,video_fr/parametre_PL.mp4,Profonde,true,Postérolatéral gauche,null,image_en/LUS_distal_D.jpg,null,LUS_distal.png,droite,false
+25,Espace Périvésical,Perivesical Space,Antérolatéral gauche,Left anterolateral,image_fr/Espace_perivesical_G.jpg,video_fr/perivesical.mp4,Profonde,true,null,Antérolatéral droit,image_en/Espace_perivesical_G.jpg,null,Espace_perivesical.png,gauche,false
+54,Varices Pelviennes,Pelvic Congestion Syndrome,Pathologies associées,Associated pathologies,null,null,Profonde,null,null,null,null,null,null,null,false
+55,Dilatation des Cavités Pyélocalicielles,Hydronephrosis,Pathologies associées,Associated pathologies,null,null,Profonde,null,null,null,null,null,null,null,false
+37,LUS Distal,Distal LUS,Postérolatéral gauche,Left posterolateral,image_fr/LUS_distal_G.jpg,video_fr/parametre_PL.mp4,Profonde,true,null,Postérolatéral droit,image_en/LUS_distal_G.jpg,null,LUS_distal.png,gauche,false
+28,Uretère,Ureter,Médiolatéral droit,Right mediolateral,image_fr/Uretere_DG.jpg,video_fr/uretere.mp4,Profonde,true,Médiolatéral gauche,null,image_en/Uretere_DG.jpg,null,Ureter.png,droite,false
+51,Diaphragme,Diaphragm,Extrapelvien,Extrapelvic,image_fr/Diaphragme.jpg,video_fr/extra_pelvien.mp4,Profonde,false,null,null,image_en/Diaphragme.jpg,null,null,null,true
+24,Ligament Rond Distal,Distal Round Ligament,Antérolatéral gauche,Left anterolateral,image_fr/Ligament_rond_G.jpg,video_fr/rond_distal.mp4,Profonde,true,null,Antérolatéral droit,image_en/Ligament_rond_G.jpg,null,Ligament_rond_distal.png,gauche,false
+59,Malformation Utéro-Vaginale,Uterovaginal Malformation,Pathologies associées,Associated pathologies,null,null,Profonde,null,null,null,null,null,null,null,false
+48,Uretère Lombaire,Lumbar Ureter,Extrapelvien,Extrapelvic,null,video_fr/extra_pelvien.mp4,Profonde,false,null,null,null,null,Uretere_lombaire.png,null,true
+43,Torus/LUS Proximaux,Torus/Proximal Uterosacral Ligament (USL),Médiocentral,Mediocentral,image_fr/TorusUSL_FR.jpg,video_fr/LUS.mp4,Profonde,false,null,null,image_en/TorusUSL_EN.jpg,null,Lus_Proximal.png,null,true
+47,Paroi Abdominale / Région Inguinale,Abdominal Wall / Inguinal Region,Extrapelvien,Extrapelvic,image_fr/Paroi_abdominale.jpg,video_fr/extra_pelvien.mp4,Profonde,false,null,null,image_en/Paroi_abdominale.jpg,null,null,null,true
+44,Rectum/Charnière Rectosigmoïdienne,Rectum / Rectosigmoid Junction,Postérocentral,Posterocentral,image_fr/rectumRS_FR.jpg,video_fr/CRV_Mesorectum.mp4,Profonde,false,null,null,image_en/rectumRS_EN.jpg,null,Rectum.png,null,true
+46,Vessie,Bladder,Antérocentral,Anterocentral,image_fr/bladder.jpg,video_fr/vessie.mp4,Profonde,false,null,null,image_en/bladder.jpg,null,null,null,true
+50,Cæcum – Iléon – Appendice –Sigmoïde,Caecum – Ileum – Appendix – Sigmoid Colon,Extrapelvien,Extrapelvic,image_fr/caecum_ileon_appendice.jpg,video_fr/extra_pelvien.mp4,Profonde,false,null,null,image_en/caecum_ileon_appendice.jpg,null,null,null,true
+45,Ligament Rond Proximal,Proximal Round Ligament,Antérocentral,Anterocentral,image_fr/cl_prl.jpg,video_fr/rond_proximal.mp4,Profonde,false,null,null,image_en/cl_prl.jpg,null,Ligament_rond_proximal.png,null,true
+49,Nerf Pudendal,Pudendal Nerve,Extrapelvien,Extrapelvic,image_fr/Nerf_pudendal.jpg,video_fr/extra_pelvien.mp4,Profonde,false,null,null,image_en/Nerf_pudendal.jpg,null,null,null,true

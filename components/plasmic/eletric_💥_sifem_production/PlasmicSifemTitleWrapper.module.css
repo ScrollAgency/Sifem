@@ -1,0 +1,70 @@
+.mobileNavbarTiles {
+  background: rgba(245, 239, 245, 1);
+  width: 400px;
+  height: auto;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  position: relative;
+}
+.mobileNavbarTiles > :global(.__wab_flex-container) {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: calc(0px - 12px);
+  height: calc(100% + 12px);
+}
+.mobileNavbarTiles > :global(.__wab_flex-container) > *,
+.mobileNavbarTiles > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.mobileNavbarTiles > :global(.__wab_flex-container) > picture > img,
+.mobileNavbarTiles
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-top: 12px;
+}
+.frame1437253913 {
+  height: auto;
+  display: flex;
+  position: relative;
+  align-self: stretch;
+  flex-direction: column;
+}
+.frame1437253913 > :global(.__wab_flex-container) {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: calc(0px - 2px);
+  height: calc(100% + 2px);
+}
+.frame1437253913 > :global(.__wab_flex-container) > *,
+.frame1437253913 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.frame1437253913 > :global(.__wab_flex-container) > picture > img,
+.frame1437253913
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-top: 2px;
+}
+.slotTargetChildren {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(117, 72, 117, 1);
+  line-height: 100%;
+  letter-spacing: 0em;
+}
+.frame22 {
+  background: rgba(117, 72, 117, 1);
+  width: 50px;
+  height: 3px;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  border-radius: 2.884615421295166px;
+}

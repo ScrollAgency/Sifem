@@ -1,0 +1,175 @@
+.checkboxWrapper {
+  background: rgba(245, 239, 245, 0.5);
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+  border-radius: 16px;
+  padding: 16px;
+}
+.checkboxWrapper > :global(.__wab_flex-container) {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-left: calc(0px - 0px);
+  width: calc(100% + 0px);
+}
+.checkboxWrapper > :global(.__wab_flex-container) > *,
+.checkboxWrapper > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.checkboxWrapper > :global(.__wab_flex-container) > picture > img,
+.checkboxWrapper
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: 0px;
+}
+.checkboxWrapperisChecked {
+  background: var(--token-V_UHRLgC2efr);
+}
+.checkboxWrapperisChecked > :global(.__wab_flex-container) {
+  align-items: flex-start;
+  justify-content: center;
+}
+.checkboxWrapperhasMedia {
+  display: flex;
+  flex-direction: column;
+}
+.checkboxWrapperhasMedia > :global(.__wab_flex-container) {
+  flex-direction: column;
+  margin-left: calc(0px - 0px);
+  width: calc(100% + 0px);
+}
+.checkboxWrapperhasMedia > :global(.__wab_flex-container) > *,
+.checkboxWrapperhasMedia
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > *,
+.checkboxWrapperhasMedia > :global(.__wab_flex-container) > picture > img,
+.checkboxWrapperhasMedia
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: 0px;
+}
+.freeBox {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  padding: 8px;
+}
+.freeBox > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-width: 0;
+}
+.freeBoxhasMedia {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.freeBoxhasMedia > :global(.__wab_flex-container) {
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: space-between;
+  margin-left: calc(0px - 8px);
+  width: calc(100% + 8px);
+  margin-top: calc(0px - 4px);
+  height: calc(100% + 4px);
+}
+.freeBoxhasMedia > :global(.__wab_flex-container) > *,
+.freeBoxhasMedia > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBoxhasMedia > :global(.__wab_flex-container) > picture > img,
+.freeBoxhasMedia
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: 8px;
+  margin-top: 4px;
+}
+.checkbox__bnjYr:global(.__wab_instance) {
+  width: auto;
+  height: 20px;
+  position: relative;
+}
+.badge {
+  width: auto;
+  height: auto;
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.badgeBase {
+  background: rgba(236, 223, 236, 1);
+  width: auto;
+  height: auto;
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  border-radius: 16px;
+  padding: 2px 8px 2px 6px;
+}
+.badgeBase > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-left: calc(0px - 4px);
+  width: calc(100% + 4px);
+}
+.badgeBase > :global(.__wab_flex-container) > *,
+.badgeBase > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.badgeBase > :global(.__wab_flex-container) > picture > img,
+.badgeBase
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: 4px;
+}
+.svg {
+  object-fit: cover;
+  max-width: 100%;
+  color: #5f3a5f;
+  width: 12px;
+  height: 12px;
+  position: relative;
+  flex-shrink: 0;
+  display: none;
+}
+.svghasMedia {
+  display: block;
+}
+.text {
+  display: block;
+  font-size: 12px;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  letter-spacing: 0em;
+  line-height: 18px;
+  color: rgba(95, 58, 95, 1);
+  position: relative;
+}
+.image5 {
+  background: url("/plasmic/sifem/images/image6.png") center center / cover no-repeat;
+  height: 168px;
+  display: block;
+  position: relative;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+.image5hasMedia {
+  position: relative;
+  left: auto;
+  top: auto;
+  z-index: 1;
+}

@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  app:
+    image: ghcr.io/${GITHUB_ACTOR}/${PROJECT_NAME}-${PROJECT_ENVIRONNEMENT}:latest
+    container_name: ${PROJECT_NAME}-${PROJECT_ENVIRONNEMENT}
+    ports:
+      - "${PROJECT_PORT}:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    networks:
+      - sifem-network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:14
+    container_name: elektrionic-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-electric}
+      POSTGRES_USER: ${POSTGRES_USER:-electric}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-electric}
+    ports:
+      - "54322:5432"  # ← assure-toi que 54321 est libre sur le VPS
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    command:
+      - -c
+      - listen_addresses=*
+      - -c
+      - wal_level=logical
+    networks:
+      - sifem-network
+
+  electric:
+    image: electricsql/electric:1.0.20
+    container_name: electric-sync
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-electric}:${POSTGRES_PASSWORD:-electric}@postgres:5432/${POSTGRES_DB:-electric}?sslmode=disable
+      ELECTRIC_INSECURE: true
+      HTTP_PORT: 3000
+      PG_PROXY_PORT: 65432
+    ports:
+      - "5134:3000"   # ← API ElectricSQL HTTP
+    restart: unless-stopped
+    networks:
+      - sifem-network
+
+volumes:
+  pgdata:
+
+networks:
+  sifem-network:
+    external: true

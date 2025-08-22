@@ -1,0 +1,48 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+model Lesion {
+  id                Int     @id @default(autoincrement())
+  name_fr           String?
+  name_en           String?
+  category_fr       String?
+  category_en       String?
+  image_fr          String?
+  video_fr          String?
+  macro_category_fr String?
+  multi_step        Boolean?
+  next_step         String?
+  previous_step     String?
+  image_en          String?
+  video_en          String?
+  image_trauma      String?
+  face              String?
+  has_options       Boolean  @default(false)
+
+  options           Option[]
+}
+
+model Option {
+  id           Int      @id @default(autoincrement())
+  created_at   DateTime @default(now())
+  name_fr      String?
+  name_en      String?
+  lesion_id    Int?
+  image_trauma String?
+  face         String?
+
+  lesion       Lesion?  @relation(fields: [lesion_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Submission {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime? @default(now())
+}

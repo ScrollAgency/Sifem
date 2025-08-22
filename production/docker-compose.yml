@@ -1,0 +1,24 @@
+name: ${PROJECT_NAME}-${PROJECT_ENVIRONNEMENT}
+services:
+  app:
+    image: ghcr.io/${GITHUB_ACTOR}/${PROJECT_NAME}-${PROJECT_ENVIRONNEMENT}:latest
+    container_name: ${PROJECT_NAME}-${PROJECT_ENVIRONNEMENT}
+    ports:
+      - "${PROJECT_PORT}:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_PLASMIC_PROJECT_ID=${NEXT_PUBLIC_PLASMIC_PROJECT_ID}
+      - NEXT_PUBLIC_PLASMIC_PROJECT_TOKEN=${NEXT_PUBLIC_PLASMIC_PROJECT_TOKEN}
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    networks:
+      - ${PROJECT_NAME}-network
+    restart: unless-stopped
+
+networks:
+  production-sifem-network:
+    name: ${PROJECT_NAME}-network
+    driver: bridge
+    external: true

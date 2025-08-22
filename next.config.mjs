@@ -1,16 +1,19 @@
+import withPWA from 'next-pwa';
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  // output: 'web' pour webapp, output: 'export' pour exportation - push
+const baseConfig = {
   output: 'export',
+  reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   async rewrites() {
     return [
-      // Essai avec app.posthog.com pour les assets statiques
       {
         source: '/ingest/static/:path*',
         destination: 'https://app.posthog.com/static/:path*',
       },
-      // Route générale pour les autres requêtes vers EU
       {
         source: '/ingest/:path*',
         destination: 'https://eu.i.posthog.com/:path*',
@@ -32,8 +35,18 @@ const nextConfig = {
     ];
   },
 
-  // This is required to support PostHog trailing slash API requests
   skipTrailingSlashRedirect: true,
+  //output: 'standalone',
 };
 
-export default nextConfig;
+const withPWAPlugin = withPWA({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+  fallbacks: {
+    document: '/offline.html',
+  },
+});
+
+export default withPWAPlugin(baseConfig);
