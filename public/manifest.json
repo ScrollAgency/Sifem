@@ -1,10 +1,10 @@
 {
-  "name": "Sifem",
-  "short_name": "Sifem",
+  "name": "dPEI Pocket",
+  "short_name": "dPEI Pocket",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "description": "App offline avec ElectricSQL + Plasmic",
+  "description": "Évaluation de l’endométriose pelvienne profonde",
   "icons": [
     {
       "src": "favicon-16x16.png",
