@@ -12,7 +12,7 @@ RUN npm install && npm cache clean --force
 COPY . .
 
 # Build Next.js en mode static export
-RUN npm run build && npm run export
+RUN npm run build
 
 # === STAGE 2: Serveur statique ===
 FROM node:22-alpine AS runner
