@@ -4,8 +4,6 @@ name: Build iOS & Deploy Electric
 on:
   push:
     branches: [ main, electric_sql ]
-  pull_request:
-    branches: [ main ]
 
 env:
   NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -48,7 +46,8 @@ jobs:
             -scheme App \
             -archivePath App.xcarchive \
             -configuration Release \
-            CODE_SIGN_STYLE=Manual
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM=${{ secrets.DEVELOPMENT_TEAM_ID }}
       # Pour uploader vers App Store, ajoutez vos certificats dans GitHub Secrets
       # - name: Export & Upload to App Store
       #   env:
