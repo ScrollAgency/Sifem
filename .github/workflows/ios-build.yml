@@ -47,7 +47,7 @@ jobs:
             -archivePath App.xcarchive \
             -configuration Release \
             CODE_SIGN_STYLE=Manual \
-            DEVELOPMENT_TEAM=${{ secrets.DEVELOPMENT_TEAM_ID }}
+            DEVELOPMENT_TEAM=${{ secrets.DEVELOPMENT_TEAM }}
       # Pour uploader vers App Store, ajoutez vos certificats dans GitHub Secrets
       # - name: Export & Upload to App Store
       #   env:
