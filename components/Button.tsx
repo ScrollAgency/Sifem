@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   PlasmicButton,
   DefaultButtonProps
-} from "./plasmic/electric_\uD83D\uDCA1_sifem_production_with_component/PlasmicButton";
+} from "./plasmic/sifem/PlasmicButton";
 
 import {
   ButtonRef,

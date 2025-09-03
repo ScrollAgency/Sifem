@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicCheckboxWrapper,
   DefaultCheckboxWrapperProps
-} from "./plasmic/electric_\uD83D\uDCA1_sifem_production_with_component/PlasmicCheckboxWrapper";
+} from "./plasmic/sifem/PlasmicCheckboxWrapper";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined

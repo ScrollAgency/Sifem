@@ -1,15 +1,15 @@
 .root:global(.__wab_instance) {
   object-fit: cover;
   position: relative;
-  color: var(--token-1P9TXzzveWNz);
-  font-family: var(--token-AF_I7JGu0JnG);
-  font-size: var(--token-cfAy3JPjnb7j);
-  line-height: var(--token-J2x_m1XIWUMN);
+  color: var(--token-qHVRFvYBYHkg);
+  font-family: var(--token-sYchVc0L-w7r);
+  font-size: var(--token-WbhLgNRgbphP);
+  line-height: var(--token-B6X1DMeMQQi3);
 }
 .freeBox {
   display: flex;
   flex-direction: row;
-  padding: var(--token-7QFwUjhZyTmp) var(--token-ykNrz9VwUqAS);
+  padding: var(--token-NsWkyQ6bXBGk) var(--token-BArkO-InpcdJ);
 }
 .slotTargetHeader {
   font-weight: 600;

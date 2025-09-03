@@ -56,33 +56,28 @@
   height: auto;
   min-width: 0;
 }
-@media (min-width: 0px) and (max-width: 768px) {
-  .navbar:global(.__wab_instance) {
-    flex-shrink: 0;
-  }
-}
 .button:global(.__wab_instance) {
   position: relative;
   left: auto;
   top: auto;
   z-index: auto;
 }
-.svg___6TmS {
+.svg__deHos {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
-  color: var(--token-ErSfEE8gakVj);
+  color: var(--token-KofFAcidyhYp);
 }
 .text {
   padding-right: 0px;
 }
-.svg__lUmgq {
+.svg__vxhVs {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
-  color: var(--token-ErSfEE8gakVj);
+  color: var(--token-KofFAcidyhYp);
 }
 .input {
   height: auto;
@@ -142,7 +137,7 @@
 }
 .password {
   display: block;
-  font-size: var(--token-asOLFEF-ugnc);
+  font-size: var(--token-HTDiiV5z4AtB);
   font-family: "Inter", sans-serif;
   font-weight: 500;
   color: rgba(95, 58, 95, 1);

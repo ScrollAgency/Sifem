@@ -3,14 +3,7 @@
   "code": {
     "lang": "ts",
     "scheme": "blackbox",
-    "reactRuntime": "classic"
-  },
-  "style": {
-    "scheme": "css-modules",
-    "defaultStyleCssFilePath": "plasmic/plasmic__default_style.module.css"
-  },
-  "images": {
-    "scheme": "public-files",
+    "reactRuntime": "classic",
     "publicDir": "../public",
     "publicUrlPrefix": "/"
   },
@@ -20,29 +13,14 @@
   },
   "srcDir": "components",
   "defaultPlasmicDir": "./plasmic",
+  "images": {
+  "scheme": "files"
+  },
+  "style": {
+    "defaultStyleCssFilePath": "plasmic/plasmic_default_styles.module.css",
+  "scheme": "css-modules"
+  },
   "projects": [
-    {
-      "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
-      "projectApiToken": "IvzN3wRogyeRjfeLl1hqzdjIjkVBvUQXxxVMFtbbpBdxfeSyKuR8fwKkECaSQERdZAIiGsh8aXppCCjBiCYyg",
-      "projectName": "loading-boundary",
-      "version": ">0.0.0",
-      "cssFilePath": "plasmic/loading_boundary/plasmic.module.css",
-      "components": [],
-      "icons": [],
-      "images": [],
-      "indirect": true,
-      "globalContextsFilePath": "",
-      "splitsProviderFilePath": "",
-      "codeComponents": [
-        {
-          "id": "u-J0rH0B-4",
-          "name": "LoadingBoundary",
-          "displayName": "hostless-loading-boundary",
-          "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
-        }
-      ],
-      "customFunctions": []
-    },
     {
       "projectId": "jkU633o1Cz7HrJdwdxhVHk",
       "projectApiToken": "RNOKYUdvtFBrgxbf09RPjYgL9LzpnT4pIsOrtpsqlLDYBRxYynkAo8OY9YRWPdoaSnRAwOO2e5PWfuVNypw",
@@ -71,12 +49,6 @@
             "name": "tableHelpers",
             "importPath": "@plasmicpkgs/plasmic-rich-components/skinny/rich-table"
           }
-        },
-        {
-          "id": "zV8WqibK3ZnC",
-          "name": "RichDetails",
-          "displayName": "hostless-rich-details",
-          "componentImportPath": "@plasmicpkgs/plasmic-rich-components/skinny/rich-details"
         },
         {
           "id": "Hh2OL1EveIF",
@@ -1938,18 +1910,18 @@
       "projectApiToken": "FhpGISKfxRj4AzOKGmdWyyiolXDN3JGYL85guk5DlZSx7vdgbYdPqcBebkgvDViWIR5SNfzVsvjzTzqw",
       "projectName": "Eletric 💥 Sifem Production",
       "version": "latest",
-      "cssFilePath": "plasmic/eletric_💥_sifem_production/plasmic.module.css",
+  "cssFilePath": "plasmic/sifem/plasmic.module.css",
       "components": [
         {
           "id": "cW7w-bAutzKt",
           "name": "Homepage",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicHomepage.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicHomepage.tsx",
           "importSpec": {
             "modulePath": "../pages/index.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicHomepage.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicHomepage.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/"
@@ -1959,11 +1931,11 @@
           "name": "Checkbox",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicCheckbox.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicCheckbox.tsx",
           "importSpec": {
             "modulePath": "Checkbox.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicCheckbox.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicCheckbox.module.css",
           "scheme": "blackbox",
           "componentType": "component",
           "plumeType": "checkbox"
@@ -1973,11 +1945,11 @@
           "name": "Button",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicButton.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicButton.tsx",
           "importSpec": {
             "modulePath": "Button.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicButton.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicButton.module.css",
           "scheme": "blackbox",
           "componentType": "component",
           "plumeType": "button"
@@ -1987,11 +1959,11 @@
           "name": "Radio",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicRadio.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicRadio.tsx",
           "importSpec": {
             "modulePath": "Radio.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicRadio.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicRadio.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2000,11 +1972,11 @@
           "name": "Switch",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicSwitch.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicSwitch.tsx",
           "importSpec": {
             "modulePath": "Switch.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicSwitch.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicSwitch.module.css",
           "scheme": "blackbox",
           "componentType": "component",
           "plumeType": "switch"
@@ -2014,11 +1986,11 @@
           "name": "Label",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicLabel.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicLabel.tsx",
           "importSpec": {
             "modulePath": "Label.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicLabel.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicLabel.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2027,11 +1999,11 @@
           "name": "TextInput",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicTextInput.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicTextInput.tsx",
           "importSpec": {
             "modulePath": "TextInput.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicTextInput.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicTextInput.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2040,11 +2012,11 @@
           "name": "TextAreaInput",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicTextAreaInput.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicTextAreaInput.tsx",
           "importSpec": {
             "modulePath": "TextAreaInput.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicTextAreaInput.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicTextAreaInput.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2053,11 +2025,11 @@
           "name": "Description",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicDescription.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicDescription.tsx",
           "importSpec": {
             "modulePath": "Description.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicDescription.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicDescription.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2066,11 +2038,11 @@
           "name": "TextField",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicTextField.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicTextField.tsx",
           "importSpec": {
             "modulePath": "TextField.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicTextField.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicTextField.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2079,11 +2051,11 @@
           "name": "MenuItem",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicMenuItem.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicMenuItem.tsx",
           "importSpec": {
             "modulePath": "MenuItem.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicMenuItem.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicMenuItem.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2092,11 +2064,11 @@
           "name": "MenuSection",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicMenuSection.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicMenuSection.tsx",
           "importSpec": {
             "modulePath": "MenuSection.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicMenuSection.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicMenuSection.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2105,11 +2077,11 @@
           "name": "MenuPopover",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicMenuPopover.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicMenuPopover.tsx",
           "importSpec": {
             "modulePath": "MenuPopover.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicMenuPopover.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicMenuPopover.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2118,11 +2090,11 @@
           "name": "Select",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicSelect.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicSelect.tsx",
           "importSpec": {
             "modulePath": "Select.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicSelect.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicSelect.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2131,11 +2103,11 @@
           "name": "Navbar",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicNavbar.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicNavbar.tsx",
           "importSpec": {
             "modulePath": "Navbar.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicNavbar.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicNavbar.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2144,11 +2116,11 @@
           "name": "Historique",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicHistorique.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicHistorique.tsx",
           "importSpec": {
             "modulePath": "../pages/historique.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicHistorique.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicHistorique.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/historique"
@@ -2158,11 +2130,11 @@
           "name": "SifemTitleWrapper",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicSifemTitleWrapper.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicSifemTitleWrapper.tsx",
           "importSpec": {
             "modulePath": "SifemTitleWrapper.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicSifemTitleWrapper.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicSifemTitleWrapper.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2171,11 +2143,11 @@
           "name": "Tab",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicTab.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicTab.tsx",
           "importSpec": {
             "modulePath": "Tab.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicTab.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicTab.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2184,11 +2156,11 @@
           "name": "CheckboxWrapper",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicCheckboxWrapper.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicCheckboxWrapper.tsx",
           "importSpec": {
             "modulePath": "CheckboxWrapper.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicCheckboxWrapper.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicCheckboxWrapper.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2197,11 +2169,11 @@
           "name": "Dropdown",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicDropdown.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicDropdown.tsx",
           "importSpec": {
             "modulePath": "Dropdown.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicDropdown.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicDropdown.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2210,11 +2182,11 @@
           "name": "EndometriomeWrapper",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicEndometriomeWrapper.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicEndometriomeWrapper.tsx",
           "importSpec": {
             "modulePath": "EndometriomeWrapper.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicEndometriomeWrapper.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicEndometriomeWrapper.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2223,11 +2195,11 @@
           "name": "BtmNavbarTile",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicBtmNavbarTile.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicBtmNavbarTile.tsx",
           "importSpec": {
             "modulePath": "BtmNavbarTile.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicBtmNavbarTile.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicBtmNavbarTile.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2236,11 +2208,11 @@
           "name": "BtmNavbar",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicBtmNavbar.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicBtmNavbar.tsx",
           "importSpec": {
             "modulePath": "BtmNavbar.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicBtmNavbar.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicBtmNavbar.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2249,11 +2221,11 @@
           "name": "Select2",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicSelect2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicSelect2.tsx",
           "importSpec": {
             "modulePath": "Select2.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicSelect2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicSelect2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2262,11 +2234,11 @@
           "name": "MenuItem2",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicMenuItem2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicMenuItem2.tsx",
           "importSpec": {
             "modulePath": "MenuItem2.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicMenuItem2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicMenuItem2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2275,11 +2247,11 @@
           "name": "MenuSection2",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicMenuSection2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicMenuSection2.tsx",
           "importSpec": {
             "modulePath": "MenuSection2.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicMenuSection2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicMenuSection2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2288,11 +2260,11 @@
           "name": "Label2",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicLabel2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicLabel2.tsx",
           "importSpec": {
             "modulePath": "Label2.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicLabel2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicLabel2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2301,11 +2273,11 @@
           "name": "Description2",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicDescription2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicDescription2.tsx",
           "importSpec": {
             "modulePath": "Description2.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicDescription2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicDescription2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2314,11 +2286,11 @@
           "name": "MenuPopover2",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicMenuPopover2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicMenuPopover2.tsx",
           "importSpec": {
             "modulePath": "MenuPopover2.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicMenuPopover2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicMenuPopover2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2327,11 +2299,11 @@
           "name": "Lexique",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicLexique.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicLexique.tsx",
           "importSpec": {
             "modulePath": "../pages/lexique.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicLexique.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicLexique.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/lexique"
@@ -2341,11 +2313,11 @@
           "name": "Faq",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicFaq.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicFaq.tsx",
           "importSpec": {
             "modulePath": "../pages/FAQ.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicFaq.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicFaq.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/FAQ"
@@ -2355,11 +2327,11 @@
           "name": "Button2",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicButton2.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicButton2.tsx",
           "importSpec": {
             "modulePath": "Button2.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicButton2.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicButton2.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2368,11 +2340,11 @@
           "name": "Modal",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicModal.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicModal.tsx",
           "importSpec": {
             "modulePath": "Modal.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicModal.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicModal.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2381,11 +2353,11 @@
           "name": "SliderThumb",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicSliderThumb.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicSliderThumb.tsx",
           "importSpec": {
             "modulePath": "SliderThumb.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicSliderThumb.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicSliderThumb.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2394,11 +2366,11 @@
           "name": "Slider",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicSlider.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicSlider.tsx",
           "importSpec": {
             "modulePath": "Slider.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicSlider.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicSlider.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2407,11 +2379,11 @@
           "name": "Ressources",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicRessources.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicRessources.tsx",
           "importSpec": {
             "modulePath": "../pages/ressources.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicRessources.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicRessources.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/ressources"
@@ -2421,11 +2393,11 @@
           "name": "Contact",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicContact.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicContact.tsx",
           "importSpec": {
             "modulePath": "../pages/contact.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicContact.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicContact.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/contact"
@@ -2435,11 +2407,11 @@
           "name": "Bilan",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicBilan.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicBilan.tsx",
           "importSpec": {
             "modulePath": "../pages/bilan.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicBilan.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicBilan.module.css",
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/bilan"
@@ -2449,11 +2421,11 @@
           "name": "AddEndo",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicAddEndo.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicAddEndo.tsx",
           "importSpec": {
             "modulePath": "AddEndo.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicAddEndo.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicAddEndo.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2462,16 +2434,16 @@
           "name": "Endo",
           "type": "managed",
           "projectId": "sYXMYndb1v9rTXALzdZyn1",
-          "renderModuleFilePath": "plasmic/eletric_💥_sifem_production/PlasmicEndo.tsx",
+          "renderModuleFilePath": "plasmic/sifem/PlasmicEndo.tsx",
           "importSpec": {
             "modulePath": "Endo.tsx"
           },
-          "cssFilePath": "plasmic/eletric_💥_sifem_production/PlasmicEndo.module.css",
+          "cssFilePath": "plasmic/sifem/PlasmicEndo.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }
       ],
-      "icons": [
+  "icons": [
         {
           "id": "x8Hjry3cKBwC",
           "name": "IconsaxLinearHambergermenuIcon",
@@ -2623,7 +2595,7 @@
           "moduleFilePath": "plasmic/eletric_💥_sifem_production/icons/PlasmicIcon__Checkbox2Svg.tsx"
         }
       ],
-      "images": [
+  "images": [
         {
           "id": "JFn62cWZ0phh",
           "name": "image 2",
@@ -3030,10 +3002,10 @@
           "filePath": "../public/plasmic/eletric_💥_sifem_production/images/im2Jpg.jpg"
         }
       ],
-      "indirect": false,
-      "globalContextsFilePath": "plasmic/eletric_💥_sifem_production/PlasmicGlobalContextsProvider.tsx",
-      "splitsProviderFilePath": "",
-      "codeComponents": [
+  "indirect": false,
+  "globalContextsFilePath": "plasmic/sifem/PlasmicGlobalContextsProvider.tsx",
+  "splitsProviderFilePath": "",
+  "codeComponents": [
         {
           "id": "3ISvgexc41b6",
           "name": "PlasmicHead",
@@ -3065,7 +3037,7 @@
           "componentImportPath": "./components/FileList"
         }
       ],
-      "customFunctions": []
+  "customFunctions": []
     },
     {
       "projectId": "rUkVVDt4QdBYgiD2ZFMTLj",
@@ -4174,58 +4146,22 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+  "jsBundleThemes": []
     }
   ],
   "globalVariants": {
     "variantGroups": [
       {
-        "id": "11F6hgzasBpu",
-        "name": "Screen",
-        "projectId": "jdGpMnKMqZhB3E56S7s31E",
-        "contextFilePath": "plasmic/sifem/PlasmicGlobalVariant__Screen.tsx"
-      },
-      {
-        "id": "e5em0iO6JQ-Q",
-        "name": "Locale",
-        "projectId": "jdGpMnKMqZhB3E56S7s31E",
-        "contextFilePath": "plasmic/sifem/PlasmicGlobalVariant__Locale.tsx"
-      },
-      {
-        "id": "GgzDd8Lo95PQ",
-        "name": "Screen",
-        "projectId": "jND4haQkMjdpXVH9tN144R",
-        "contextFilePath": "plasmic/sifem/PlasmicGlobalVariant__Screen.tsx"
-      },
-      {
-        "id": "KemWC_IXZp7Y",
-        "name": "Locale",
-        "projectId": "jND4haQkMjdpXVH9tN144R",
-        "contextFilePath": "plasmic/sifem/PlasmicGlobalVariant__Locale.tsx"
-      },
-      {
         "id": "KAVWzF6OCVPZ",
         "name": "Screen",
         "projectId": "sYXMYndb1v9rTXALzdZyn1",
-        "contextFilePath": "plasmic/eletric_💥_sifem_production/PlasmicGlobalVariant__Screen.tsx"
+        "contextFilePath": "plasmic/sifem/PlasmicGlobalVariant__Screen.tsx"
       },
       {
         "id": "-c6F2vHxxdiZ",
         "name": "Locale",
         "projectId": "sYXMYndb1v9rTXALzdZyn1",
-        "contextFilePath": "plasmic/eletric_💥_sifem_production/PlasmicGlobalVariant__Locale.tsx"
-      },
-      {
-        "id": "VESNhdnh4FaI",
-        "name": "Screen",
-        "projectId": "rUkVVDt4QdBYgiD2ZFMTLj",
-        "contextFilePath": "plasmic/electric_💡_sifem_production_with_component/PlasmicGlobalVariant__Screen.tsx"
-      },
-      {
-        "id": "_NLkocxzfrk4",
-        "name": "Locale",
-        "projectId": "rUkVVDt4QdBYgiD2ZFMTLj",
-        "contextFilePath": "plasmic/electric_💡_sifem_production_with_component/PlasmicGlobalVariant__Locale.tsx"
+        "contextFilePath": "plasmic/sifem/PlasmicGlobalVariant__Locale.tsx"
       }
     ]
   },

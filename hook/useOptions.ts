@@ -12,7 +12,7 @@ export function useOptions(): { data: Option[]; loading: boolean } {
 
   const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
   const url = isLocalhost
-    ? "http://localhost:3000/api/proxy-electric?table=option&offset=-1"
+    ? "http://localhost:3006/api/proxy-electric?table=option&offset=-1"
     : "https://electric-sifem.agence-scroll.com/api/proxy-electric?table=option&offset=-1";
 
   useEffect(() => {

@@ -68,7 +68,7 @@
   left: 25px;
   top: 0px;
 }
-.freeBox___8PNxC {
+.freeBox__t3Zm {
   width: auto;
   height: auto;
   display: flex;
@@ -77,24 +77,24 @@
   flex-direction: column;
   padding: 2px 1px;
 }
-.freeBox___8PNxC > :global(.__wab_flex-container) {
+.freeBox__t3Zm > :global(.__wab_flex-container) {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   margin-top: calc(0px - 1px);
   height: calc(100% + 1px);
 }
-.freeBox___8PNxC > :global(.__wab_flex-container) > *,
-.freeBox___8PNxC > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox___8PNxC > :global(.__wab_flex-container) > picture > img,
-.freeBox___8PNxC
+.freeBox__t3Zm > :global(.__wab_flex-container) > *,
+.freeBox__t3Zm > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__t3Zm > :global(.__wab_flex-container) > picture > img,
+.freeBox__t3Zm
   > :global(.__wab_flex-container)
   > :global(.__wab_slot)
   > picture
   > img {
   margin-top: 1px;
 }
-.freeBox__sRvb3 {
+.freeBox__lJkqv {
   background: rgba(117, 72, 117, 1);
   width: 7px;
   height: 7px;
@@ -103,7 +103,7 @@
   flex-shrink: 0;
   border-radius: 2px;
 }
-.freeBox__kqstd {
+.freeBox__aKEwH {
   background: rgba(117, 72, 117, 1);
   width: 7px;
   height: 7px;
@@ -112,7 +112,7 @@
   flex-shrink: 0;
   border-radius: 2px;
 }
-.freeBox___1CMoE {
+.freeBox__oJtM5 {
   background: rgba(117, 72, 117, 1);
   width: 7px;
   height: 7px;
@@ -121,7 +121,7 @@
   flex-shrink: 0;
   border-radius: 2px;
 }
-.freeBox__lAtBn {
+.freeBox__dbcvh {
   width: auto;
   height: auto;
   display: flex;
@@ -131,24 +131,24 @@
   padding-top: 2px;
   padding-bottom: 2px;
 }
-.freeBox__lAtBn > :global(.__wab_flex-container) {
+.freeBox__dbcvh > :global(.__wab_flex-container) {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   margin-top: calc(0px - 1px);
   height: calc(100% + 1px);
 }
-.freeBox__lAtBn > :global(.__wab_flex-container) > *,
-.freeBox__lAtBn > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__lAtBn > :global(.__wab_flex-container) > picture > img,
-.freeBox__lAtBn
+.freeBox__dbcvh > :global(.__wab_flex-container) > *,
+.freeBox__dbcvh > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__dbcvh > :global(.__wab_flex-container) > picture > img,
+.freeBox__dbcvh
   > :global(.__wab_flex-container)
   > :global(.__wab_slot)
   > picture
   > img {
   margin-top: 1px;
 }
-.freeBox___9HTKq {
+.freeBox__wKvbn {
   background: rgba(117, 72, 117, 1);
   width: 7px;
   height: 7px;
@@ -157,7 +157,7 @@
   flex-shrink: 0;
   border-radius: 2px;
 }
-.freeBox__tu9Dl {
+.freeBox___2FizR {
   background: rgba(117, 72, 117, 1);
   width: 7px;
   height: 7px;
@@ -166,7 +166,7 @@
   flex-shrink: 0;
   border-radius: 2px;
 }
-.freeBox__zgCxJ {
+.freeBox__kmhGz {
   background: rgba(117, 72, 117, 1);
   width: 7px;
   height: 7px;
@@ -175,7 +175,7 @@
   flex-shrink: 0;
   border-radius: 2px;
 }
-.freeBox__v20An {
+.freeBox__ykKk {
   width: auto;
   height: auto;
   display: flex;
@@ -184,24 +184,24 @@
   flex-direction: column;
   padding: 2px 1px;
 }
-.freeBox__v20An > :global(.__wab_flex-container) {
+.freeBox__ykKk > :global(.__wab_flex-container) {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   margin-top: calc(0px - 1px);
   height: calc(100% + 1px);
 }
-.freeBox__v20An > :global(.__wab_flex-container) > *,
-.freeBox__v20An > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__v20An > :global(.__wab_flex-container) > picture > img,
-.freeBox__v20An
+.freeBox__ykKk > :global(.__wab_flex-container) > *,
+.freeBox__ykKk > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__ykKk > :global(.__wab_flex-container) > picture > img,
+.freeBox__ykKk
   > :global(.__wab_flex-container)
   > :global(.__wab_slot)
   > picture
   > img {
   margin-top: 1px;
 }
-.freeBox__mRu7 {
+.freeBox__kZilL {
   background: rgba(117, 72, 117, 1);
   width: 7px;
   height: 7px;
@@ -210,7 +210,7 @@
   flex-shrink: 0;
   border-radius: 2px;
 }
-.freeBox__vjUNk {
+.freeBox__wbvGu {
   background: rgba(117, 72, 117, 1);
   width: 7px;
   height: 7px;
@@ -219,7 +219,7 @@
   flex-shrink: 0;
   border-radius: 2px;
 }
-.freeBox___3MrE {
+.freeBox__kCw3 {
   background: rgba(117, 72, 117, 1);
   width: 7px;
   height: 7px;
