@@ -16,7 +16,7 @@ export function useLesions(): { data: Lesion[]; loading: boolean } {
   const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
   const url = isLocalhost
     ? "http://localhost:3000/api/proxy-electric?table=lesion&offset=-1"
-    : "https://electric-sifem.agence-scroll.com/api/proxy-electric?table=lesion&offset=-1";
+    : "https://sifem.agence-scroll.com/api/proxy-electric?table=lesion&offset=-1";
 
   useEffect(() => {
     const stream = new ShapeStream({ url });
