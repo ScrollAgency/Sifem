@@ -3,16 +3,15 @@
   position: relative;
   flex-direction: column;
   width: 100vw;
-  height: 64px;
+  height: auto;
 }
 @media (min-width: 0px) and (max-width: 768px) {
   .navbar {
     width: 100vw;
-    height: 80px;
     padding: 0px;
   }
 }
-.freeBox__x0S3T {
+.freeBox__r4VbO {
   display: flex;
   position: relative;
   flex-direction: row;
@@ -27,9 +26,9 @@
   padding: 4px;
 }
 @media (min-width: 0px) and (max-width: 768px) {
-  .freeBox__x0S3T {
+  .freeBox__r4VbO {
     display: flex;
-    height: 96px;
+    height: 120px;
     align-items: flex-end;
     flex-shrink: 0;
     padding: 24px;
@@ -47,7 +46,7 @@
     top: auto;
   }
 }
-.svg__pA2L {
+.svg__qjKoQ {
   object-fit: cover;
   max-width: 100%;
   color: #754875;
@@ -57,7 +56,7 @@
   overflow: hidden;
   flex-shrink: 0;
 }
-.navbar .svg__pA2L:hover {
+.navbar .svg__qjKoQ:hover {
   color: #b283b2;
 }
 .logo3 {
@@ -77,37 +76,37 @@
   .logo3 {
     position: absolute;
     left: 30%;
-    top: 48px;
+    top: 68px;
     right: 30%;
     width: auto;
   }
 }
-.img__alOu {
+.img__ySfyv {
   object-fit: cover;
   max-width: 160px;
 }
-.img__alOu > picture > img {
+.img__ySfyv > picture > img {
   object-fit: cover;
 }
 @media (min-width: 0px) and (max-width: 768px) {
-  .img__alOu {
+  .img__ySfyv {
     max-width: 140px;
   }
 }
-.freeBox__wJbR5 {
+.freeBox__c2Tnm {
   display: flex;
   z-index: 1;
 }
-.freeBox__wJbR5 > :global(.__wab_flex-container) {
+.freeBox__c2Tnm > :global(.__wab_flex-container) {
   justify-content: flex-end;
   align-items: center;
   margin-left: calc(0px - 4px);
   width: calc(100% + 4px);
 }
-.freeBox__wJbR5 > :global(.__wab_flex-container) > *,
-.freeBox__wJbR5 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__wJbR5 > :global(.__wab_flex-container) > picture > img,
-.freeBox__wJbR5
+.freeBox__c2Tnm > :global(.__wab_flex-container) > *,
+.freeBox__c2Tnm > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__c2Tnm > :global(.__wab_flex-container) > picture > img,
+.freeBox__c2Tnm
   > :global(.__wab_flex-container)
   > :global(.__wab_slot)
   > picture
@@ -115,7 +114,7 @@
   margin-left: 4px;
 }
 @media (min-width: 0px) and (max-width: 768px) {
-  .freeBox__wJbR5 > :global(.__wab_flex-container) {
+  .freeBox__c2Tnm > :global(.__wab_flex-container) {
     justify-content: flex-end;
     align-items: center;
     margin-left: calc(0px - 2px);
@@ -125,10 +124,10 @@
   }
 }
 @media (min-width: 0px) and (max-width: 768px) {
-  .freeBox__wJbR5 > :global(.__wab_flex-container) > *,
-  .freeBox__wJbR5 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-  .freeBox__wJbR5 > :global(.__wab_flex-container) > picture > img,
-  .freeBox__wJbR5
+  .freeBox__c2Tnm > :global(.__wab_flex-container) > *,
+  .freeBox__c2Tnm > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+  .freeBox__c2Tnm > :global(.__wab_flex-container) > picture > img,
+  .freeBox__c2Tnm
     > :global(.__wab_flex-container)
     > :global(.__wab_slot)
     > picture
@@ -150,25 +149,25 @@
   width: auto;
   display: none;
 }
-.button__q9YkY:global(.__wab_instance) {
+.button__uhy6L:global(.__wab_instance) {
   position: relative;
   left: auto;
   top: auto;
   z-index: auto;
 }
-.svg__hmD3 {
+.svg__dWndb {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
-  color: var(--token-ErSfEE8gakVj);
+  color: var(--token-KofFAcidyhYp);
 }
-.svg__aiYxs {
+.svg__ckSy {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
-  color: var(--token-ErSfEE8gakVj);
+  color: var(--token-KofFAcidyhYp);
 }
 .sideBar {
   background: rgba(245, 239, 245, 1);
@@ -237,7 +236,7 @@
     margin-right: 0px;
     margin-bottom: 0px;
     margin-left: 0px;
-    height: 49px;
+    height: 80px;
     min-width: 0;
     flex-shrink: 0;
   }
@@ -265,7 +264,7 @@
     margin-top: 0px;
   }
 }
-.svg__sM9Xk {
+.svg__u3StN {
   object-fit: cover;
   width: 24px;
   height: 24px;
@@ -273,14 +272,14 @@
   flex-shrink: 0;
 }
 @media (min-width: 0px) and (max-width: 768px) {
-  .svg__sM9Xk {
+  .svg__u3StN {
     height: 30px;
     width: 30px;
     flex-shrink: 0;
   }
 }
-.navbar .svg__sM9Xk:hover {
-  color: var(--token-Nkh8PSyJ9l_C);
+.navbar .svg__u3StN:hover {
+  color: var(--token-_AmC1SRUXP8j);
 }
 .logo4 {
   background: url("/plasmic/sifem/images/logoDPeiPocketPng.png") left auto top auto / cover repeat;
@@ -298,11 +297,11 @@
     right: auto;
   }
 }
-.img__bD3NN {
+.img___4HuMz {
   object-fit: cover;
   max-width: 160px;
 }
-.img__bD3NN > picture > img {
+.img___4HuMz > picture > img {
   object-fit: cover;
 }
 .space {
@@ -322,7 +321,7 @@
   align-items: center;
   justify-content: flex-start;
 }
-.link__gnHTf {
+.link__cuDdd {
   display: block;
   font-size: 16px;
   font-family: "Inter", sans-serif;
@@ -361,7 +360,7 @@
   > img {
   margin-top: 12px;
 }
-.link__ubUf6 {
+.link___8Hu7F {
   display: block;
   font-size: 16px;
   font-family: "Inter", sans-serif;
@@ -400,7 +399,7 @@
   > img {
   margin-top: 12px;
 }
-.link__wwTv2 {
+.link__aeCfe {
   display: block;
   font-size: 16px;
   font-family: "Inter", sans-serif;
@@ -439,7 +438,7 @@
   > img {
   margin-top: 12px;
 }
-.link__gC4G {
+.link__nx7K3 {
   position: relative;
   cursor: pointer;
   text-overflow: clip;
@@ -450,7 +449,7 @@
   font-size: 16px;
   display: block;
 }
-.linkglobal_locale_en__gC4Gy6Rt2 {
+.linkglobal_locale_en__nx7K3FhlYu {
   padding-right: 0px;
 }
 .mobileNavbarTiles5 {
@@ -464,7 +463,7 @@
   align-items: center;
   justify-content: flex-start;
 }
-.link__dvJkV {
+.link__hwP9J {
   display: block;
   font-size: 16px;
   font-family: "Inter", sans-serif;
@@ -476,7 +475,7 @@
   cursor: pointer;
   text-transform: uppercase;
 }
-.linkglobal_locale_en__dvJkVy6Rt2 {
+.linkglobal_locale_en__hwP9JfhlYu {
   text-transform: uppercase;
 }
 .mobileNavbarTiles6 {
@@ -490,7 +489,7 @@
   align-items: center;
   justify-content: flex-start;
 }
-.link__k1VHz {
+.link__ehzdg {
   display: block;
   font-size: 16px;
   font-family: "Inter", sans-serif;
@@ -502,6 +501,6 @@
   cursor: pointer;
   text-transform: uppercase;
 }
-.linkglobal_locale_en__k1VHzy6Rt2 {
+.linkglobal_locale_en__ehzdgfhlYu {
   text-transform: uppercase;
 }

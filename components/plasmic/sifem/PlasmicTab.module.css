@@ -22,7 +22,7 @@
 }
 .tabspressed {
   cursor: pointer;
-  border-bottom: 2px solid var(--token-0Wy7pzmpcU-V);
+  border-bottom: 2px solid var(--token-GdBf0S_SBiPQ);
 }
 .tabshover {
   cursor: pointer;
@@ -38,5 +38,5 @@
 }
 .slotTargetTabTitle3pressed {
   font-weight: 600;
-  color: var(--token-0Wy7pzmpcU-V);
+  color: var(--token-GdBf0S_SBiPQ);
 }

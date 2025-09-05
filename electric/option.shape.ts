@@ -1,7 +1,7 @@
 import { ShapeStream, Shape } from '@electric-sql/client';
 
 const optionStream = new ShapeStream({
-  url: 'http://localhost:5134/v1/shape',  // adapte si besoin
+  url: 'http://localhost:5133/v1/shape',  // adapte si besoin
   params: {
     table: 'option',
   },

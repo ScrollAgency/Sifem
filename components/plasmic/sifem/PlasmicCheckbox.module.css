@@ -113,6 +113,9 @@
 .leftisChecked {
   background: none;
 }
+.leftsecond {
+  margin-left: calc(32px + 16px) !important;
+}
 .icon {
   display: flex;
   transition-property: all;
@@ -123,83 +126,83 @@
   -webkit-transition-duration: 0.2s;
 }
 .root .icon___focusVisibleWithin {
-  box-shadow: 0px 0px 0px 3px var(--token-7ZwD4cy0QFxP);
+  box-shadow: 0px 0px 0px 3px var(--token-ZkfVES2bfpwc);
   outline: none;
   border-radius: 2px;
 }
 .root:focus-within .icon {
-  box-shadow: 0px 0px 0px 3px var(--token-7ZwD4cy0QFxP);
+  box-shadow: 0px 0px 0px 3px var(--token-ZkfVES2bfpwc);
   outline: none;
   border-radius: 2px;
 }
-.svg__oqZda {
+.svg__pyZf7 {
   position: relative;
   object-fit: cover;
-  color: var(--token-9suY4y4xDfNB);
+  color: var(--token-iCvpvC0n19M6);
   width: 24px;
   height: 24px;
   flex-shrink: 0;
 }
-.svgisChecked__oqZda5A53I {
-  color: var(--token-0Wy7pzmpcU-V);
+.svgisChecked__pyZf7ZHi7M {
+  color: var(--token-GdBf0S_SBiPQ);
 }
-.svgisIndeterminate__oqZdatX2PB {
-  color: var(--token-7ZwD4cy0QFxP);
+.svgisIndeterminate__pyZf7AVjo {
+  color: var(--token-ZkfVES2bfpwc);
 }
-.root .svg___focusVisibleWithin__oqZdaA7X7G {
+.root .svg___focusVisibleWithin__pyZf7J6Wp {
   outline: none;
 }
-.root:focus-within .svg__oqZda {
+.root:focus-within .svg__pyZf7 {
   outline: none;
 }
-.root:hover .svg__oqZda {
-  color: var(--token--UDwApq8o1vS);
+.root:hover .svg__pyZf7 {
+  color: var(--token-dISOsPV3WaLF);
 }
-.rootisDisabled:hover .svgisDisabled__oqZdapOlzw {
+.rootisDisabled:hover .svgisDisabled__pyZf7Uztl6 {
   color: #dbdbd7;
 }
-.rootisChecked:hover .svgisChecked__oqZda5A53I {
-  color: var(--token-0Wy7pzmpcU-V);
+.rootisChecked:hover .svgisChecked__pyZf7ZHi7M {
+  color: var(--token-GdBf0S_SBiPQ);
 }
-.rootisIndeterminate:hover .svgisIndeterminate__oqZdatX2PB {
-  color: var(--token--UDwApq8o1vS);
+.rootisIndeterminate:hover .svgisIndeterminate__pyZf7AVjo {
+  color: var(--token-dISOsPV3WaLF);
 }
-.svg___0IaqX {
+.svg__jty3W {
   position: relative;
   object-fit: cover;
-  color: var(--token-0Wy7pzmpcU-V);
+  color: var(--token-GdBf0S_SBiPQ);
   width: 24px;
   height: 24px;
   flex-shrink: 0;
   display: none;
 }
-.svgisDisabled___0IaqXpOlzw {
+.svgisDisabled__jty3Wuztl6 {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
 }
-.svgisChecked___0IaqX5A53I {
-  color: var(--token-0Wy7pzmpcU-V);
+.svgisChecked__jty3WzHi7M {
+  color: var(--token-GdBf0S_SBiPQ);
 }
-.svgisIndeterminate___0IaqXtX2PB {
-  color: var(--token-7ZwD4cy0QFxP);
+.svgisIndeterminate__jty3WaVjo {
+  color: var(--token-ZkfVES2bfpwc);
 }
-.root .svg___focusVisibleWithin___0IaqXa7X7G {
+.root .svg___focusVisibleWithin__jty3Wj6Wp {
   outline: none;
 }
-.root:focus-within .svg___0IaqX {
+.root:focus-within .svg__jty3W {
   outline: none;
 }
-.root:hover .svg___0IaqX {
-  color: var(--token--UDwApq8o1vS);
+.root:hover .svg__jty3W {
+  color: var(--token-dISOsPV3WaLF);
 }
-.rootisDisabled:hover .svgisDisabled___0IaqXpOlzw {
+.rootisDisabled:hover .svgisDisabled__jty3Wuztl6 {
   color: #dbdbd7;
 }
-.rootisChecked:hover .svgisChecked___0IaqX5A53I {
+.rootisChecked:hover .svgisChecked__jty3WzHi7M {
   color: #0081f1;
 }
-.rootisIndeterminate:hover .svgisIndeterminate___0IaqXtX2PB {
+.rootisIndeterminate:hover .svgisIndeterminate__jty3WaVjo {
   color: #0081f1;
 }
 .labelContainer {
@@ -219,6 +222,9 @@
 }
 .slotTargetChildren {
   white-space: pre-wrap;
+}
+.slotTargetChildrensecond {
+  font-size: 14px;
 }
 .root .slotTargetChildren___focusVisibleWithin > *,
 .root .slotTargetChildren___focusVisibleWithin > :global(.__wab_slot) > *,
@@ -284,12 +290,15 @@
   > img {
   outline: none;
 }
-.freeBox__cCztp {
+.freeBox__jbd2 {
   display: flex;
   flex-direction: row;
   position: relative;
   justify-content: flex-start;
   align-items: center;
+}
+.text__k974D {
+  font-size: var(--token-GskCEak5i6f_);
 }
 .img {
   object-fit: cover;
@@ -302,6 +311,11 @@
 }
 .img > picture > img {
   object-fit: cover;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .img {
+    margin-top: calc(16px + 4px) !important;
+  }
 }
 .imgisChecked {
   margin-top: calc(16px + 4px) !important;

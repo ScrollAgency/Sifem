@@ -55,12 +55,6 @@
   left: auto;
   width: 100%;
   min-width: 0;
-  flex-shrink: 0;
-}
-@media (min-width: 0px) and (max-width: 768px) {
-  .navbar:global(.__wab_instance) {
-    flex-shrink: 0;
-  }
 }
 .button:global(.__wab_instance) {
   position: relative;
@@ -68,19 +62,19 @@
   top: auto;
   z-index: auto;
 }
-.svg___8EhFo {
+.svg__aNbSh {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
-  color: var(--token-ErSfEE8gakVj);
+  color: var(--token-KofFAcidyhYp);
 }
-.svg__ubgC2 {
+.svg__dG1EJ {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
-  color: var(--token-ErSfEE8gakVj);
+  color: var(--token-KofFAcidyhYp);
 }
 .input {
   height: auto;
@@ -151,12 +145,12 @@
   color: rgba(95, 58, 95, 1);
   position: relative;
 }
-.svg___4BIAf {
+.svg___9VlN {
   object-fit: cover;
   max-width: 100%;
   height: 1em;
 }
-.svg__k8Bl7 {
+.svg__scUv {
   object-fit: cover;
   max-width: 100%;
   height: 1em;

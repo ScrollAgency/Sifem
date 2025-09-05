@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicEndo,
   DefaultEndoProps
-} from "./plasmic/eletric_\uD83D\uDCA5_sifem_production/PlasmicEndo";
+} from "./plasmic/sifem/PlasmicEndo";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined

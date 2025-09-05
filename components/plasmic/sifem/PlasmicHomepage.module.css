@@ -43,7 +43,6 @@
   right: auto;
   bottom: auto;
   max-width: 1080px;
-  padding: 8px;
 }
 @media (min-width: 0px) and (max-width: 768px) {
   .main {
@@ -59,12 +58,10 @@
 .navbar:global(.__wab_instance) {
   max-width: 1080px;
   z-index: 9999;
-  flex-shrink: 0;
 }
 @media (min-width: 0px) and (max-width: 768px) {
   .navbar:global(.__wab_instance) {
     margin-bottom: 0px;
-    flex-shrink: 0;
   }
 }
 .button2:global(.__wab_instance) {
@@ -73,22 +70,22 @@
   top: auto;
   z-index: auto;
 }
-.svg__lQp8N {
+.svg__v1Gfq {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
-  color: var(--token-ErSfEE8gakVj);
+  color: var(--token-KofFAcidyhYp);
 }
-.text__w0Wg {
+.text___9FIg1 {
   padding-right: 0px;
 }
-.svg__dJvxc {
+.svg__srw5X {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
-  color: var(--token-ErSfEE8gakVj);
+  color: var(--token-KofFAcidyhYp);
 }
 .freeBox {
   display: flex;
@@ -100,15 +97,15 @@
   top: auto;
   left: auto;
   min-width: 0;
-  padding: 4rem var(--token-PLmp-f6xIj_U) var(--token-PLmp-f6xIj_U);
+  padding: 4rem var(--token-UccAcvMe3QUi) var(--token-UccAcvMe3QUi);
 }
 .freeBox > :global(.__wab_flex-container) {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   min-width: 0;
-  margin-top: calc(0px - var(--token-PLmp-f6xIj_U));
-  height: calc(100% + var(--token-PLmp-f6xIj_U));
+  margin-top: calc(0px - var(--token-UccAcvMe3QUi));
+  height: calc(100% + var(--token-UccAcvMe3QUi));
 }
 .freeBox > :global(.__wab_flex-container) > *,
 .freeBox > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
@@ -118,11 +115,11 @@
   > :global(.__wab_slot)
   > picture
   > img {
-  margin-top: var(--token-PLmp-f6xIj_U);
+  margin-top: var(--token-UccAcvMe3QUi);
 }
 @media (min-width: 0px) and (max-width: 768px) {
   .freeBox {
-    padding: var(--token-W_1Ho_BHGfsN);
+    padding: var(--token-jyJnC9se6CRg);
   }
 }
 .text {
@@ -135,7 +132,7 @@
   width: auto;
 }
 .image1 {
-  background: url("/plasmic/sifem/images/image5.png") center center / cover no-repeat;
+  background: url("/plasmic/eletric_💥_sifem_production/images/image5.png") center center / cover no-repeat;
   width: 373px;
   height: 373px;
   display: block;
@@ -152,21 +149,21 @@
   left: auto;
   flex-shrink: 0;
 }
-.svg__bdn8Y {
+.svg__cPnYg {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
-  color: var(--token-ErSfEE8gakVj);
+  color: var(--token-KofFAcidyhYp);
 }
 .svg {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
-  color: var(--token-ErSfEE8gakVj);
+  color: var(--token-KofFAcidyhYp);
 }
-.text__jgVHu {
+.text__uh5Vz {
   position: relative;
   width: 100%;
   height: auto;
