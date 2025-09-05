@@ -1,4 +1,3 @@
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -387,9 +386,9 @@ function PlasmicBilan__RenderFunc(props: {
   }) => void;
 }) {
   const { variants, overrides, forNode, sifemData, onSubmissionChange } = props;
-  
   const { lesions, options, loading } = useData();
   
+  const cheminMap = "lesions";
 
   const args = React.useMemo(
     () =>
@@ -939,96 +938,10 @@ function PlasmicBilan__RenderFunc(props: {
     getOptions: { data: options },
   };
 
-
-  // React.useEffect(() => {
-  //   if (loading) {
-  //     $state.submissionEndometriome = [];
-  //     $state.submission = [];
-  //     $state.subSubmission = [];
-  //     return;
-  //   }
-  
-  //   if (!options || !Array.isArray(options) || !lesions || !Array.isArray(lesions)) {
-  //     $state.submissionEndometriome = [];
-  //     $state.submission = [];
-  //     $state.subSubmission = [];
-  //     return;
-  //   }
-  
-  //   const lesionIdsSet = new Set(lesions.map((l) => String(l.id)));
-  
-  //   const newSubmissionEndometriome = options.filter(
-  //     (opt) => opt.type === "endometriome"
-  //   );
-  
-  //   const newSubmission = lesions.filter((l) => l.isChecked === true);
-  
-  //   const newSubSubmission = options.filter(
-  //     (opt) =>
-  //       opt.type !== "endometriome" &&
-  //       lesionIdsSet.has(String(opt.lesion_id))
-  //   );
-  
-  //   const arraysEqual = (a = [], b = []) =>
-  //     a.length === b.length &&
-  //     a.every((item, i) => item?.id === b[i]?.id);
-  
-  //   if (!arraysEqual($state.submissionEndometriome, newSubmissionEndometriome)) {
-  //     $state.submissionEndometriome = newSubmissionEndometriome;
-  //   }
-  //   if (!arraysEqual($state.submission, newSubmission)) {
-  //     $state.submission = newSubmission;
-  //   }
-  //   if (!arraysEqual($state.subSubmission, newSubSubmission)) {
-  //     $state.subSubmission = newSubSubmission;
-  //   }
-  // }, [lesions, options, loading]);
-
-  // const new$Queries: Record<string, ReturnType<typeof usePlasmicDataOp>> = {
-  //   getLesions: usePlasmicDataOp(() => {
-  //     return {
-  //       sourceId: "nFzKFTcjnGoE1XGAaWz5EP",
-  //       opId: "5fae0ea3-f838-4045-9fde-97d5098d3a43",
-  //       userArgs: {},
-  //       cacheKey: `plasmic.$.5fae0ea3-f838-4045-9fde-97d5098d3a43.$.`,
-  //       invalidatedKeys: null,
-  //       roleId: null
-  //     };
-  //   }),
-  //   getOptions: usePlasmicDataOp(() => {
-  //     return {
-  //       sourceId: "nFzKFTcjnGoE1XGAaWz5EP",
-  //       opId: "112e3570-86ee-47b6-810b-1a4f1bf49a9a",
-  //       userArgs: {},
-  //       cacheKey: `plasmic.$.112e3570-86ee-47b6-810b-1a4f1bf49a9a.$.`,
-  //       invalidatedKeys: null,
-  //       roleId: null
-  //     };
-  //   })
-  // };
-  // if (Object.keys(new$Queries).some(k => new$Queries[k] !== $queries[k])) {
-  //   setDollarQueries(new$Queries);
-
-  //   $queries = new$Queries;
-  // }
-
-
   const globalVariants = ensureGlobalVariants({
     locale: useLocale(),
     screen: useScreenVariantskavWzF6Ocvpz()
   });
-
-  // Initialisation du state checkbox si besoin
-  React.useEffect(() => {
-    if (
-      typeof $state !== 'undefined' &&
-      !$state.checkbox &&
-      $queries?.getLesions?.data &&
-      Array.isArray($queries.getLesions.data)
-    ) {
-      $state.checkbox = $queries.getLesions.data.map(l => ({ ...l, isChecked: false }));
-    }
-  }, [$state, $queries?.getLesions?.data]);
 
   return (
     <React.Fragment>
@@ -1179,7 +1092,7 @@ function PlasmicBilan__RenderFunc(props: {
           <FileList
             data-plasmic-name={"imagePovAbdomen"}
             data-plasmic-override={overrides.imagePovAbdomen}
-            bucketPath={"image_map/image_POV_abdomen/"}
+            bucketPath={"image_POV_abdomen/"}
             className={classNames("__wab_instance", sty.imagePovAbdomen)}
             onList={async files => {
               const $steps = {};
@@ -1298,7 +1211,7 @@ function PlasmicBilan__RenderFunc(props: {
           <FileList
             data-plasmic-name={"imagePovFaceDroite"}
             data-plasmic-override={overrides.imagePovFaceDroite}
-            bucketPath={"image_map/image_POV_face-droite/"}
+            bucketPath={"image_POV_face-droite/"}
             className={classNames("__wab_instance", sty.imagePovFaceDroite)}
             onList={async files => {
               const $steps = {};
@@ -1340,7 +1253,7 @@ function PlasmicBilan__RenderFunc(props: {
           <FileList
             data-plasmic-name={"imagePovFaceGauche"}
             data-plasmic-override={overrides.imagePovFaceGauche}
-            bucketPath={"image_map/image_POV_face_gauche/"}
+            bucketPath={"image_POV_face_gauche/"}
             className={classNames("__wab_instance", sty.imagePovFaceGauche)}
             onList={async files => {
               const $steps = {};
@@ -1382,7 +1295,7 @@ function PlasmicBilan__RenderFunc(props: {
           <FileList
             data-plasmic-name={"imagePovProfil"}
             data-plasmic-override={overrides.imagePovProfil}
-            bucketPath={"image_map/image_POV_profil/"}
+            bucketPath={"image_POV_profil/"}
             className={classNames("__wab_instance", sty.imagePovProfil)}
             onList={async files => {
               const $steps = {};
@@ -1503,7 +1416,7 @@ function PlasmicBilan__RenderFunc(props: {
                     displayWidth={"auto"}
                     loading={"lazy"}
                     src={{
-                      src: "/plasmic/eletric_💥_sifem_production/images/loaderGif.gif",
+                      src: "/plasmic/sifem/images/loaderGif.gif",
                       fullWidth: 128,
                       fullHeight: 128,
                       aspectRatio: undefined
@@ -1527,7 +1440,7 @@ function PlasmicBilan__RenderFunc(props: {
                     displayWidth={"auto"}
                     loading={"lazy"}
                     src={{
-                      src: "/plasmic/eletric_💥_sifem_production/images/image1.png",
+                      src: "/plasmic/sifem/images/image1.png",
                       fullWidth: 1024,
                       fullHeight: 1024,
                       aspectRatio: undefined
@@ -3236,13 +3149,13 @@ function PlasmicBilan__RenderFunc(props: {
                         src={
                           hasVariant(globalVariants, "locale", "en")
                             ? {
-                                src: "/plasmic/eletric_💥_sifem_production/images/compartimentsEnJpg.jpg",
+                                src: "/plasmic/sifem/images/compartimentsEnJpg.jpg",
                                 fullWidth: 766,
                                 fullHeight: 726,
                                 aspectRatio: undefined
                               }
                             : {
-                                src: "/plasmic/eletric_💥_sifem_production/images/compartimentsFrJpg.jpg",
+                                src: "/plasmic/sifem/images/compartimentsFrJpg.jpg",
                                 fullWidth: 766,
                                 fullHeight: 726,
                                 aspectRatio: undefined
@@ -5050,6 +4963,8 @@ function PlasmicBilan__RenderFunc(props: {
                                 ).map((__plasmic_item_1, __plasmic_idx_1) => {
                                   const currentItem2 = __plasmic_item_1;
                                   const currentIndex2 = __plasmic_idx_1;
+                                  //const imgUrl = imagePovFaceDroite + currentItem.name_fr.replace(/ /g, "_") + ".png";
+                                  // Utiliser imgUrl dans le rendu de l'image overlay
                                   return (() => {
                                     const child$Props = {
                                       className: classNames(
@@ -5507,7 +5422,7 @@ function PlasmicBilan__RenderFunc(props: {
                       displayWidth={"auto"}
                       loading={"eager"}
                       src={{
-                        src: "/plasmic/eletric_💥_sifem_production/images/im1NewJpg6.jpg",
+                        src: "/plasmic/sifem/images/im1NewJpg6.jpg",
                         fullWidth: 480,
                         fullHeight: 480,
                         aspectRatio: undefined
@@ -5518,20 +5433,20 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          console.log("#### D : Image 1 - start - profil - 5436 ####")
+
+                          const mesLesionsD11 = $queries.getLesions.data
+                              .filter(x => $state.submission.map(y => y.id).includes(x.id))
+                              .filter(x => $state.filesProfil.map(y => y.image_trauma).includes(x.image_trauma))
+                              .map(x => x.image_trauma)
+                          console.log("D : Img 1 - Func 1 - Lésions - filesProfil - 5442", $state.submission)
                           return (
                             // lesions selected...
-                            $queries.getLesions.data
-                              .filter(x =>
-                                $state.submission.map(y => y.id).includes(x.id)
-                              )
-                              // which have filesProfil
-                              .filter(x =>
-                                $state.filesProfil
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              .map(x => x.image_trauma)
+                            $queries.getLesions.data.filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesProfil
+                            .filter(x => $state.filesProfil.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
                           );
+
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -5545,6 +5460,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("D : Img 1 - Func 1.map - traumaLesion - 5470", currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaLesion"}
@@ -5560,9 +5476,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("D : Img 1 - Func 1.map - src - 5488", cheminMap + imagePovProfil + currentItem)
                               return (
-                                imagePovProfil +
-                                currentItem
+                                cheminMap + imagePovProfil + currentItem
                               );
                             } catch (e) {
                               if (
@@ -5570,7 +5486,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -5587,24 +5503,18 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          const mesOptionsD12 = $queries.getOptions.data
+                              .filter(x => $state.subSubmission.map(y => y.id).includes(x.lesion_id) ||$state.submissionEndometriome.map(y => y.id).includes(x.id))
+                              .filter(x => $state.filesProfil.map(y => y.image_trauma).includes(x.image_trauma))
+                              .map(x => x.image_trauma)
+                          console.log("D : Img 1 - Func 2 - option - filesProfil - 5519 : ", mesOptionsD12)
+
                           return (
                             $queries.getOptions.data
                               // is selected
-                              .filter(
-                                x =>
-                                  $state.subSubmission
-                                    .map(y => y.id)
-                                    .includes(x.id) ||
-                                  $state.submissionEndometriome
-                                    .map(y => y.id)
-                                    .includes(x.id)
-                              )
+                              .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
                               // has profil images
-                              .filter(x =>
-                                $state.filesProfil
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
+                              .filter(x => $state.filesProfil.map(y => y.name).includes(x.image_trauma))
                               // map images
                               .map(x => x.image_trauma)
                           );
@@ -5621,6 +5531,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("D : Img 1 - Func 2.map - 5540", currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaOptions"}
@@ -5636,9 +5547,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("D : Img 1 - Func 2.map - src - 5556", cheminMap + imagePovProfil + currentItem)
                               return (
-                                imagePovProfil +
-                                currentItem
+                                cheminMap + imagePovProfil + currentItem
                               );
                             } catch (e) {
                               if (
@@ -5646,7 +5557,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -5678,6 +5589,7 @@ function PlasmicBilan__RenderFunc(props: {
                         : " Vue pelvienne lat\u00e9rale"}
                     </div>
                   </div>
+
                   <div
                     data-plasmic-name={"face"}
                     data-plasmic-override={overrides.face}
@@ -5700,7 +5612,7 @@ function PlasmicBilan__RenderFunc(props: {
                       displayWidth={"auto"}
                       loading={"eager"}
                       src={{
-                        src: "/plasmic/eletric_💥_sifem_production/images/im2Jpg.jpg",
+                        src: "/plasmic/sifem/images/im2Jpg.jpg",
                         fullWidth: 420,
                         fullHeight: 492,
                         aspectRatio: undefined
@@ -5711,23 +5623,20 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          console.log("#### D : Image 2 - start - face - 5628 ####")
+
+                          const mesLesionsD21 = $queries.getLesions.data.filter(x=>x.has_options == false && x.face == "droite")
+                            .filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesFaceDroit
+                            .filter(x => $state.filesFaceDroite.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
+                          console.log("D : Img 2 - Func 1 - Lésion - 5640", mesLesionsD21)
+
                           return (
                             // lesions selected...
-                            $queries.getLesions.data
-                              .filter(
-                                x =>
-                                  x.has_options == false && x.face == "droite"
-                              )
-                              .filter(x =>
-                                $state.submission.map(y => y.id).includes(x.id)
-                              )
-                              // which have filesFaceDroit
-                              .filter(x =>
-                                $state.filesFaceDroite
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              .map(x => x.image_trauma)
+                            $queries.getLesions.data.filter(x=>x.has_options == false && x.face == "droite")
+                            .filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesFaceDroit
+                            .filter(x => $state.filesFaceDroite.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
                           );
                         } catch (e) {
                           if (
@@ -5742,6 +5651,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("D : Img 2 - Func 1.map - 5662 : ", currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaLesionDroit"}
@@ -5758,9 +5668,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("D : Img 2 - Func 1.map - src - 5679 : ", cheminMap + imagePovFaceDroite + currentItem)
                               return (
-                                imagePovFaceDroite +
-                                currentItem
+                                cheminMap + imagePovFaceDroite + currentItem
                               );
                             } catch (e) {
                               if (
@@ -5768,7 +5678,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -5785,22 +5695,18 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          const mesLesionsD22 = $queries.getLesions.data.filter(x=>x.has_options == false && x.face == null)
+                            .filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesFaceDroit
+                            .filter(x => $state.filesFaceDroite.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
+                          console.log("D : Img 2 - Func 2 - Lésion - filesFaceDroite - 5711 : ", mesLesionsD22)
+
                           return (
                             // lesions selected...
-                            $queries.getLesions.data
-                              .filter(
-                                x => x.has_options == false && x.face == null
-                              )
-                              .filter(x =>
-                                $state.submission.map(y => y.id).includes(x.id)
-                              )
-                              // which have filesFaceDroit
-                              .filter(x =>
-                                $state.filesFaceDroite
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              .map(x => x.image_trauma)
+                            $queries.getLesions.data.filter(x=>x.has_options == false && x.face == null)
+                            .filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesFaceDroit
+                            .filter(x => $state.filesFaceDroite.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
                           );
                         } catch (e) {
                           if (
@@ -5815,6 +5721,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("D : Img 2 - Func 2.map - traumaLesionCentre - 5733 : ", currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaLesionCentre"}
@@ -5831,9 +5738,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("D : Img 2 - Func 2.map - src - 5750 : ", cheminMap + imagePovFaceDroite + currentItem)
                               return (
-                                imagePovFaceDroite +
-                                currentItem
+                                cheminMap + imagePovFaceDroite + currentItem
                               );
                             } catch (e) {
                               if (
@@ -5841,7 +5748,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -5858,23 +5765,17 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          const mesLesionsD23 = $queries.getLesions.data.filter(x=>x.has_options == false && x.face == "gauche")
+                            //.filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            //.filter(x => $state.filesFaceGauche.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
+                          console.log("--> D : Img 2 - Func 3 - Lésion - filesFaceGauche - 5781 : ",  $state.submission)
+
                           return (
                             // lesions selected...
-                            $queries.getLesions.data
-                              .filter(
-                                x =>
-                                  x.has_options == false && x.face == "gauche"
-                              )
-                              .filter(x =>
-                                $state.submission.map(y => y.id).includes(x.id)
-                              )
-                              // which have filesFaceGauche
-                              .filter(x =>
-                                $state.filesFaceGauche
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              .map(x => x.image_trauma)
+                            $queries.getLesions.data.filter(x=>x.has_options == false && x.face == "gauche")
+                            .filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesFaceGauche
+                            .filter(x => $state.filesFaceGauche.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
                           );
                         } catch (e) {
                           if (
@@ -5889,6 +5790,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("D : Img 2 - Func 3.map - 5804 : ", currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaLesionGauche"}
@@ -5905,9 +5807,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("D : Img 2 - Func 3.map - 5821 : ", cheminMap + imagePovFaceGauche + currentItem)
                               return (
-                                imagePovFaceGauche +
-                                currentItem
+                                cheminMap + imagePovFaceGauche + currentItem
                               );
                             } catch (e) {
                               if (
@@ -5915,7 +5817,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -5932,25 +5834,20 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
-                          return (
-                            $queries.getOptions.data
-                              .filter(x => x.face !== "gauche")
+                          const mesOptionsD24 = $queries.getOptions.data.filter(x=>x.face !=="gauche")
                               // is selected
-                              .filter(
-                                x =>
-                                  $state.subSubmission
-                                    .map(y => y.id)
-                                    .includes(x.id) ||
-                                  $state.submissionEndometriome
-                                    .map(y => y.id)
-                                    .includes(x.id)
-                              )
+                              .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
                               // has profil images
-                              .filter(x =>
-                                $state.filesFaceDroite
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
+                              .filter(x => $state.filesFaceDroite.map(y => y.name).includes(x.image_trauma))
+                              // map images
+                              .map(x => x.image_trauma)
+                          console.log("D : Img 2 - Func 4 - Options - filesFaceDroite - 5853 : ", $state.filesFaceDroite)
+                          return (
+                            $queries.getOptions.data.filter(x=>x.face !=="gauche")
+                              // is selected
+                              .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
+                              // has profil images
+                              .filter(x => $state.filesFaceDroite.map(y => y.name).includes(x.image_trauma))
                               // map images
                               .map(x => x.image_trauma)
                           );
@@ -5967,6 +5864,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("D : Img 2 - Func 4.map - 5874 : ", currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaOptionsDroite"}
@@ -5983,9 +5881,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("D : Img 2 - Func 4.map - src - 5891 : ", cheminMap + imagePovFaceDroite + currentItem)
                               return (
-                                imagePovFaceDroite +
-                                currentItem
+                               cheminMap + imagePovFaceDroite + currentItem
                               );
                             } catch (e) {
                               if (
@@ -5993,7 +5891,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -6010,25 +5908,20 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
-                          return (
-                            $queries.getOptions.data
-                              .filter(x => x.face !== "droite")
+                          const mesOptionsD25 = $queries.getOptions.data.filter(x=>x.face !=="droite")
                               // is selected
-                              .filter(
-                                x =>
-                                  $state.subSubmission
-                                    .map(y => y.id)
-                                    .includes(x.id) ||
-                                  $state.submissionEndometriome
-                                    .map(y => y.id)
-                                    .includes(x.id)
-                              )
+                              .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
                               // has profil images
-                              .filter(x =>
-                                $state.filesFaceGauche
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
+                              .filter(x => $state.filesFaceGauche.map(y => y.name).includes(x.image_trauma))
+                              // map images
+                              .map(x => x.image_trauma)
+                          console.log("D : Img 2 - Func 5 - Options - filesFaceGauche - 5922 : ", mesOptionsD25)
+                          return (
+                            $queries.getOptions.data.filter(x=>x.face !=="droite")
+                              // is selected
+                              .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
+                              // has profil images
+                              .filter(x => $state.filesFaceGauche.map(y => y.name).includes(x.image_trauma))
                               // map images
                               .map(x => x.image_trauma)
                           );
@@ -6045,6 +5938,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("D : Img 2 - Func 5.map - 5944 : ", currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaOptionsGauche"}
@@ -6061,9 +5955,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("D : Img 2 - Func 5.map - src - 5961 : ", cheminMap + imagePovFaceGauche + currentItem)
                               return (
-                                imagePovFaceGauche +
-                                currentItem
+                                cheminMap + imagePovFaceGauche + currentItem
                               );
                             } catch (e) {
                               if (
@@ -6071,7 +5965,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -6103,6 +5997,7 @@ function PlasmicBilan__RenderFunc(props: {
                         : "Vue coelioscopique"}
                     </div>
                   </div>
+
                   <div
                     data-plasmic-name={"abdo2"}
                     data-plasmic-override={overrides.abdo2}
@@ -6125,7 +6020,7 @@ function PlasmicBilan__RenderFunc(props: {
                       displayWidth={"100%"}
                       loading={"eager"}
                       src={{
-                        src: "/plasmic/eletric_💥_sifem_production/images/im3NewJpg5.jpg",
+                        src: "/plasmic/sifem/images/im3NewJpg5.jpg",
                         fullWidth: 450,
                         fullHeight: 469,
                         aspectRatio: undefined
@@ -6136,20 +6031,18 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          console.log("#### D : Image 3 - start - abdo2 - 6038 ####")
+
+                          const mesOptionsD31 = $queries.getLesions.data.filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesAbo
+                            .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
+                          console.log("D : Img 3 - Func 1 - Options - filesAbdo(off) - 6045 : ", mesOptionsD31)
+
                           return (
                             // lesions selected...
-                            $queries.getLesions.data
-                              .filter(x =>
-                                $state.submission.map(y => y.id).includes(x.id)
-                              )
-                              // which have filesAbo
-                              .filter(x =>
-                                $state.filesAbdo
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              .map(x => x.image_trauma)
-                          );
+                            $queries.getLesions.data.filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesAbo
+                            .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma));
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -6163,6 +6056,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("D : Img 3 - Func 1.map - 6068 : ", currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaLesion2"}
@@ -6178,9 +6072,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                               console.log("D : Img 3 - Func 1.map - src - 6085 : ",  cheminMap + imagePovAbdomen + currentItem)
                               return (
-                                imagePovAbdomen +
-                                currentItem
+                                cheminMap + imagePovAbdomen + currentItem
                               );
                             } catch (e) {
                               if (
@@ -6188,7 +6082,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -6205,24 +6099,17 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          const voirOptionsD32 = $queries.getOptions.data
+                            .filter(x => $state.submission.map(y => y.id).includes(x.lesion_id))
+                            .map(x => x.image_trauma).filter(Boolean)
+                          console.log("D : Img 3 - Func 2 - Options - (lesion_id) - 6115 : ",  voirOptionsD32)
+
                           return (
-                            $queries.getOptions.data
+                           $queries.getOptions.data
                               // is selected
-                              .filter(
-                                x =>
-                                  $state.subSubmission
-                                    .map(y => y.id)
-                                    .includes(x.id) ||
-                                  $state.submissionEndometriome
-                                    .map(y => y.id)
-                                    .includes(x.id)
-                              )
+                              .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
                               // has abo images
-                              .filter(x =>
-                                $state.filesAbdo
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
+                              .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma))
                               // map images
                               .map(x => x.image_trauma)
                           );
@@ -6239,6 +6126,8 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("D : Img 3 - Func 2.map - 6136 : ",  currentItem)
+
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaOptions2"}
@@ -6254,9 +6143,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("D : Img 3 - Func 2.map - src - 6153 : ",  cheminMap + imagePovAbdomen + currentItem)
                               return (
-                                imagePovAbdomen +
-                                currentItem
+                                cheminMap + imagePovAbdomen + currentItem
                               );
                             } catch (e) {
                               if (
@@ -6264,7 +6153,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -6296,6 +6185,7 @@ function PlasmicBilan__RenderFunc(props: {
                         : " Vue pelvienne lat\u00e9rale"}
                     </div>
                   </div>
+
                   <div
                     data-plasmic-name={"abdo"}
                     data-plasmic-override={overrides.abdo}
@@ -6318,7 +6208,7 @@ function PlasmicBilan__RenderFunc(props: {
                       displayWidth={"auto"}
                       loading={"eager"}
                       src={{
-                        src: "/plasmic/eletric_💥_sifem_production/images/img2Jpg.jpg",
+                        src: "/plasmic/sifem/images/img2Jpg.jpg",
                         fullWidth: 307,
                         fullHeight: 320,
                         aspectRatio: undefined
@@ -6329,19 +6219,23 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          console.log("#### D : Image 2-2 - start - abdo - 6230 ####")
+
+                          // const mesLesionsD221 = $queries.getLesions.data
+                          //     .filter(x =>$state.submission.map(y => y.id).includes(x.id))
+                          //     .filter(x => $state.filesAbdo.map(y => y.image_trauma).includes(x.image_trauma))
+                          //     .map(x => x.image_trauma)
+                          //     .filter(Boolean)
+
+                          const mesLesionsD221 = $queries.getLesions.data.filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                              // which have filesAbo
+                              .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
+                          console.log("D : Img 2-2 - Func 1 - Lésions - face G && filesFaceDroite - 6237 : ",  mesLesionsD221)
                           return (
                             // lesions selected...
-                            $queries.getLesions.data
-                              .filter(x =>
-                                $state.submission.map(y => y.id).includes(x.id)
-                              )
+                              $queries.getLesions.data.filter(x => $state.submission.map(y=>y.id).includes(x.id))
                               // which have filesAbo
-                              .filter(x =>
-                                $state.filesAbdo
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              .map(x => x.image_trauma)
+                              .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
                           );
                         } catch (e) {
                           if (
@@ -6356,6 +6250,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("D : Img 2-2 - Func 1.map - 6258 : ",  currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaLesion3"}
@@ -6372,9 +6267,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("D : Img 2-2 - Func 1.map - src - 6275 : ",  cheminMap + imagePovAbdomen + currentItem)
                               return (
-                                imagePovAbdomen +
-                                currentItem
+                                cheminMap + imagePovAbdomen + currentItem
                               );
                             } catch (e) {
                               if (
@@ -6382,7 +6277,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -6399,24 +6294,26 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          //  const voirOptions22 = $queries.getOptions.data
+                          //       .filter(x => $state.submission.map(y => y.id === x.lesion_id))
+                          //       .filter(x => $state.filesAbdo.map(y => y.image_trauma).includes(x.image_trauma))
+                          //       .map(x => x.image_trauma)
+                          //       .filter(Boolean)
+                          const mesOptionsD222 = $queries.getOptions.data
+                              // is selected
+                              .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
+                              // has abo images
+                              .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma))
+                              // map images
+                              .map(x => x.image_trauma)
+                            console.log("D : Img 2-2 - Func 2 - Options - filesAbdo - 6311 : ",  mesOptionsD222)
+
                           return (
                             $queries.getOptions.data
                               // is selected
-                              .filter(
-                                x =>
-                                  $state.subSubmission
-                                    .map(y => y.id)
-                                    .includes(x.id) ||
-                                  $state.submissionEndometriome
-                                    .map(y => y.id)
-                                    .includes(x.id)
-                              )
+                              .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
                               // has abo images
-                              .filter(x =>
-                                $state.filesAbdo
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
+                              .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma))
                               // map images
                               .map(x => x.image_trauma)
                           );
@@ -6433,6 +6330,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("D : Img 2-2 - Func 2.map - 6329 : ",  currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaOptions3"}
@@ -6449,9 +6347,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("D : Img 2-2 - Func 2.map - src - 6346 : ",  cheminMap + imagePovAbdomen + currentItem)
                               return (
-                                imagePovAbdomen +
-                                currentItem
+                                cheminMap + imagePovAbdomen + currentItem
                               );
                             } catch (e) {
                               if (
@@ -6459,7 +6357,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -6522,7 +6420,7 @@ function PlasmicBilan__RenderFunc(props: {
                       displayWidth={"auto"}
                       loading={"eager"}
                       src={{
-                        src: "/plasmic/eletric_💥_sifem_production/images/im1NewJpg5.jpg",
+                        src: "/plasmic/sifem/images/im1NewJpg5.jpg",
                         fullWidth: 546,
                         fullHeight: 545,
                         aspectRatio: undefined
@@ -6533,19 +6431,17 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          console.log("#### M : Image 1 - start profil2 - 6432 ####")
+
+                          const mesLesionsM11 = $queries.getLesions.data.filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesProfil
+                            .filter(x => $state.filesProfil.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
+                          console.log("M : Img 1 - Func 1 - Lésions - filesProfil - 6438 : ",  mesLesionsM11)
                           return (
                             // lesions selected...
-                            $queries.getLesions.data
-                              .filter(x =>
-                                $state.submission.map(y => y.id).includes(x.id)
-                              )
+                              $queries.getLesions.data.filter(x => $state.submission.map(y=>y.id).includes(x.id))
                               // which have filesProfil
-                              .filter(x =>
-                                $state.filesProfil
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              .map(x => x.image_trauma)
+                              .filter(x => $state.filesProfil.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
                           );
                         } catch (e) {
                           if (
@@ -6560,6 +6456,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("M : Img 1 - Func 1.map - traumaLesion4 - 6458 : ",  currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaLesion4"}
@@ -6575,9 +6472,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("M : Img 1 - Func 1.map - src - 6458 : ",  cheminMap + imagePovProfil + currentItem)
                               return (
-                                imagePovProfil +
-                                currentItem
+                                cheminMap + imagePovProfil + currentItem
                               );
                             } catch (e) {
                               if (
@@ -6585,7 +6482,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -6602,24 +6499,20 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          const voirOptionsM12 = $queries.getOptions.data
+                              // is selected
+                              .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
+                              // has profil images
+                              .filter(x => $state.filesProfil.map(y => y.name).includes(x.image_trauma))
+                              // map images
+                              .map(x => x.image_trauma)
+                            console.log("M : Img 1 - Func 2 - Options - filesProfil - 6505 : ",  voirOptionsM12)
                           return (
                             $queries.getOptions.data
                               // is selected
-                              .filter(
-                                x =>
-                                  $state.subSubmission
-                                    .map(y => y.id)
-                                    .includes(x.id) ||
-                                  $state.submissionEndometriome
-                                    .map(y => y.id)
-                                    .includes(x.id)
-                              )
+                              .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
                               // has profil images
-                              .filter(x =>
-                                $state.filesProfil
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
+                              .filter(x => $state.filesProfil.map(y => y.name).includes(x.image_trauma))
                               // map images
                               .map(x => x.image_trauma)
                           );
@@ -6636,6 +6529,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("M : Img 1 - Func 2.map - traumaOptions4 - 6526 : ",  currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaOptions4"}
@@ -6651,9 +6545,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("M : Img 1 - Func 2.map - src - 6542 : ",  cheminMap + imagePovProfil + currentItem)
                               return (
-                                imagePovProfil +
-                                currentItem
+                                cheminMap + imagePovProfil + currentItem
                               );
                             } catch (e) {
                               if (
@@ -6661,7 +6555,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -6693,6 +6587,7 @@ function PlasmicBilan__RenderFunc(props: {
                         : " Vue pelvienne lat\u00e9rale"}
                     </div>
                   </div>
+
                   <div
                     data-plasmic-name={"face2"}
                     data-plasmic-override={overrides.face2}
@@ -6715,7 +6610,7 @@ function PlasmicBilan__RenderFunc(props: {
                       displayWidth={"auto"}
                       loading={"eager"}
                       src={{
-                        src: "/plasmic/eletric_💥_sifem_production/images/im2Jpg.jpg",
+                        src: "/plasmic/sifem/images/im2Jpg.jpg",
                         fullWidth: 420,
                         fullHeight: 492,
                         aspectRatio: undefined
@@ -6726,24 +6621,22 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          console.log("#### M : Image 2 - start - face2 - 6619 ####")
+
+                          const lesionsDroiteM21 = $queries.getLesions.data.filter(x=>x.has_options == false && x.face == "droite")
+                            .filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesFaceDroit
+                            .filter(x => $state.filesFaceDroite.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
+
+                            console.log("M : Img 2 - Func 1 - Lésions - filesFaceDroite - 6627 : ",  lesionsDroiteM21)
                           return (
                             // lesions selected...
-                            $queries.getLesions.data
-                              .filter(
-                                x =>
-                                  x.has_options == false && x.face == "droite"
-                              )
-                              .filter(x =>
-                                $state.submission.map(y => y.id).includes(x.id)
-                              )
+                              $queries.getLesions.data.filter(x=>x.has_options == false && x.face == "droite")
+                              .filter(x => $state.submission.map(y=>y.id).includes(x.id))
                               // which have filesFaceDroit
-                              .filter(x =>
-                                $state.filesFaceDroite
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              .map(x => x.image_trauma)
+                              .filter(x => $state.filesFaceDroite.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
                           );
+                          
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -6757,6 +6650,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("M : Img 2 - Func 1.map - traumaLesionDroit2 - 6659 : ",  currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaLesionDroit2"}
@@ -6773,9 +6667,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("M : Img 2 - Func 1.map - src - 6676 : ",  cheminMap + imagePovFaceDroite + currentItem)
                               return (
-                                imagePovFaceDroite +
-                                currentItem
+                                cheminMap + imagePovFaceDroite + currentItem
                               );
                             } catch (e) {
                               if (
@@ -6783,7 +6677,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -6800,22 +6694,17 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          const mesLesionsM22 = $queries.getLesions.data.filter(x=>x.has_options == false && x.face == null)
+                            .filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesFaceDroit
+                            .filter(x => $state.filesFaceDroite.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
+                          console.log("M : Img 2 - Func 2 - Lésions - filesFaceDroite - 6709 : ",  mesLesionsM22)
                           return (
                             // lesions selected...
-                            $queries.getLesions.data
-                              .filter(
-                                x => x.has_options == false && x.face == null
-                              )
-                              .filter(x =>
-                                $state.submission.map(y => y.id).includes(x.id)
-                              )
-                              // which have filesFaceDroit
-                              .filter(x =>
-                                $state.filesFaceDroite
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              .map(x => x.image_trauma)
+                            $queries.getLesions.data.filter(x=>x.has_options == false && x.face == null)
+                            .filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesFaceDroit
+                            .filter(x => $state.filesFaceDroite.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
                           );
                         } catch (e) {
                           if (
@@ -6830,6 +6719,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("M : Img 2 - Func 2.map - traumaLesionCentre2 - 6731 : ",  currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaLesionCentre2"}
@@ -6846,9 +6736,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("M : Img 2 - Func 2.map - src - 6748 : ",  cheminMap + imagePovFaceDroite + currentItem)
                               return (
-                                imagePovFaceDroite +
-                                currentItem
+                                cheminMap + imagePovFaceDroite + currentItem
                               );
                             } catch (e) {
                               if (
@@ -6856,7 +6746,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -6873,23 +6763,17 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          const mesLesionsM23 = $queries.getLesions.data.filter(x=>x.has_options == false && x.face == "gauche")
+                            .filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesFaceGauche
+                            .filter(x => $state.filesFaceGauche.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
+                          console.log("M : Img 2 - Func 3 - Lésions - filesFaceGauche - 6781 : ",  mesLesionsM23)
                           return (
                             // lesions selected...
-                            $queries.getLesions.data
-                              .filter(
-                                x =>
-                                  x.has_options == false && x.face == "gauche"
-                              )
-                              .filter(x =>
-                                $state.submission.map(y => y.id).includes(x.id)
-                              )
-                              // which have filesFaceGauche
-                              .filter(x =>
-                                $state.filesFaceGauche
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              .map(x => x.image_trauma)
+                            $queries.getLesions.data.filter(x=>x.has_options == false && x.face == "gauche")
+                            .filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesFaceGauche
+                            .filter(x => $state.filesFaceGauche.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
                           );
                         } catch (e) {
                           if (
@@ -6904,6 +6788,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("M : Img 2 - Func 3.map - traumaLesionGauche2 - 6781 : ",  currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaLesionGauche2"}
@@ -6920,9 +6805,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("M : Img 2 - Func 3.map - src - 6820 : ",  cheminMap + imagePovFaceGauche + currentItem)
                               return (
-                                imagePovFaceGauche +
-                                currentItem
+                                cheminMap + imagePovFaceGauche + currentItem
                               );
                             } catch (e) {
                               if (
@@ -6930,7 +6815,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -6947,27 +6832,22 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          const mesOptionsM24 = $queries.getOptions.data.filter(x=>x.face !=="gauche")
+                            // is selected
+                            .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
+                            // has profil images
+                            .filter(x => $state.filesFaceDroite.map(y => y.name).includes(x.image_trauma))
+                            // map images
+                            .map(x => x.image_trauma)
+                          console.log("M : Img 2 - Func 4 - Options ! Face G - 6852 : ",  mesOptionsM24)
                           return (
-                            $queries.getOptions.data
-                              .filter(x => x.face !== "gauche")
-                              // is selected
-                              .filter(
-                                x =>
-                                  $state.subSubmission
-                                    .map(y => y.id)
-                                    .includes(x.id) ||
-                                  $state.submissionEndometriome
-                                    .map(y => y.id)
-                                    .includes(x.id)
-                              )
-                              // has profil images
-                              .filter(x =>
-                                $state.filesFaceDroite
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              // map images
-                              .map(x => x.image_trauma)
+                            $queries.getOptions.data.filter(x=>x.face !=="gauche")
+                            // is selected
+                            .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
+                            // has profil images
+                            .filter(x => $state.filesFaceDroite.map(y => y.name).includes(x.image_trauma))
+                            // map images
+                            .map(x => x.image_trauma)
                           );
                         } catch (e) {
                           if (
@@ -6982,6 +6862,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("M : Img 2 - Func 4.map - traumaOptionsDroite2 - 6874 : ",  currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaOptionsDroite2"}
@@ -6998,9 +6879,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("M : Img 2 - Func 4.map - src - 6891 : ",  cheminMap + imagePovAbdomen + currentItem)
                               return (
-                                imagePovFaceDroite +
-                                currentItem
+                                cheminMap + imagePovFaceDroite + currentItem
                               );
                             } catch (e) {
                               if (
@@ -7008,7 +6889,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -7025,27 +6906,22 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          const mesOptionsM25 = $queries.getOptions.data.filter(x=>x.face !=="droite")
+                            // is selected
+                            .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
+                            // has profil images
+                            .filter(x => $state.filesFaceGauche.map(y => y.name).includes(x.image_trauma))
+                            // map images
+                            .map(x => x.image_trauma)
+                          console.log("M : Img 2 - Func 5 - Options - Face ! D - 6923 : ",  mesOptionsM25)
                           return (
-                            $queries.getOptions.data
-                              .filter(x => x.face !== "droite")
-                              // is selected
-                              .filter(
-                                x =>
-                                  $state.subSubmission
-                                    .map(y => y.id)
-                                    .includes(x.id) ||
-                                  $state.submissionEndometriome
-                                    .map(y => y.id)
-                                    .includes(x.id)
-                              )
-                              // has profil images
-                              .filter(x =>
-                                $state.filesFaceGauche
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              // map images
-                              .map(x => x.image_trauma)
+                           $queries.getOptions.data.filter(x=>x.face !=="droite")
+                            // is selected
+                            .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
+                            // has profil images
+                            .filter(x => $state.filesFaceGauche.map(y => y.name).includes(x.image_trauma))
+                            // map images
+                            .map(x => x.image_trauma)
                           );
                         } catch (e) {
                           if (
@@ -7060,6 +6936,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("M : Img 2 - Func 5.map - traumaOptionsGauche2 - 6946 : ",  currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaOptionsGauche2"}
@@ -7076,9 +6953,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("M : Img 2 - Func 5 - src - 6963 : ",  cheminMap + imagePovAbdomen + currentItem)
                               return (
-                                imagePovFaceGauche +
-                                currentItem
+                                cheminMap + imagePovFaceGauche + currentItem
                               );
                             } catch (e) {
                               if (
@@ -7086,7 +6963,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -7140,7 +7017,7 @@ function PlasmicBilan__RenderFunc(props: {
                       displayWidth={"100%"}
                       loading={"eager"}
                       src={{
-                        src: "/plasmic/eletric_💥_sifem_production/images/im3NewJpg4.jpg",
+                        src: "/plasmic/sifem/images/im3NewJpg4.jpg",
                         fullWidth: 511,
                         fullHeight: 533,
                         aspectRatio: undefined
@@ -7151,19 +7028,17 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          console.log("#### M : Image 3 - start - abdo3 - 7038 ####")
+
+                          const mesLesionsM31 =  $queries.getLesions.data.filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesAbo
+                            .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
+                          console.log("M : Image 3 - Func 1 - Lésions - filesAbdo - 7045 : ", mesLesionsM31)
                           return (
                             // lesions selected...
-                            $queries.getLesions.data
-                              .filter(x =>
-                                $state.submission.map(y => y.id).includes(x.id)
-                              )
-                              // which have filesAbo
-                              .filter(x =>
-                                $state.filesAbdo
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              .map(x => x.image_trauma)
+                            $queries.getLesions.data.filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesAbo
+                            .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
                           );
                         } catch (e) {
                           if (
@@ -7178,6 +7053,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("M : Image 3 - Func 1.map - traumaLesion5 - 7066 : ", currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaLesion5"}
@@ -7193,9 +7069,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("M : Image 3 - Func 1.map - src - 7045 : ", cheminMap + imagePovAbdomen + currentItem)
                               return (
-                                imagePovAbdomen +
-                                currentItem
+                                cheminMap + imagePovAbdomen + currentItem
                               );
                             } catch (e) {
                               if (
@@ -7203,7 +7079,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -7220,26 +7096,22 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          const mesOptionsM32 = $queries.getOptions.data
+                            // is selected
+                            .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
+                            // has abo images
+                            .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma))
+                            // map images
+                            .map(x => x.image_trauma)
+                          console.log("M : Image 3 - Func 2 - Options - filesAbdo - 7066 : ", mesOptionsM32)
                           return (
                             $queries.getOptions.data
-                              // is selected
-                              .filter(
-                                x =>
-                                  $state.subSubmission
-                                    .map(y => y.id)
-                                    .includes(x.id) ||
-                                  $state.submissionEndometriome
-                                    .map(y => y.id)
-                                    .includes(x.id)
-                              )
-                              // has abo images
-                              .filter(x =>
-                                $state.filesAbdo
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              // map images
-                              .map(x => x.image_trauma)
+                            // is selected
+                            .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
+                            // has abo images
+                            .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma))
+                            // map images
+                            .map(x => x.image_trauma)
                           );
                         } catch (e) {
                           if (
@@ -7254,6 +7126,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("M : Image 3 - Func 2.map - traumaOptions5- 7133 : ", currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaOptions5"}
@@ -7269,9 +7142,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("M : Image 3 - Func 2.map - src - 7149 : ", cheminMap + imagePovAbdomen + currentItem)
                               return (
-                                imagePovAbdomen +
-                                currentItem
+                                cheminMap + imagePovAbdomen + currentItem
                               );
                             } catch (e) {
                               if (
@@ -7279,7 +7152,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -7333,7 +7206,7 @@ function PlasmicBilan__RenderFunc(props: {
                       displayWidth={"auto"}
                       loading={"eager"}
                       src={{
-                        src: "/plasmic/eletric_💥_sifem_production/images/img2Jpg.jpg",
+                        src: "/plasmic/sifem/images/img2Jpg.jpg",
                         fullWidth: 307,
                         fullHeight: 320,
                         aspectRatio: undefined
@@ -7344,19 +7217,17 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          console.log("#### M : Image 2 (bis) - start - abdo4 - 7223 ####")
+
+                          const mesLesionsMb21 = $queries.getLesions.data.filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesAbo
+                            .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
+                          console.log("M : Image 2b - Func 1 - Lésions - filesAbdo - 7229 : ", mesLesionsMb21)
                           return (
                             // lesions selected...
-                            $queries.getLesions.data
-                              .filter(x =>
-                                $state.submission.map(y => y.id).includes(x.id)
-                              )
-                              // which have filesAbo
-                              .filter(x =>
-                                $state.filesAbdo
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
-                              .map(x => x.image_trauma)
+                            $queries.getLesions.data.filter(x => $state.submission.map(y=>y.id).includes(x.id))
+                            // which have filesAbo
+                            .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma)).map(x => x.image_trauma)
                           );
                         } catch (e) {
                           if (
@@ -7371,6 +7242,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("M : Image 2b - Func 1.map - traumaLesion6 - 7249 : ", currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaLesion6"}
@@ -7387,9 +7259,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("M : Image 2b - Func 1.map - src - 7266 : ", cheminMap + imagePovAbdomen + currentItem)
                               return (
-                                imagePovAbdomen +
-                                currentItem
+                                cheminMap + imagePovAbdomen + currentItem
                               );
                             } catch (e) {
                               if (
@@ -7397,7 +7269,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -7414,24 +7286,20 @@ function PlasmicBilan__RenderFunc(props: {
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
+                          const mesOptionsMb22 =  $queries.getOptions.data
+                              // is selected
+                              .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
+                              // has abo images
+                              .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma))
+                              // map images
+                              .map(x => x.image_trauma)
+                          console.log("M : Image 2b - Func 2 - Options - filesAbdo - 7297 : ", mesOptionsMb22)
                           return (
                             $queries.getOptions.data
                               // is selected
-                              .filter(
-                                x =>
-                                  $state.subSubmission
-                                    .map(y => y.id)
-                                    .includes(x.id) ||
-                                  $state.submissionEndometriome
-                                    .map(y => y.id)
-                                    .includes(x.id)
-                              )
+                              .filter(x => $state.subSubmission.map(y=>y.id).includes(x.id) || $state.submissionEndometriome.map(y=>y.id).includes(x.id))
                               // has abo images
-                              .filter(x =>
-                                $state.filesAbdo
-                                  .map(y => y.name)
-                                  .includes(x.image_trauma)
-                              )
+                              .filter(x => $state.filesAbdo.map(y => y.name).includes(x.image_trauma))
                               // map images
                               .map(x => x.image_trauma)
                           );
@@ -7448,6 +7316,7 @@ function PlasmicBilan__RenderFunc(props: {
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
+                      console.log("M : Image 2b - Func 2.map - traumaOptions6 - 7317 : ", currentItem)
                       return (
                         <PlasmicImg__
                           data-plasmic-name={"traumaOptions6"}
@@ -7464,9 +7333,9 @@ function PlasmicBilan__RenderFunc(props: {
                           key={currentIndex}
                           src={(() => {
                             try {
+                              console.log("M : Image 2b - Func 2.map - src - 7334 : ", cheminMap + imagePovAbdomen + currentItem)
                               return (
-                                imagePovAbdomen +
-                                currentItem
+                                cheminMap + imagePovAbdomen + currentItem
                               );
                             } catch (e) {
                               if (
@@ -7474,7 +7343,7 @@ function PlasmicBilan__RenderFunc(props: {
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
                                 return {
-                                  src: "/plasmic/eletric_💥_sifem_production/images/sagPlexusJpg.jpg",
+                                  src: "/plasmic/sifem/images/sagPlexusJpg.jpg",
                                   fullWidth: 1410,
                                   fullHeight: 1410,
                                   aspectRatio: undefined
@@ -7553,7 +7422,7 @@ function PlasmicBilan__RenderFunc(props: {
                         displayWidth={"auto"}
                         loading={"eager"}
                         src={{
-                          src: "/plasmic/eletric_💥_sifem_production/images/logoSifem160X1601Png.png",
+                          src: "/plasmic/sifem/images/logoSifem160X1601Png.png",
                           fullWidth: 200,
                           fullHeight: 200,
                           aspectRatio: undefined
@@ -7676,7 +7545,7 @@ function PlasmicBilan__RenderFunc(props: {
                         displayWidth={"auto"}
                         loading={"eager"}
                         src={{
-                          src: "/plasmic/eletric_💥_sifem_production/images/image111Png.png",
+                          src: "/plasmic/sifem/images/image111Png.png",
                           fullWidth: 160,
                           fullHeight: 160,
                           aspectRatio: undefined

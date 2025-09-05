@@ -2,6 +2,7 @@
 
 import { forwardRef, useCallback, useImperativeHandle, ForwardRefRenderFunction } from 'react';
 import { useData } from '@/contexts/DataContext';
+import { useEffect, useState } from 'react';
 
 interface FileObject {
   name: string;
@@ -16,6 +17,8 @@ interface FileListProps {
   bucketPath?: string;
   onList?: (files: FileObject[]) => void;
   onError?: (error: Error) => void;
+  sourceType?: 'lesions' | 'options';
+  [key: string]: any;
 }
 
 export interface FileListRef {
@@ -23,17 +26,21 @@ export interface FileListRef {
 }
 
 const FileListComponent: ForwardRefRenderFunction<FileListRef, FileListProps> = (
-  { bucketPath = '', onList, onError },
+  props,
   ref
 ) => {
+  const { bucketPath = '', onList, onError, ...rest } = props;
+  const { lesions, options, loading } = useData();
+  const [apiFiles, setApiFiles] = useState<FileObject[] | null>(null);
 
-  const { lesions, loading } = useData();
-
-  const listFiles = useCallback(async (options?: { path?: string }) => {
+  const listFiles = useCallback(async (optionsArg?: { path?: string }) => {
     try {
-      // Ici, on ignore path/bucketPath, on retourne toutes les lesions
-      if (loading) throw new Error('Data is still loading');
-      const files = lesions || [];
+      const path = optionsArg?.path || bucketPath;
+      // Appel API Next.js pour lister les fichiers locaux
+      const res = await fetch(`/api/list-images?dir=${encodeURIComponent(path)}`);
+      if (!res.ok) throw new Error('API error');
+      const files = await res.json();
+      setApiFiles(files);
       onList?.(files as FileObject[]);
       return files as FileObject[];
     } catch (error) {
@@ -41,14 +48,16 @@ const FileListComponent: ForwardRefRenderFunction<FileListRef, FileListProps> = 
       onError?.(err);
       throw err;
     }
-  }, [lesions, loading, onList, onError]);
+  }, [bucketPath, onList, onError]);
 
   // Expose the listFiles function via ref
   useImperativeHandle(ref, () => ({
     listFiles
   }));
 
-  // Component doesn't render anything
+
+  // Suppression du déclenchement automatique pour éviter la boucle infinie
+
   return null;
 };
 

@@ -295,7 +295,7 @@ function PlasmicNavbar__RenderFunc(props: {
             displayWidth={"auto"}
             loading={"lazy"}
             src={{
-              src: "/plasmic/eletric_💥_sifem_production/images/logoDPeiPocketPng.png",
+              src: "/plasmic/sifem/images/logoDPeiPocketPng.png",
               fullWidth: 811,
               fullHeight: 86,
               aspectRatio: undefined
@@ -637,7 +637,7 @@ function PlasmicNavbar__RenderFunc(props: {
                 displayWidth={"auto"}
                 loading={"lazy"}
                 src={{
-                  src: "/plasmic/eletric_💥_sifem_production/images/logoDPeiPocketPng.png",
+                  src: "/plasmic/sifem/images/logoDPeiPocketPng.png",
                   fullWidth: 811,
                   fullHeight: 86,
                   aspectRatio: undefined

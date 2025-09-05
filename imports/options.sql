@@ -11,7 +11,7 @@ CREATE TABLE option (
 INSERT INTO option (id, created_at, name_fr, name_en, lesion_id, image_trauma, face) VALUES
 (11, '2025-05-26 14:41:43.544634+00', 'Gauche', 'Left', 45, 'Ligament_rond_proximal.png', 'gauche'),
 (14, '2025-05-26 14:41:43.544634+00', 'Base', 'Basis', 46, 'Vessie_base.png', NULL),
-(16, '2025-05-26 14:41:43.544634+00', 'Gauche', 'Left', 47, NULL, 'gauche'),
+(16, '2025-05-26 14:41:43.544634+00', 'Gauche', 'Left', 47, '', 'gauche'),
 (18, '2025-05-26 14:41:43.544634+00', 'Gauche', 'Left', 48, 'Uretere_lombaire_G.png', 'gauche'),
 (9, '2025-05-26 14:41:43.544634+00', 'Charnière rectosigmoïdienne', 'Rectosigmoid junction', 44, 'Rectum_RS_jct.png', NULL),
 (20, '2025-05-26 14:41:43.544634+00', 'Gauche', 'Left', 49, NULL, 'gauche'),
@@ -29,6 +29,8 @@ INSERT INTO option (id, created_at, name_fr, name_en, lesion_id, image_trauma, f
 (12, '2025-05-26 14:41:43.544634+00', 'Dôme', 'Dome', 46, 'Vessie_dome.png', NULL),
 (21, '2025-05-26 14:41:43.544634+00', 'Cæcum', 'Caecum', 50, 'CAECUM.png', NULL),
 (4, '2025-05-26 14:41:43.544634+00', 'Torus', 'Torus', 43, 'Torus.png', NULL),
+(42, '2025-05-26 14:41:43.544634+00', 'LUS droit', 'Right USL', 43, 'Lus_Proximal.png', 'droite'),
+(43, '2025-05-26 14:41:43.544634+00', 'LUS gauche', 'Left USL', 43, 'Lus_Proximal.png', 'gauche'),
 (27, '2025-05-27 11:55:01.261558+00', '1 cm', '1 cm', 10, 'endometriome (_1cm).png', 'gauche'),
 (28, '2025-05-27 11:55:01.261558+00', '2 cm', '2 cm', 10, 'endometriome (_2cm).png', 'gauche'),
 (33, '2025-05-27 11:55:01.261558+00', '>10 cm', '>10 cm', 10, 'endometriome (_10cm).png', 'gauche'),
@@ -41,7 +43,5 @@ INSERT INTO option (id, created_at, name_fr, name_en, lesion_id, image_trauma, f
 (25, '2025-05-26 14:41:43.544634+00', 'Droit', 'Right', 51, 'Diaphragme_D.png', 'droite'),
 (19, '2025-05-26 14:41:43.544634+00', 'Droit', 'Right', 49, NULL, 'droite'),
 (17, '2025-05-26 14:41:43.544634+00', 'Droit', 'Right', 48, 'Uretere_lombaire_D.png', 'droite'),
-(15, '2025-05-26 14:41:43.544634+00', 'Droit', 'Right', 47, NULL, 'droite'),
-(10, '2025-05-26 14:41:43.544634+00', 'Droit', 'Right', 45, 'Ligament_rond_proximal.png', 'droite'),
-(3, '2025-05-26 14:41:43.544634+00', 'Droit', 'Right', 43, 'Lus_Proximal.png', 'droite'),
-(5, '2025-05-26 14:41:43.544634+00', 'Gauche', 'Left', 43, 'Lus_Proximal.png', 'gauche');
+(15, '2025-05-26 14:41:43.544634+00', 'Droit', 'Right', 47, '', 'droite'),
+(10, '2025-05-26 14:41:43.544634+00', 'Droit', 'Right', 45, 'Ligament_rond_proximal.png', 'droite');
