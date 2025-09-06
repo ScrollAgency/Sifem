@@ -1,4 +1,5 @@
-name: Deploy to production
+name: Deploy electric instance
+
 on:
   push:
     branches:
@@ -6,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to production
+    name: Deploy production
     runs-on: ubuntu-latest
     steps:
 
@@ -26,7 +27,7 @@ jobs:
       - name: Get current date and set app name
         run: |
           echo "date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
-          echo "myapp=pass-marche" >> $GITHUB_ENV
+          echo "myapp=sifem" >> $GITHUB_ENV
           echo "environnement=production" >> $GITHUB_ENV
 
       # Étape 4 : Configurer QEMU pour la construction multiplateforme
@@ -62,6 +63,10 @@ jobs:
             ghcr.io/${{ env.REPO_NAME }}-${{ env.environnement }}:latest
           build-args: |
             CACHEBUST=${{ github.sha }}  # Cache-busting
+            NEXT_PUBLIC_PLASMIC_PROJECT_ID=${{ secrets.NEXT_PUBLIC_PLASMIC_PROJECT_ID }}
+            NEXT_PUBLIC_PLASMIC_PROJECT_TOKEN=${{ secrets.NEXT_PUBLIC_PLASMIC_PROJECT_TOKEN }}
+            NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
       # Étape 9 : Authentifier Docker sur le serveur
       - name: Authenticate Docker on the server
@@ -69,18 +74,18 @@ jobs:
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "
             echo ${{ secrets.GHCR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           "
-        
-      # Étape 10 : Déployer la version de production sur le vps
-      - name: Deploy production on vps
+          
+      # Étape 10 : Déployer la version de staging sur le vps
+      - name: Deploy Staging on vps
         run: |
           ssh  -o StrictHostKeyChecking=no -T ubuntu@${{ secrets.SERVER_IP }} "
-            cd ${{ env.myapp }}/${{ env.environnement }} &&
+            cd /srv/projets/${{ env.environnement }}/${{ env.myapp }} &&
             docker compose -f docker-compose.yml pull &&
             docker compose -f docker-compose.yml up -d
           "
 
-      # Étape 11 : Nettoyer Docker sur le serveur
-      - name: Clean up Docker on Server
+      # Étape 11 : Nettoyer le serveur Docker
+      - name: Clean up Docker on staging Server
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "
             echo 'Starting Docker cleanup...' &&
