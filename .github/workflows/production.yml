@@ -21,7 +21,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts  
+          ssh-keyscan -H ${{ secrets.SERVER_IP_PRODUCTION }} >> ~/.ssh/known_hosts  
 
       # Étape 3 : Obtenir la date
       - name: Get current date and set app name
@@ -71,14 +71,14 @@ jobs:
       # Étape 9 : Authentifier Docker sur le serveur
       - name: Authenticate Docker on the server
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP_PRODUCTION }} "
             echo ${{ secrets.GHCR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           "
           
       # Étape 10 : Déployer la version de staging sur le vps
       - name: Deploy Staging on vps
         run: |
-          ssh  -o StrictHostKeyChecking=no -T ubuntu@${{ secrets.SERVER_IP }} "
+          ssh  -o StrictHostKeyChecking=no -T ubuntu@${{ secrets.SERVER_IP_PRODUCTION }} "
             cd /srv/projets/${{ env.environnement }}/${{ env.myapp }} &&
             docker compose -f docker-compose.yml pull &&
             docker compose -f docker-compose.yml up -d
@@ -87,7 +87,7 @@ jobs:
       # Étape 11 : Nettoyer le serveur Docker
       - name: Clean up Docker on staging Server
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP_PRODUCTION }} "
             echo 'Starting Docker cleanup...' &&
             echo 'Before cleanup:' &&
             df -h &&
