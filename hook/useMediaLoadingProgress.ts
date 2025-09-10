@@ -52,8 +52,6 @@ export function useMediaLoadingProgress() {
       const mediaElements = Array.from(
         document.querySelectorAll("img, video")
       ) as (HTMLImageElement | HTMLVideoElement)[];
-      console.log("🔍 Media detected:", mediaElements.length);
-      console.log("🔍 Media Liste:", mediaElements);
 
       mediaElements.forEach((el) => {
         if (!(el as any)._alreadyTracked) {
