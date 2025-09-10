@@ -17,28 +17,6 @@ function Homepage() {
     getOptions: { data: options },
   };
 
-  function PwaProgressBar({ progress }: { progress: number }) {
-    return (
-      <div style={{
-        width: "100%",
-        height: "6px",
-        background: "#eee",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        zIndex: 9999
-      }}>
-        <div
-          style={{
-            width: `${progress}%`,
-            height: "100%",
-            background: "#1976d2",
-            transition: "width 0.3s ease",
-          }}
-        />
-      </div>
-    );
-  }
 
   return (
     <LocaleContextProvider value={undefined}>
@@ -49,15 +27,25 @@ function Homepage() {
           query={useRouter()?.query}
         >
           {!allLoaded && (
-            <>
-              <PlasmicHomepage
-                overrides={
-                  {
-                    progressBar: <PwaProgressBar progress={pwaProgress} />
-                  } as any
-                }
-              />
-            </>
+            <PlasmicHomepage
+              overrides={
+                {
+                  progressBar: (
+                    <div className="progressBar">
+                      <div
+                        style={{
+                          width: `${pwaProgress}%`,
+                          height: "100%",
+                          background: "#fff0ee",
+                          borderRadius: "8px",
+                          transition: "width 0.3s ease"
+                        }}
+                      />
+                    </div>
+                  )
+                } as any
+              }
+            />
           )}
           {allLoaded && <PlasmicHomepage />}
         </PageParamsProvider__>

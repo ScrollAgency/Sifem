@@ -1,16 +1,12 @@
 import { ShapeStream, Shape } from '@electric-sql/client';
 
-const optionStream = new ShapeStream({
-  url: 'http://localhost:5133/v1/shape',  // adapte si besoin
-  params: {
-    table: 'option',
-  },
-});
-
-const optionShape = new Shape(optionStream);
-
+// Désactivé : connexion API ElectricSQL
 export async function getOptionRows() {
-  return await optionShape.rows;
+  return [];
 }
 
+const optionShape = {
+  rows: Promise.resolve([]),
+  subscribe: () => () => {},
+};
 export default optionShape;

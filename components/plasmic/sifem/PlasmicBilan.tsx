@@ -104,6 +104,7 @@ import Vector5SvgIcon from "./icons/PlasmicIcon__Vector5Svg"; // plasmic-import:
 import Vector6SvgIcon from "./icons/PlasmicIcon__Vector6Svg"; // plasmic-import: SJenxLeoYOMs/icon
 
 import { useData } from "@/contexts/DataContext";
+import { getLesionRows } from "@/electric/lesion.shape";
 
 createPlasmicElementProxy;
 

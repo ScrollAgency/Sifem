@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import optionShape from "@/electric/option.shape";
+// Utiliser fetch pour charger le JSON depuis public/
 
 type Option = {
   id: number;
@@ -11,18 +11,18 @@ export function useOptions(): { data: Option[]; loading: boolean } {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    optionShape.rows.then((rows) => {
-      setOptions((rows as Option[]) ?? []);
-      setLoading(false);
-    });
-
-    const unsubscribe = optionShape.subscribe(({ rows }) => {
-      setOptions((rows as Option[]) ?? []);
-    });
-
-    return () => {
-      unsubscribe();
-    };
+    async function loadOptions() {
+      try {
+        const res = await fetch('/options.json');
+        const data = await res.json();
+        setOptions(Array.isArray(data) ? data : []);
+      } catch (e) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadOptions();
   }, []);
 
   return { data: options, loading };

@@ -1,0 +1,326 @@
+[
+  {
+    "id": 11,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Gauche",
+    "name_en": "Left",
+    "lesion_id": 45,
+    "image_trauma": "Ligament_rond_proximal.png",
+    "face": "gauche"
+  },
+  {
+    "id": 14,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Base",
+    "name_en": "Basis",
+    "lesion_id": 46,
+    "image_trauma": "Vessie_base.png",
+    "face": null
+  },
+  {
+    "id": 16,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Gauche",
+    "name_en": "Left",
+    "lesion_id": 47,
+    "image_trauma": null,
+    "face": "gauche"
+  },
+  {
+    "id": 18,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Gauche",
+    "name_en": "Left",
+    "lesion_id": 48,
+    "image_trauma": "Uretere_lombaire_G.png",
+    "face": "gauche"
+  },
+  {
+    "id": 9,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Charnière rectosigmoïdienne",
+    "name_en": "Rectosigmoid junction",
+    "lesion_id": 44,
+    "image_trauma": "Rectum_RS_jct.png",
+    "face": null
+  },
+  {
+    "id": 20,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Gauche",
+    "name_en": "Left",
+    "lesion_id": 49,
+    "image_trauma": null,
+    "face": "gauche"
+  },
+  {
+    "id": 35,
+    "created_at": "2025-05-27 11:55:01.261558+00",
+    "name_fr": "2 cm",
+    "name_en": "2 cm",
+    "lesion_id": 16,
+    "image_trauma": "endometriome (_2cm).png",
+    "face": "droite"
+  },
+  {
+    "id": 23,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Appendice",
+    "name_en": "Appendix",
+    "lesion_id": 50,
+    "image_trauma": "APPENDICE.png",
+    "face": null
+  },
+  {
+    "id": 29,
+    "created_at": "2025-05-27 11:55:01.261558+00",
+    "name_fr": "3 cm",
+    "name_en": "3 cm",
+    "lesion_id": 10,
+    "image_trauma": "endometriome (_3cm).png",
+    "face": "gauche"
+  },
+  {
+    "id": 30,
+    "created_at": "2025-05-27 11:55:01.261558+00",
+    "name_fr": "4 cm",
+    "name_en": "4 cm",
+    "lesion_id": 10,
+    "image_trauma": "endometriome (_4cm).png",
+    "face": "gauche"
+  },
+  {
+    "id": 22,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Iléon",
+    "name_en": "Ileum",
+    "lesion_id": 50,
+    "image_trauma": "ILEON.png",
+    "face": null
+  },
+  {
+    "id": 24,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Sigmoïde",
+    "name_en": "Sigmoid colon",
+    "lesion_id": 50,
+    "image_trauma": "SIGMOIDE.png",
+    "face": null
+  },
+  {
+    "id": 32,
+    "created_at": "2025-05-27 11:55:01.261558+00",
+    "name_fr": "5-10 cm",
+    "name_en": "5-10 cm",
+    "lesion_id": 10,
+    "image_trauma": "endometriome (5-10cm).png",
+    "face": "gauche"
+  },
+  {
+    "id": 13,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Cul de sac vésico-utérin",
+    "name_en": "Vesico-uterine pouch",
+    "lesion_id": 46,
+    "image_trauma": "Vessie_cul_de_sac.png",
+    "face": null
+  },
+  {
+    "id": 6,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Bas rectum",
+    "name_en": "Lower rectum",
+    "lesion_id": 44,
+    "image_trauma": "Rectum_low.png",
+    "face": null
+  },
+  {
+    "id": 7,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Moyen rectum",
+    "name_en": "Mid rectum",
+    "lesion_id": 44,
+    "image_trauma": "Rectum_middle.png",
+    "face": null
+  },
+  {
+    "id": 8,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Haut rectum",
+    "name_en": "Upper rectum",
+    "lesion_id": 44,
+    "image_trauma": "Rectum_high.png",
+    "face": null
+  },
+  {
+    "id": 12,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Dôme",
+    "name_en": "Dome",
+    "lesion_id": 46,
+    "image_trauma": "Vessie_dome.png",
+    "face": null
+  },
+  {
+    "id": 21,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Cæcum",
+    "name_en": "Caecum",
+    "lesion_id": 50,
+    "image_trauma": "CAECUM.png",
+    "face": null
+  },
+  {
+    "id": 4,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Torus",
+    "name_en": "Torus",
+    "lesion_id": 43,
+    "image_trauma": "Torus.png",
+    "face": null
+  },
+  {
+    "id": 42,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "LUS droit",
+    "name_en": "Right USL",
+    "lesion_id": 43,
+    "image_trauma": "Lus_Proximal.png",
+    "face": "droite"
+  },
+  {
+    "id": 43,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "LUS gauche",
+    "name_en": "Left USL",
+    "lesion_id": 43,
+    "image_trauma": "Lus_Proximal.png",
+    "face": "gauche"
+  },
+  {
+    "id": 27,
+    "created_at": "2025-05-27 11:55:01.261558+00",
+    "name_fr": "1 cm",
+    "name_en": "1 cm",
+    "lesion_id": 10,
+    "image_trauma": "endometriome (_1cm).png",
+    "face": "gauche"
+  },
+  {
+    "id": 28,
+    "created_at": "2025-05-27 11:55:01.261558+00",
+    "name_fr": "2 cm",
+    "name_en": "2 cm",
+    "lesion_id": 10,
+    "image_trauma": "endometriome (_2cm).png",
+    "face": "gauche"
+  },
+  {
+    "id": 33,
+    "created_at": "2025-05-27 11:55:01.261558+00",
+    "name_fr": ">10 cm",
+    "name_en": ">10 cm",
+    "lesion_id": 10,
+    "image_trauma": "endometriome (_10cm).png",
+    "face": "gauche"
+  },
+  {
+    "id": 34,
+    "created_at": "2025-05-27 11:55:01.261558+00",
+    "name_fr": "1 cm",
+    "name_en": "1 cm",
+    "lesion_id": 16,
+    "image_trauma": "endometriome (_1cm).png",
+    "face": "droite"
+  },
+  {
+    "id": 36,
+    "created_at": "2025-05-27 11:55:01.261558+00",
+    "name_fr": "3 cm",
+    "name_en": "3 cm",
+    "lesion_id": 16,
+    "image_trauma": "endometriome (_3cm).png",
+    "face": "droite"
+  },
+  {
+    "id": 37,
+    "created_at": "2025-05-27 11:55:01.261558+00",
+    "name_fr": "4 cm",
+    "name_en": "4 cm",
+    "lesion_id": 16,
+    "image_trauma": "endometriome (_4cm).png",
+    "face": "droite"
+  },
+  {
+    "id": 39,
+    "created_at": "2025-05-27 11:55:01.261558+00",
+    "name_fr": "5-10 cm",
+    "name_en": "5-10 cm",
+    "lesion_id": 16,
+    "image_trauma": "endometriome (5-10cm).png",
+    "face": "droite"
+  },
+  {
+    "id": 40,
+    "created_at": "2025-05-27 11:55:01.261558+00",
+    "name_fr": ">10 cm",
+    "name_en": ">10 cm",
+    "lesion_id": 16,
+    "image_trauma": "endometriome (_10cm).png",
+    "face": "droite"
+  },
+  {
+    "id": 26,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Gauche",
+    "name_en": "Left",
+    "lesion_id": 51,
+    "image_trauma": "Diaphragme_G.png",
+    "face": "gauche"
+  },
+  {
+    "id": 25,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Droit",
+    "name_en": "Right",
+    "lesion_id": 51,
+    "image_trauma": "Diaphragme_D.png",
+    "face": "droite"
+  },
+  {
+    "id": 19,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Droit",
+    "name_en": "Right",
+    "lesion_id": 49,
+    "image_trauma": null,
+    "face": "droite"
+  },
+  {
+    "id": 17,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Droit",
+    "name_en": "Right",
+    "lesion_id": 48,
+    "image_trauma": "Uretere_lombaire_D.png",
+    "face": "droite"
+  },
+  {
+    "id": 15,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Droit",
+    "name_en": "Right",
+    "lesion_id": 47,
+    "image_trauma": null,
+    "face": "droite"
+  },
+  {
+    "id": 10,
+    "created_at": "2025-05-26 14:41:43.544634+00",
+    "name_fr": "Droit",
+    "name_en": "Right",
+    "lesion_id": 45,
+    "image_trauma": "Ligament_rond_proximal.png",
+    "face": "droite"
+  }
+]

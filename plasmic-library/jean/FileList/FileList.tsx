@@ -3,6 +3,7 @@
 import { forwardRef, useCallback, useImperativeHandle, ForwardRefRenderFunction } from 'react';
 import { useData } from '@/contexts/DataContext';
 import { useEffect, useState } from 'react';
+import pwaAssets from '../../../public/pwa-assets.json';
 
 interface FileObject {
   name: string;
@@ -35,11 +36,34 @@ const FileListComponent: ForwardRefRenderFunction<FileListRef, FileListProps> = 
 
   const listFiles = useCallback(async (optionsArg?: { path?: string }) => {
     try {
-      const path = optionsArg?.path || bucketPath;
-      // Appel API Next.js pour lister les fichiers locaux
-      const res = await fetch(`/api/list-images?dir=${encodeURIComponent(path)}`);
-      if (!res.ok) throw new Error('API error');
-      const files = await res.json();
+      let path = optionsArg?.path || bucketPath;
+      // Mapping des noms courts vers les chemins complets du manifest
+      const pathMap: Record<string, string> = {
+        'image_POV_abdomen/': 'lesions/image_map/image_POV_abdomen/',
+        'image_POV_profil/': 'lesions/image_map/image_POV_profil/',
+        'image_POV_face-droite/': 'lesions/image_map/image_POV_face-droite/',
+        'image_POV_face_gauche/': 'lesions/image_map/image_POV_face_gauche/',
+      };
+      if (pathMap[path]) {
+        path = pathMap[path];
+      }
+      // Filtre les assets du manifest selon le dossier demandé
+      const files = (pwaAssets as Array<{ url: string }>)
+        .filter(asset => asset.url.startsWith(`/${path}`))
+        .map(asset => {
+          const name = asset.url.split('/').pop() || '';
+          return {
+            name,
+            id: asset.url,
+            updated_at: '',
+            created_at: '',
+            last_accessed_at: '',
+            metadata: {},
+          };
+        });
+      // Log détaillé pour debug
+      console.log('[FileList] path:', path);
+      console.log('[FileList] files:', files.map(f => f.name));
       setApiFiles(files);
       onList?.(files as FileObject[]);
       return files as FileObject[];
