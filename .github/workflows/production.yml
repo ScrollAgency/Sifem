@@ -3,7 +3,7 @@ name: Deploy electric instance
 on:
   push:
     branches:
-      - production
+      - production-no-run
 
 jobs:
   deploy:
