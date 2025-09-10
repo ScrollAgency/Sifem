@@ -80,8 +80,8 @@ const regularDirname = hasDirname && fs.existsSync(path.join(__dirname, 'schema.
 
 // if the client has been bundled, we need to look for the folders
 const foundDirname = !regularDirname && findSync(process.cwd(), [
-    "src\\generated\\client",
-    "generated\\client",
+    "src/generated/client",
+    "generated/client",
 ], ['d'], ['d'], 1)[0]
 
 const dirname = regularDirname || foundDirname || __dirname
@@ -167,7 +167,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\jeanz\\Documents\\GitHub\\Sifem-ionic\\src\\generated\\client",
+      "value": "/home/gael/projets/scroll/sifem-ionic/src/generated/client",
       "fromEnvVar": null
     },
     "config": {
@@ -178,9 +178,10 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null
+    "rootEnvPath": "../../../.env",
+    "schemaEnvPath": "../../../.env"
   },
-  "relativePath": "..\\..\\..\\prisma",
+  "relativePath": "../../../prisma",
   "clientVersion": "4.8.1",
   "engineVersion": "d6e67a83f971b175a593ccc12e15c4a757f93ffe",
   "datasourceNames": [
@@ -206,7 +207,7 @@ const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
-path.join(__dirname, "query_engine-windows.dll.node");
-path.join(process.cwd(), "src\\generated\\client\\query_engine-windows.dll.node")
+path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
+path.join(process.cwd(), "src/generated/client/libquery_engine-debian-openssl-3.0.x.so.node")
 path.join(__dirname, "schema.prisma");
-path.join(process.cwd(), "src\\generated\\client\\schema.prisma")
+path.join(process.cwd(), "src/generated/client/schema.prisma")

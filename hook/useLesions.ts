@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import lesionShape from "@/electric/lesion.shape";
+// Utiliser fetch pour charger le JSON depuis public/
 
 type Lesion = {
   id: number;
@@ -13,18 +13,18 @@ export function useLesions(): { data: Lesion[]; loading: boolean } {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    lesionShape.rows.then((rows) => {
-      setLesions((rows as Lesion[]) ?? []);
-      setLoading(false);
-    });
-
-    const unsubscribe = lesionShape.subscribe(({ rows }) => {
-      setLesions((rows as Lesion[]) ?? []);
-    });
-
-    return () => {
-      unsubscribe();
-    };
+    async function loadLesions() {
+      try {
+        const res = await fetch('/lesions.json');
+        const data = await res.json();
+        setLesions(Array.isArray(data) ? data : []);
+      } catch (e) {
+        setLesions([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadLesions();
   }, []);
 
   return { data: lesions, loading };

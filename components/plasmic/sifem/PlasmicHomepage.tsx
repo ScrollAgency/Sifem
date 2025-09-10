@@ -332,7 +332,11 @@ function PlasmicHomepage__RenderFunc(props: {
 
               {/* Barre de progression personnalisée entre l'image et le bouton */}
               {overrides.progressBar && (
-                <div data-plasmic-name={"progressBar"} data-plasmic-override={overrides.progressBar} />
+                <div
+                  data-plasmic-name={"progressBar"}
+                  data-plasmic-override={overrides.progressBar}
+                  className={sty.progressBar}
+                />
               )}
 
               <Button
