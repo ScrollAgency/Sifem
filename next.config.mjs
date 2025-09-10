@@ -1,4 +1,6 @@
 import withPWA from '@ducanh2912/next-pwa';
+import fs from 'fs';
+import path from 'path';
 
 /** @type {import('next').NextConfig} */
 const baseConfig = {

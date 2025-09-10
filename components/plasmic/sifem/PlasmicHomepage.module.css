@@ -141,6 +141,14 @@
   left: auto;
   flex-shrink: 0;
 }
+.progressBar {
+  width: 355px;
+  height: 8px;
+  background: #fff0ee;
+  border-radius: 8px;
+  margin: 24px 0;
+  display: block;
+}
 .button:global(.__wab_instance) {
   width: 355px;
   height: 48px;
