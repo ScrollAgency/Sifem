@@ -1,10 +1,8 @@
-import withPWA from 'next-pwa';
-import fs from 'fs';
-import path from 'path';
+import withPWA from '@ducanh2912/next-pwa';
 
 /** @type {import('next').NextConfig} */
 const baseConfig = {
-  //output: 'export',
+  output: 'export',
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
