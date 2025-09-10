@@ -132,7 +132,7 @@
   width: auto;
 }
 .image1 {
-  background: url("/plasmic/eletric_💥_sifem_production/images/image5.png") center center / cover no-repeat;
+  background: url("/plasmic/sifem/images/image5.png") center center / cover no-repeat;
   width: 373px;
   height: 373px;
   display: block;
@@ -140,6 +140,14 @@
   top: auto;
   left: auto;
   flex-shrink: 0;
+}
+.progressBar {
+  width: 355px;
+  height: 8px;
+  background: #fff0ee;
+  border-radius: 8px;
+  margin: 24px 0;
+  display: block;
 }
 .button:global(.__wab_instance) {
   width: 355px;

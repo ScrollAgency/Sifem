@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ShapeStream, Shape } from "@electric-sql/client";
+import lesionShape from "@/electric/lesion.shape";
 
 type Lesion = {
   id: number;
@@ -8,29 +8,18 @@ type Lesion = {
   type?: string;
   status?: string;
 };
-
 export function useLesions(): { data: Lesion[]; loading: boolean } {
   const [lesions, setLesions] = useState<Lesion[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
-  const url = isLocalhost
-    ? "http://localhost:3000/api/proxy-electric?table=lesion&offset=-1"
-    : "https://sifem.agence-scroll.com/api/proxy-electric?table=lesion&offset=-1";
-
   useEffect(() => {
-    const stream = new ShapeStream({ url });
-    const shape = new Shape(stream);
-
-    shape.rows.then((rows) => {
-      const sorted = (rows as Lesion[]).sort((a, b) => a.id - b.id);
-      setLesions(sorted);
+    lesionShape.rows.then((rows) => {
+      setLesions((rows as Lesion[]) ?? []);
       setLoading(false);
     });
 
-    const unsubscribe = shape.subscribe(({ rows }) => {
-      const sorted = (rows as Lesion[]).sort((a, b) => a.id - b.id);
-      setLesions(sorted);
+    const unsubscribe = lesionShape.subscribe(({ rows }) => {
+      setLesions((rows as Lesion[]) ?? []);
     });
 
     return () => {
@@ -40,4 +29,3 @@ export function useLesions(): { data: Lesion[]; loading: boolean } {
 
   return { data: lesions, loading };
 }
-

@@ -94,6 +94,7 @@ export type PlasmicHomepage__OverridesType = {
   freeBox?: Flex__<"div">;
   text?: Flex__<"div">;
   image1?: Flex__<"div">;
+  progressBar?: Flex__<"div">;
   button?: Flex__<typeof Button>;
   svg?: Flex__<"svg">;
 };
@@ -328,6 +329,11 @@ function PlasmicHomepage__RenderFunc(props: {
                 data-plasmic-override={overrides.image1}
                 className={classNames(projectcss.all, sty.image1)}
               />
+
+              {/* Barre de progression personnalisée entre l'image et le bouton */}
+              {overrides.progressBar && (
+                <div data-plasmic-name={"progressBar"} data-plasmic-override={overrides.progressBar} />
+              )}
 
               <Button
                 data-plasmic-name={"button"}

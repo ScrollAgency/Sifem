@@ -4,11 +4,42 @@ import path from 'path';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { dir } = req.query;
+  // Si aucun paramètre, on liste public/lesions et public/plasmic
   if (!dir || typeof dir !== 'string') {
-    return res.status(400).json({ error: 'Missing or invalid dir parameter' });
+    const folders = [
+      { base: 'lesions', baseDir: path.join(process.cwd(), 'public', 'lesions') },
+      { base: 'plasmic', baseDir: path.join(process.cwd(), 'public', 'plasmic') }
+    ];
+    try {
+      const allResults = [];
+      for (const { base, baseDir } of folders) {
+        if (!fs.existsSync(baseDir)) continue;
+        const files = fs.readdirSync(baseDir);
+        for (const file of files) {
+          const filePath = path.join(baseDir, file);
+          const stats = fs.statSync(filePath);
+          allResults.push({
+            name: file,
+            id: `${base}/${file}`,
+            created_at: stats.birthtime,
+            updated_at: stats.mtime,
+            last_accessed_at: stats.atime,
+            metadata: {
+              size: stats.size,
+              mimetype: path.extname(file),
+              lastModified: stats.mtime,
+            },
+            url: `/${base}/${file}`,
+          });
+        }
+      }
+      return res.status(200).json(allResults);
+    } catch (err) {
+      return res.status(500).json({ error: 'Failed to read directories', details: String(err) });
+    }
   }
 
-  // Only allow access to public/lesions/image_map/*
+  // Si paramètre dir fourni, on garde l'ancien comportement pour image_map
   const baseDir = path.join(process.cwd(), 'public', 'lesions', 'image_map');
   const targetDir = path.join(baseDir, dir.replace(/^\/+/, ''));
 
@@ -23,7 +54,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       const stats = fs.statSync(filePath);
       return {
         name: file,
-        id: file, // You can generate a uuid if needed
+        id: file,
         created_at: stats.birthtime,
         updated_at: stats.mtime,
         last_accessed_at: stats.atime,

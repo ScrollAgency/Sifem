@@ -1,4 +1,6 @@
 import withPWA from '@ducanh2912/next-pwa';
+import fs from 'fs';
+import path from 'path';
 
 /** @type {import('next').NextConfig} */
 const baseConfig = {
@@ -39,6 +41,24 @@ const baseConfig = {
   //output: 'standalone',
 };
 
+let additionalManifestEntries = [
+  { url: '/bilan', revision: null },
+  { url: '/plasmic-host', revision: null },
+  { url: '/site.webmanifest', revision: null },
+  { url: '/android-chrome-192x192.png', revision: null },
+  { url: '/android-chrome-512x512.png', revision: null },
+];
+
+try {
+  const assetsPath = path.join(process.cwd(), 'public', 'pwa-assets.json');
+  if (fs.existsSync(assetsPath)) {
+    const assets = JSON.parse(fs.readFileSync(assetsPath, 'utf-8'));
+    additionalManifestEntries = additionalManifestEntries.concat(assets);
+  }
+} catch (e) {
+  console.warn('Impossible de charger pwa-assets.json:', e);
+}
+
 const withPWAPlugin = withPWA({
   dest: 'public',
   register: true,
@@ -47,6 +67,7 @@ const withPWAPlugin = withPWA({
   fallbacks: {
     document: '/offline.html',
   },
+  additionalManifestEntries,
 });
 
 export default withPWAPlugin(baseConfig);
