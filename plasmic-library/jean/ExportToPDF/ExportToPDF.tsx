@@ -692,18 +692,31 @@ const generateEnhancedPDF = async (
   }
   
   if (save) {
-    // Save the PDF using blob method for better mobile compatibility
+    // Use native sharing/saving behavior instead of forced download
     const blob = pdf.output('blob');
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.download = `${fileName}.pdf`;
-    link.href = url;
-    document.body.appendChild(link);
-    link.click();
-    setTimeout(() => {
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }, 100);
+    
+    // Check if we're in a Capacitor native environment
+    const isNative = (window as any).Capacitor?.isNativePlatform?.() || false;
+    
+    if (isNative) {
+      // For native apps, use the browser's default blob handling
+      // This will trigger the native share sheet or file save dialog
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } else {
+      // For web, keep the download behavior
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = `${fileName}.pdf`;
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, 100);
+    }
   }
   
   return pdf;
@@ -1092,27 +1105,69 @@ export const useExportToPDF = () => {
             }
           }
           
-          // Download PNG
+          // Save PNG with native/web compatibility
           const blob = await new Promise<Blob>((resolve) => 
             canvas.toBlob(b => resolve(b!), 'image/png')
           );
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.download = `${fileName}.png`;
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-          setTimeout(() => {
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-          }, 100);
+          
+          const isNative = (window as any).Capacitor?.isNativePlatform?.() || false;
+          
+          if (isNative) {
+            // For native apps, use the browser's default blob handling
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+          } else {
+            // For web, keep the download behavior
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = `${fileName}.png`;
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            setTimeout(() => {
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+            }, 100);
+          }
 
         } catch (pngError) {
           console.error('Error generating PNG:', pngError);
           alert('PNG generation failed. Saving as PDF instead.');
           
-          // Fallback to PDF
+          // Fallback to PDF with native/web compatibility
           const blob = pdfDoc.output('blob');
+          const isNative = (window as any).Capacitor?.isNativePlatform?.() || false;
+          
+          if (isNative) {
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+          } else {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = `${fileName}.pdf`;
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            setTimeout(() => {
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+            }, 100);
+          }
+        }
+      } else {
+        // Save PDF with native/web compatibility
+        const blob = pdfDoc.output('blob');
+        const isNative = (window as any).Capacitor?.isNativePlatform?.() || false;
+        
+        if (isNative) {
+          // For native apps, use the browser's default blob handling
+          const url = URL.createObjectURL(blob);
+          window.open(url, '_blank');
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        } else {
+          // For web, keep the download behavior
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.download = `${fileName}.pdf`;
@@ -1124,19 +1179,6 @@ export const useExportToPDF = () => {
             URL.revokeObjectURL(url);
           }, 100);
         }
-      } else {
-        // Save PDF
-        const blob = pdfDoc.output('blob');
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.download = `${fileName}.pdf`;
-        link.href = url;
-        document.body.appendChild(link);
-        link.click();
-        setTimeout(() => {
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        }, 100);
       }
     } catch (error) {
       console.error('Export failed:', error);
