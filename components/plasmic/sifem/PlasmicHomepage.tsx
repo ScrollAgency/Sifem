@@ -335,7 +335,6 @@ function PlasmicHomepage__RenderFunc(props: {
                 <div
                   data-plasmic-name={"progressBar"}
                   data-plasmic-override={overrides.progressBar}
-                  className={sty.progressBar}
                 />
               )}
 

@@ -37,14 +37,23 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const lesionsRes = await fetch('/lesions.json');
         const lesionsJson = await lesionsRes.json();
-        setLesions(Array.isArray(lesionsJson) ? lesionsJson : []);
         const optionsRes = await fetch('/options.json');
         const optionsJson = await optionsRes.json();
-        setOptions(Array.isArray(optionsJson) ? optionsJson : []);
+
+        // Tri par id
+        const sortedLesions = Array.isArray(lesionsJson)
+          ? lesionsJson.slice().sort((a, b) => a.id - b.id)
+          : [];
+        const sortedOptions = Array.isArray(optionsJson)
+          ? optionsJson.slice().sort((a, b) => a.id - b.id)
+          : [];
+
+        setLesions(sortedLesions);
+        setOptions(sortedOptions);
         setLoading(false);
         console.log('DataContext loaded:', {
-          lesions: Array.isArray(lesionsJson) ? lesionsJson : [],
-          options: Array.isArray(optionsJson) ? optionsJson : []
+          lesions: sortedLesions,
+          options: sortedOptions
         });
       } catch (e) {
         setLesions([]);
