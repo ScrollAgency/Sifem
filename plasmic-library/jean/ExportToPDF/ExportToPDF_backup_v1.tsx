@@ -11,7 +11,6 @@ interface ExportOptions {
   format?: 'pdf' | 'png';
   orientation?: 'portrait' | 'landscape';
   autoResize?: boolean;
-  maximizeWidth?: boolean;
 }
 
 interface ExportToPDFProps {
@@ -20,7 +19,6 @@ interface ExportToPDFProps {
   format?: 'pdf' | 'png';
   orientation?: 'portrait' | 'landscape';
   autoResize?: boolean;
-  maximizeWidth?: boolean;
   onExport?: () => void;
   className?: string;
 }
@@ -35,184 +33,16 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const isMobileDevice = () => 
   window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-// Detect if running on native mobile platform
-const isNativePlatform = (): boolean => {
-  return Capacitor.isNativePlatform();
-};
 
-// Get platform-specific directory for file storage
-const getPlatformDirectory = async (): Promise<Directory> => {
-  const platform = Capacitor.getPlatform();
-  
-  if (platform === 'ios') {
-    return Directory.Documents;
-  } else if (platform === 'android') {
-    // Sur Android, utiliser Cache ou Data au lieu d'ExternalStorage
-    // Ces répertoires ne nécessitent pas de permissions spéciales
-    return Directory.Cache;
-  } else {
-    // Fallback pour autres plateformes
-    return Directory.Data;
-  }
-};
-
-// Native file save/share helper
-const saveFileNative = async (blob: Blob, fileName: string, fileType: 'pdf' | 'png') => {
-  console.log('Sauvegarde native du fichier:', fileName);
-  
-  try {
-    let base64Data: string;
-    
-    // Convert blob to base64
-    base64Data = await new Promise<string>((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        // Remove data URL prefix if present
-        const base64 = result.includes(',') ? result.split(',')[1] : result;
-        resolve(base64);
-      };
-      reader.readAsDataURL(blob);
-    });
-
-    let directory = await getPlatformDirectory();
-    let result;
-    const fullFileName = `${fileName}.${fileType}`;
-    
-    // Essayer d'abord avec le répertoire principal
-    try {
-      result = await Filesystem.writeFile({
-        path: fullFileName,
-        data: base64Data,
-        directory: directory,
-        encoding: Encoding.UTF8
-      });
-      
-      console.log('Fichier sauvegardé avec succès:', result.uri);
-    } catch (firstError) {
-      console.warn('Échec avec le premier répertoire, essai avec Data:', firstError);
-      
-      // Si ça échoue, essayer avec Directory.Data
-      directory = Directory.Data;
-      try {
-        result = await Filesystem.writeFile({
-          path: fullFileName,
-          data: base64Data,
-          directory: directory,
-          encoding: Encoding.UTF8
-        });
-        
-        console.log('Fichier sauvegardé avec succès (Data):', result.uri);
-      } catch (secondError) {
-        console.warn('Échec avec Directory.Data, essai avec Documents:', secondError);
-        
-        // Dernier essai avec Directory.Documents
-        directory = Directory.Documents;
-        result = await Filesystem.writeFile({
-          path: fullFileName,
-          data: base64Data,
-          directory: directory,
-          encoding: Encoding.UTF8
-        });
-        
-        console.log('Fichier sauvegardé avec succès (Documents):', result.uri);
-      }
-    }
-
-    // Share the file
-    await Share.share({
-      title: 'Exporter le fichier',
-      text: `Partager ${fullFileName}`,
-      url: result.uri,
-      dialogTitle: 'Partager le fichier exporté'
-    });
-
-    console.log('Fichier partagé avec succès');
-  } catch (error) {
-    console.error('Erreur lors de la sauvegarde native:', error);
-    
-    // Fallback: try to share the data directly
-    try {
-      const dataUrl = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.readAsDataURL(blob);
-      });
-      
-      await Share.share({
-        title: 'Exporter le fichier',
-        text: `Partager ${fileName}.${fileType}`,
-        url: dataUrl,
-        dialogTitle: 'Partager le fichier exporté'
-      });
-      
-      console.log('Fichier partagé directement via URL de données');
-    } catch (shareError) {
-      console.error('Erreur lors du partage de fallback:', shareError);
-      throw new Error(`Impossible de sauvegarder le fichier: ${error}`);
-    }
-  }
-};
-
-// Save file using web download method
-const saveFileWeb = (
-  data: Blob, 
-  fileName: string,
-  fileType: string
-): void => {
-  const url = URL.createObjectURL(data);
-  const link = document.createElement('a');
-  link.download = `${fileName}.${fileType}`;
-  link.href = url;
-  document.body.appendChild(link);
-  link.click();
-  setTimeout(() => {
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }, 100);
-};
-
-// Universal file save function that detects platform
-const saveFile = async (
-  data: Blob, 
-  fileName: string, 
-  fileType: 'pdf' | 'png'
-): Promise<void> => {
-  if (isNativePlatform()) {
-    await saveFileNative(data, fileName, fileType);
-  } else {
-    saveFileWeb(data, fileName, fileType);
-  }
-};
-
-// Dynamic resolution detection for normalized export
-const getTargetResolution = () => {
-  if (isMobileDevice()) {
-    return {
-      width: 1920,
-      height: 1080
-    };
-  }
-  
-  const screenWidth = window.screen.width || window.innerWidth || 1920;
-  const screenHeight = window.screen.height || window.innerHeight || 1080;
-  const maxWidth = Math.min(screenWidth, 3840);
-  const maxHeight = Math.min(screenHeight, 3840);
-  
-  return {
-    width: maxWidth,
-    height: maxHeight
-  };
-};
-
-const NORMALIZED_CAPTURE_SCALE = 1;
 
 // Optimize SVG elements for better html2canvas rendering
 const optimizeSVGsForCapture = (element: HTMLElement): (() => void) => {
   const svgs = element.querySelectorAll('svg');
   const originalStyles = new Map();
   
-  Array.from(svgs).forEach((svg) => {
+  console.log(`Optimizing ${svgs.length} SVG(s) for export`);
+  
+  Array.from(svgs).forEach((svg, index) => {
     const svgElement = svg as unknown as HTMLElement;
     
     // Store original values for restoration
@@ -230,7 +60,7 @@ const optimizeSVGsForCapture = (element: HTMLElement): (() => void) => {
     };
     originalStyles.set(svg, original);
     
-
+    console.log(`SVG ${index + 1}: Analyzing transforms`);
     
     // Extract transform values directly from SVG
     const svgTransform = svgElement.style.transform;
@@ -238,6 +68,7 @@ const optimizeSVGsForCapture = (element: HTMLElement): (() => void) => {
     let translateY = 0;
     
     if (svgTransform && svgTransform !== 'none') {
+      console.log(`SVG ${index + 1}: Transform detected: ${svgTransform}`);
       
       // Parse translate3d
       const translate3dMatch = svgTransform.match(/translate3d\(([^,]+),\s*([^,]+),\s*([^)]+)\)/);
@@ -265,6 +96,8 @@ const optimizeSVGsForCapture = (element: HTMLElement): (() => void) => {
       }
     }
     
+    console.log(`SVG ${index + 1}: Final position calculated X=${translateX}, Y=${translateY}`);
+    
     // Set missing dimensions based on viewBox if needed
     const viewBox = svg.getAttribute('viewBox');
     if (viewBox && (!svg.getAttribute('width') || !svg.getAttribute('height'))) {
@@ -281,6 +114,7 @@ const optimizeSVGsForCapture = (element: HTMLElement): (() => void) => {
     
         // Apply positioning fixes for transforms
     if (translateX !== 0 || translateY !== 0) {
+      console.log(`SVG ${index + 1}: Applying position optimization`);
       
       // Remove all transforms
       svgElement.style.transform = 'none';
@@ -304,7 +138,8 @@ const optimizeSVGsForCapture = (element: HTMLElement): (() => void) => {
         // Ensure SVG stays within bounds
         svgElement.style.maxWidth = `calc(100% - ${translateX}px)`;
         svgElement.style.position = 'static';
-
+        
+        console.log(`SVG ${index + 1}: Applied parent padding: ${translateX}px`);
       } else {
         // Fallback if no parent element
         svgElement.style.marginLeft = `${translateX}px`;
@@ -331,11 +166,14 @@ const optimizeSVGsForCapture = (element: HTMLElement): (() => void) => {
     if (svgElement.style.position !== 'absolute') {
       svgElement.style.position = 'relative';
     }
+    
+    console.log(`SVG ${index + 1}: Optimization complete`);
   });
   
   // Return cleanup function to restore original state
   return () => {
-    Array.from(svgs).forEach((svg) => {
+    console.log('Restoring original SVG state');
+    Array.from(svgs).forEach((svg, index) => {
       const original = originalStyles.get(svg);
       if (original) {
         // Restore attributes
@@ -409,7 +247,8 @@ const optimizeSVGsForCapture = (element: HTMLElement): (() => void) => {
         svg.removeAttribute('data-parent-original-style');
         svg.removeAttribute('data-width-adjusted');
         svg.removeAttribute('data-original-width');
-
+        
+        console.log(`SVG ${index + 1}: Restored`);
       }
     });
   };
@@ -560,7 +399,7 @@ const processImagesForPDF = async (element: HTMLElement): Promise<{[key: string]
   const images = element.querySelectorAll('img');
   const imageMap: {[key: string]: string} = {};
   
-
+  console.log(`Pre-processing ${images.length} images for PDF generation`);
   
   await Promise.all(Array.from(images).map(async (img, index) => {
     try {
@@ -589,7 +428,182 @@ const processImagesForPDF = async (element: HTMLElement): Promise<{[key: string]
     }
   }));
   
+  console.log(`Processed ${Object.keys(imageMap).length} images successfully`);
   return imageMap;
+};
+
+// Detect if running on native mobile platform
+const isNativePlatform = (): boolean => {
+  return Capacitor.isNativePlatform();
+};
+
+// Get platform-specific directory for file storage
+const getPlatformDirectory = async (): Promise<Directory> => {
+  const platform = Capacitor.getPlatform();
+  
+  if (platform === 'ios') {
+    return Directory.Documents;
+  } else if (platform === 'android') {
+    // Sur Android, utiliser Cache ou Data au lieu d'ExternalStorage
+    // Ces répertoires ne nécessitent pas de permissions spéciales
+    return Directory.Cache;
+  } else {
+    // Fallback pour autres plateformes
+    return Directory.Data;
+  }
+};
+
+// Save file to native filesystem and share
+const saveFileNative = async (
+  data: string | Blob, 
+  fileName: string, 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  mimeType: string
+): Promise<void> => {
+  try {
+    console.log('Sauvegarde native du fichier:', fileName);
+    
+    let base64Data: string;
+    
+    // Convert data to base64
+    if (data instanceof Blob) {
+      base64Data = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as string;
+          // Remove data URL prefix if present
+          const base64 = result.includes(',') ? result.split(',')[1] : result;
+          resolve(base64);
+        };
+        reader.readAsDataURL(data);
+      });
+    } else {
+      // If data is already base64 string, clean it
+      base64Data = data.includes(',') ? data.split(',')[1] : data;
+    }
+
+    let directory = await getPlatformDirectory();
+    let result;
+    
+    // Essayer d'abord avec le répertoire principal
+    try {
+      result = await Filesystem.writeFile({
+        path: fileName,
+        data: base64Data,
+        directory: directory,
+        encoding: Encoding.UTF8
+      });
+      
+      console.log('Fichier sauvegardé avec succès:', result.uri);
+    } catch (firstError) {
+      console.warn('Échec avec le premier répertoire, essai avec Data:', firstError);
+      
+      // Si ça échoue, essayer avec Directory.Data
+      directory = Directory.Data;
+      try {
+        result = await Filesystem.writeFile({
+          path: fileName,
+          data: base64Data,
+          directory: directory,
+          encoding: Encoding.UTF8
+        });
+        
+        console.log('Fichier sauvegardé avec succès (Data):', result.uri);
+      } catch (secondError) {
+        console.warn('Échec avec Directory.Data, essai avec Documents:', secondError);
+        
+        // Dernier essai avec Directory.Documents
+        directory = Directory.Documents;
+        result = await Filesystem.writeFile({
+          path: fileName,
+          data: base64Data,
+          directory: directory,
+          encoding: Encoding.UTF8
+        });
+        
+        console.log('Fichier sauvegardé avec succès (Documents):', result.uri);
+      }
+    }
+
+    // Share the file
+    await Share.share({
+      title: 'Exporter le fichier',
+      text: `Partager ${fileName}`,
+      url: result.uri,
+      dialogTitle: 'Partager le fichier exporté'
+    });
+
+    console.log('Fichier partagé avec succès');
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde native:', error);
+    
+    // Fallback: try to share the data directly
+    try {
+      if (data instanceof Blob) {
+        const dataUrl = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(data);
+        });
+        
+        await Share.share({
+          title: 'Exporter le fichier',
+          text: `Partager ${fileName}`,
+          url: dataUrl,
+          dialogTitle: 'Partager le fichier exporté'
+        });
+        
+        console.log('Fichier partagé directement via URL de données');
+      }
+    } catch (shareError) {
+      console.error('Erreur lors du partage de fallback:', shareError);
+      throw new Error(`Impossible de sauvegarder le fichier: ${error}`);
+    }
+  }
+};
+
+// Save file using web download method
+const saveFileWeb = (
+  data: Blob, 
+  fileName: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _mimeType?: string
+): void => {
+  const url = URL.createObjectURL(data);
+  const link = document.createElement('a');
+  link.download = fileName;
+  link.href = url;
+  document.body.appendChild(link);
+  link.click();
+  setTimeout(() => {
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }, 100);
+};
+
+// Universal file save function that detects platform
+const saveFile = async (
+  data: string | Blob, 
+  fileName: string, 
+  mimeType: string
+): Promise<void> => {
+  if (isNativePlatform()) {
+    await saveFileNative(data, fileName, mimeType);
+  } else {
+    if (data instanceof Blob) {
+      saveFileWeb(data, fileName, mimeType);
+    } else {
+      // Convert base64 string to blob for web download
+      const byteCharacters = atob(data.includes(',') ? data.split(',')[1] : data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: mimeType });
+      saveFileWeb(blob, fileName, mimeType);
+    }
+  }
 };
 
 // Enhanced PDF generator
@@ -598,10 +612,11 @@ const generateEnhancedPDF = async (
   orientation: 'portrait' | 'landscape', 
   fileName: string, 
   save: boolean, 
-  autoResize: boolean = true,
-  maximizeWidth: boolean = true
- ) => {
-  const pxToMm = 25.4 / 96;
+  autoResize: boolean = true
+): Promise<jsPDF> => {
+  console.log('Starting enhanced PDF generation');
+  
+  const pxToMm = 25.4 / 96; // Convert pixels to millimeters
 
   // Analyze elements to determine optimal page setup
   const elementDimensions = elements.map(element => {
@@ -622,7 +637,7 @@ const generateEnhancedPDF = async (
   let finalOrientation = orientation;
   const a4Portrait = { width: 210, height: 297 };
   const a4Landscape = { width: 297, height: 210 };
-  const margin = 8;
+  const margin = 15;
 
   if (autoResize && maxElementWidthMm > a4Portrait.width - (2 * margin)) {
     if (maxElementWidthMm <= a4Landscape.width - (2 * margin)) {
@@ -651,6 +666,8 @@ const generateEnhancedPDF = async (
   const pageHeight = pdf.internal.pageSize.getHeight();
   const maxWidth = pageWidth - (2 * margin);
   const maxHeight = pageHeight - (2 * margin);
+  
+  console.log(`Using page size: ${pageWidth.toFixed(1)}x${pageHeight.toFixed(1)}mm`);
 
   let currentY = margin;
   
@@ -659,75 +676,42 @@ const generateEnhancedPDF = async (
     const elementData = elementDimensions[i];
     const element = elementData.element;
     
+    console.log(`Processing element ${i+1}/${elements.length} (${element.id || 'unknown'})`);
+    
     // Pre-process images
     await processImagesForPDF(element);
     
-    // Convert to millimeters and calculate optimal scaling
-    let elementWidth = elementData.width * pxToMm;
-    let elementHeight = elementData.height * pxToMm;
-    
-        // Calculate scaling to maximize space usage
-    let scale = 1;
-    const widthScale = maxWidth / elementWidth;
-    const heightScale = maxHeight / elementHeight;
-    
-    if (maximizeWidth) {
-      if (elementWidth <= maxWidth && elementHeight <= maxHeight) {
-        scale = widthScale;
-        if (elementHeight * scale > maxHeight) {
-          scale = heightScale;
-        }
-        scale = Math.min(scale, 2.0);
-      } else {
-        scale = Math.min(widthScale, heightScale);
-      }
-    } else {
-      if (elementWidth <= maxWidth && elementHeight <= maxHeight) {
-        scale = Math.min(widthScale, heightScale);
-        scale = Math.min(scale, 1.5);
-      } else {
-        scale = Math.min(widthScale, heightScale);
-      }
-    }
-    
-    elementWidth *= scale;
-    elementHeight *= scale;
+         // Convert to millimeters and calculate scaling
+     let elementWidth = elementData.width * pxToMm;
+     let elementHeight = elementData.height * pxToMm;
+     
+     let scale = 1;
+     if (elementWidth > maxWidth || elementHeight > maxHeight) {
+       scale = Math.min(maxWidth / elementWidth, maxHeight / elementHeight);
+     }
+     
+     elementWidth *= scale;
+     elementHeight *= scale;
     
     // Check if new page is needed
     if (currentY + elementHeight > pageHeight - margin) {
       pdf.addPage();
       currentY = margin;
+      console.log('Added new page for element');
     }
     
-    const x = margin + (maxWidth - elementWidth) / 2;
+    const x = (pageWidth - elementWidth) / 2;
     const y = currentY;
     
     // Try to capture the element
     let success = false;
     
-          try {
-        // Final flex stabilization before capture
-        const computedStyle = window.getComputedStyle(element);
-        const parentStyle = element.parentElement ? window.getComputedStyle(element.parentElement) : null;
-        const isFlexElement = parentStyle?.display?.includes('flex') || computedStyle.display?.includes('flex');
-        
-        if (isFlexElement) {
-          for (let i = 0; i < 5; i++) {
-            if (element.parentElement) {
-              // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-              element.parentElement.offsetHeight;
-            }
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            element.offsetHeight;
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            element.scrollHeight;
-            await delay(50);
-          }
-        }
+    try {
+      console.log('Capturing element with html2canvas');
       
-              // Ensure text visibility
-        const originalStyles = new Map();
-        const textElements = element.querySelectorAll('p, span, div, h1, h2, h3, h4, h5, h6, li, td');
+      // Ensure text visibility
+      const originalStyles = new Map();
+      const textElements = element.querySelectorAll('p, span, div, h1, h2, h3, h4, h5, h6, li, td');
       
       Array.from(textElements).forEach(el => {
         const htmlEl = el as HTMLElement;
@@ -773,21 +757,15 @@ const generateEnhancedPDF = async (
       await delay(50); // Small delay for SVG optimization to take effect
       
       // Capture with html2canvas
-      const targetRes = getTargetResolution(); // Résolution mobile optimisée
       const captureOptions = {
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#ffffff',
+        background: '#ffffff',
         logging: false,
-        scale: NORMALIZED_CAPTURE_SCALE, // Scale normalisé pour cohérence desktop/mobile
         foreignObjectRendering: false,
         imageTimeout: 15000,
         removeContainer: true,
-        windowWidth: targetRes.width, // Force desktop window width
-        windowHeight: targetRes.height, // Force desktop window height
-        width: elementData.width, // Use actual element width
-        height: elementData.height, // Use actual element height
-      };
+      } as any;
       
       const canvas = await html2canvas(element, captureOptions);
       
@@ -827,6 +805,7 @@ const generateEnhancedPDF = async (
       // Restore SVG original attributes
       cleanupSVGs();
       
+      console.log('Element captured successfully');
       success = true;
     } catch (error) {
       console.error('Failed to capture element:', error);
@@ -845,9 +824,9 @@ const generateEnhancedPDF = async (
   }
   
   if (save) {
-    // Save the PDF with proper native/web handling
+    // Save the PDF using universal save method
     const blob = pdf.output('blob');
-    await saveFileNative(blob, fileName, 'pdf');
+    await saveFile(blob, `${fileName}.pdf`, 'application/pdf');
   }
   
   return pdf;
@@ -856,23 +835,21 @@ const generateEnhancedPDF = async (
 // Temporarily switch to desktop layout for mobile devices
 const temporarilySetDesktopLayout = () => {
   if (!isMobileDevice()) {
-    return () => {};
+    console.log('Desktop detected - skipping layout changes');
+    return () => {}; // No-op cleanup for desktop
   }
+  
+  console.log('Temporarily switching to desktop layout for export');
   
   // Store original values
   const originalValues = {
     viewportMeta: document.querySelector('meta[name="viewport"]') as HTMLMetaElement,
     bodyMinWidth: document.body.style.minWidth,
     bodyWidth: document.body.style.width,
-    bodyMaxWidth: document.body.style.maxWidth,
     htmlMinWidth: document.documentElement.style.minWidth,
     htmlWidth: document.documentElement.style.width,
-    htmlMaxWidth: document.documentElement.style.maxWidth,
     bodyOverflow: document.body.style.overflow,
     htmlOverflow: document.documentElement.style.overflow,
-    bodyTransform: document.body.style.transform,
-    bodyTransformOrigin: document.body.style.transformOrigin,
-    bodyZoom: (document.body.style as unknown as { zoom?: string }).zoom,
     injectedStyleSheet: null as HTMLStyleElement | null
   };
   
@@ -886,26 +863,14 @@ const temporarilySetDesktopLayout = () => {
     document.head.appendChild(viewportMeta);
   }
   
-  const targetRes = getTargetResolution();
-  const targetWidth = targetRes.width;
-  const targetScale = 1.0;
-  viewportMeta.content = `width=${targetWidth}, initial-scale=${targetScale}, maximum-scale=${targetScale}, minimum-scale=${targetScale}, user-scalable=no, viewport-fit=cover`;
+  // Set fixed desktop viewport with higher resolution
+  const targetWidth = 1920;
+  viewportMeta.content = `width=${targetWidth}, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no`;
   
+  // Inject desktop styles
   const desktopStyleSheet = document.createElement('style');
   desktopStyleSheet.setAttribute('data-export-desktop-override', 'true');
   desktopStyleSheet.innerHTML = `
-    html, body {
-      width: ${targetWidth}px !important;
-      min-width: ${targetWidth}px !important;
-      max-width: ${targetWidth}px !important;
-      transform: none !important;
-      zoom: 1 !important;
-      -webkit-text-size-adjust: none !important;
-      -ms-text-size-adjust: none !important;
-      text-size-adjust: none !important;
-      font-size-adjust: none !important;
-    }
-    
     * {
       -webkit-text-size-adjust: 100% !important;
       -ms-text-size-adjust: 100% !important;
@@ -915,63 +880,30 @@ const temporarilySetDesktopLayout = () => {
       text-rendering: optimizeLegibility !important;
       transition: none !important;
       animation: none !important;
-      transform: none !important;
-      zoom: 1 !important;
-    }
-    
-    /* Force desktop-like scaling for all elements */
-    div, section, article, main, nav, header, footer, aside {
-      box-sizing: border-box !important;
-      transform: none !important;
-    }
-    
-    /* Ensure images maintain proper scaling */
-    img {
-      max-width: none !important;
-      height: auto !important;
-      transform: none !important;
-    }
-    
-    /* Remove mobile-specific optimizations */
-    @media screen and (max-width: 768px) {
-      * {
-        font-size: inherit !important;
-        line-height: inherit !important;
-        margin: inherit !important;
-        padding: inherit !important;
-      }
     }
   `;
   document.head.appendChild(desktopStyleSheet);
   originalValues.injectedStyleSheet = desktopStyleSheet;
   
+  // Force dimensions
   document.body.style.minWidth = `${targetWidth}px`;
   document.body.style.width = `${targetWidth}px`;
-  document.body.style.maxWidth = `${targetWidth}px`;
   document.documentElement.style.minWidth = `${targetWidth}px`;
   document.documentElement.style.width = `${targetWidth}px`;
-  document.documentElement.style.maxWidth = `${targetWidth}px`;
-  
-  // Remove any transforms that might affect scaling
-  document.body.style.transform = 'none';
-  document.body.style.transformOrigin = 'top left';
-  (document.body.style as unknown as { zoom?: string }).zoom = '1';
   
   // Prevent scroll during capture
   document.body.style.overflow = 'hidden';
   document.documentElement.style.overflow = 'hidden';
   
-  // Force immediate reflows multiples fois
-  for (let i = 0; i < 5; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    document.body.offsetHeight;
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    document.documentElement.offsetHeight;
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    document.body.scrollWidth;
-  }
+  // Force reflows
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  document.body.offsetHeight;
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  document.documentElement.offsetHeight;
   
+  // Return cleanup function
   return () => {
+    console.log('Restoring mobile layout');
     
     // Remove injected stylesheet
     if (originalValues.injectedStyleSheet && originalValues.injectedStyleSheet.parentNode) {
@@ -988,24 +920,16 @@ const temporarilySetDesktopLayout = () => {
     // Restore styles
     document.body.style.minWidth = originalValues.bodyMinWidth;
     document.body.style.width = originalValues.bodyWidth;
-    document.body.style.maxWidth = originalValues.bodyMaxWidth;
     document.documentElement.style.minWidth = originalValues.htmlMinWidth;
     document.documentElement.style.width = originalValues.htmlWidth;
-    document.documentElement.style.maxWidth = originalValues.htmlMaxWidth;
-    
     document.body.style.overflow = originalValues.bodyOverflow;
     document.documentElement.style.overflow = originalValues.htmlOverflow;
-    document.body.style.transform = originalValues.bodyTransform;
-    document.body.style.transformOrigin = originalValues.bodyTransformOrigin;
-    (document.body.style as unknown as { zoom?: string }).zoom = originalValues.bodyZoom;
     
     // Force reflows
-    for (let i = 0; i < 3; i++) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      document.body.offsetHeight;
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      document.documentElement.offsetHeight;
-    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    document.body.offsetHeight;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    document.documentElement.offsetHeight;
     
     setTimeout(() => {
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -1112,8 +1036,7 @@ export const useExportToPDF = () => {
     fileName = 'export',
     format = 'pdf',
     orientation = 'portrait',
-    autoResize = true,
-    maximizeWidth = true
+    autoResize = true
   }: ExportOptions) => {
     setIsExporting(true);
     let restoreLayout: (() => void) | null = null;
@@ -1177,7 +1100,7 @@ export const useExportToPDF = () => {
         try {
           await Promise.race([
             document.fonts.ready,
-            delay(200) // Font loading timeout augmenté
+            delay(200) // Augmenté de 100 à 200ms pour le timeout des fonts
           ]);
         } catch {
           // Continue if fonts fail to load
@@ -1243,9 +1166,10 @@ export const useExportToPDF = () => {
       });
 
       // Generate PDF
-      const pdfDoc = await generateEnhancedPDF(elements, orientation, fileName, false, autoResize, maximizeWidth);
+      const pdfDoc = await generateEnhancedPDF(elements, orientation, fileName, false, autoResize);
       
       if (format === 'png') {
+        console.log('Conversion en PNG');
         
         try {
           // Create a canvas for PNG export
@@ -1253,13 +1177,12 @@ export const useExportToPDF = () => {
           const ctx = canvas.getContext('2d');
           
           if (!ctx) {
-            throw new Error('Could not get canvas context');
+            throw new Error('Impossible d\'obtenir le contexte canvas');
           }
           
-          // Calculate dimensions with normalized scaling
+          // Calculate dimensions
           let totalHeight = 0;
           const margins = 20;
-          // Utiliser une résolution normalisée pour PNG
           const maxWidth = 1654; // ~200 DPI for A4
           const elementsInfo = [];
           
@@ -1286,26 +1209,22 @@ export const useExportToPDF = () => {
           ctx.fillStyle = '#FFFFFF';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           
-          // Render each element with normalized capture settings
+          // Render each element
           for (const info of elementsInfo) {
             try {
-              await delay(150); // Délai augmenté avant capture
+              await delay(150); // Augmenté de 100 à 150ms
               
-              const targetRes = getTargetResolution(); // Résolution mobile optimisée
               const tempCanvas = await html2canvas(info.element, {
                 useCORS: true,
                 allowTaint: true,
-                backgroundColor: '#ffffff',
+                background: '#ffffff',
                 logging: false,
-                scale: NORMALIZED_CAPTURE_SCALE, // Scale normalisé pour cohérence desktop/mobile
                 foreignObjectRendering: false,
                 imageTimeout: 15000,
                 removeContainer: true,
-                windowWidth: targetRes.width, // Force desktop width
-                windowHeight: targetRes.height, // Force desktop height
-              });
+              } as any);
               
-              await delay(100); // Délai après capture
+              await delay(100); // Augmenté de 50 à 100ms
               
               // Use same dimensions on mobile and desktop
               const pngImageWidth = info.width;
@@ -1320,29 +1239,29 @@ export const useExportToPDF = () => {
                  pngX, pngY, pngImageWidth, pngImageHeight
                );
             } catch (err) {
-              console.error('Error capturing element for PNG:', err);
+              console.error('Erreur lors de la capture de l\'élément pour PNG:', err);
             }
           }
           
-          // Save PNG with native/web compatibility
+          // Download PNG
           const blob = await new Promise<Blob>((resolve) => 
             canvas.toBlob(b => resolve(b!), 'image/png')
           );
+          await saveFile(blob, `${fileName}.png`, 'image/png');
           
-          await saveFile(blob, fileName, 'png');
-
+          console.log('Export PNG terminé avec succès');
         } catch (pngError) {
-          console.error('Error generating PNG:', pngError);
-          alert('PNG generation failed. Saving as PDF instead.');
+          console.error('Erreur lors de la génération PNG:', pngError);
+          alert('La génération PNG a échoué. Sauvegarde en PDF à la place.');
           
-          // Fallback to PDF with native/web compatibility
+          // Fallback to PDF
           const blob = pdfDoc.output('blob');
-          await saveFile(blob, fileName, 'pdf');
+          await saveFile(blob, `${fileName}.pdf`, 'application/pdf');
         }
       } else {
-        // Save PDF with native/web compatibility
+        // Save PDF
         const blob = pdfDoc.output('blob');
-        await saveFile(blob, fileName, 'pdf');
+        await saveFile(blob, `${fileName}.pdf`, 'application/pdf');
       }
       
       console.log('Export terminé avec succès');
@@ -1389,7 +1308,6 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
     format = 'pdf',
     orientation = 'portrait',
     autoResize = true,
-    maximizeWidth = true,
     onExport,
   }, 
   ref
@@ -1404,7 +1322,6 @@ const ExportToPDFComponent: ForwardRefRenderFunction<ExportToPDFRef, ExportToPDF
       format,
       orientation,
       autoResize,
-      maximizeWidth,
       ...options
     })
   }));
