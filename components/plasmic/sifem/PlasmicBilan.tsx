@@ -3557,76 +3557,14 @@ function PlasmicBilan__RenderFunc(props: {
                             [__plasmic_idx_0]
                           );
                           return (
-                            <Checkbox
-                              data-plasmic-name={"pathologieAssociee"}
-                              data-plasmic-override={
-                                overrides.pathologieAssociee
-                              }
-                              {...child$Props}
-                            >
-                              <div
-                                className={classNames(
-                                  projectcss.all,
-                                  sty.freeBox___32Cc
-                                )}
-                              >
-                                <div
-                                  className={classNames(
-                                    projectcss.all,
-                                    projectcss.__wab_text,
-                                    sty.text__fcPqM,
-                                    {
-                                      [sty.textglobal_locale_en__fcPqMfhlYu]:
-                                        hasVariant(
-                                          globalVariants,
-                                          "locale",
-                                          "en"
-                                        )
-                                    }
-                                  )}
-                                >
-                                  {hasVariant(
-                                    globalVariants,
-                                    "locale",
-                                    "en"
-                                  ) ? (
-                                    <React.Fragment>
-                                      {(() => {
-                                        try {
-                                          return currentItem.name_en;
-                                        } catch (e) {
-                                          if (
-                                            e instanceof TypeError ||
-                                            e?.plasmicType ===
-                                              "PlasmicUndefinedDataError"
-                                          ) {
-                                            return "Absence d'endom\u00e9triose superficielle visible";
-                                          }
-                                          throw e;
-                                        }
-                                      })()}
-                                    </React.Fragment>
-                                  ) : (
-                                    <React.Fragment>
-                                      {(() => {
-                                        try {
-                                          return currentItem.name_fr;
-                                        } catch (e) {
-                                          if (
-                                            e instanceof TypeError ||
-                                            e?.plasmicType ===
-                                              "PlasmicUndefinedDataError"
-                                          ) {
-                                            return "Absence d'endom\u00e9triose superficielle visible";
-                                          }
-                                          throw e;
-                                        }
-                                      })()}
-                                    </React.Fragment>
-                                  )}
-                                </div>
-                              </div>
-                            </Checkbox>
+                            <Endo
+                              lesionId={currentItem.id}
+                              submissionEndometriome={$state.submissionEndometriome.filter(x => x.lesion_id === currentItem.id)}
+                              onSubmissionEndometriomeChange={val => {
+                                $stateSet($state, ["submissionEndometriome"], val);
+                              }}
+                              options={$queries.getOptions.data.filter(x => x.lesion_id === currentItem.id)}
+                            />
                           );
                         })();
                       })
