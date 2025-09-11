@@ -33,51 +33,99 @@ const isMobileDevice = () =>
   window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 // Native file save/share helper
-const saveFileNative = (blob: Blob, fileName: string, fileType: 'pdf' | 'png') => {
+const saveFileNative = async (blob: Blob, fileName: string, fileType: 'pdf' | 'png') => {
   const isNative = (window as any).Capacitor?.isNativePlatform?.() || false;
+  
+  console.log('🔍 saveFileNative - Debug Info:', {
+    isNative,
+    hasCapacitor: !!(window as any).Capacitor,
+    hasPlugins: !!(window as any).Capacitor?.Plugins,
+    hasShare: !!(window as any).Capacitor?.Plugins?.Share,
+    hasFilesystem: !!(window as any).Capacitor?.Plugins?.Filesystem,
+    platform: (window as any).Capacitor?.getPlatform?.(),
+    fileName,
+    fileType,
+    blobSize: blob.size
+  });
   
   if (isNative) {
     // For native apps, try multiple approaches
     try {
-      // Convert blob to base64 for better compatibility
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64data = reader.result as string;
-        
-        // Try to use Capacitor Share plugin if available
-        const Share = (window as any).Capacitor?.Plugins?.Share;
-        if (Share) {
-          Share.share({
+      const Filesystem = (window as any).Capacitor?.Plugins?.Filesystem;
+      const Share = (window as any).Capacitor?.Plugins?.Share;
+      
+      // Convert blob to base64
+      const base64data = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
+      
+      // Remove data URL prefix to get pure base64
+      const base64Pure = base64data.split(',')[1];
+      const mimeType = fileType === 'pdf' ? 'application/pdf' : 'image/png';
+      
+      console.log('📤 Tentative de sauvegarde avec Filesystem + Share');
+      
+      if (Filesystem && Share) {
+        try {
+          // Save file to device storage first
+          const result = await Filesystem.writeFile({
+            path: `${fileName}.${fileType}`,
+            data: base64Pure,
+            directory: 'DOCUMENTS',
+            encoding: 'base64'
+          });
+          
+          console.log('✅ Fichier sauvegardé:', result);
+          
+          // Then share the saved file
+          await Share.share({
+            title: `${fileName}.${fileType}`,
+            text: `${fileType.toUpperCase()} Export from Sifem`,
+            url: result.uri,
+            dialogTitle: `Partager le ${fileType.toUpperCase()}`
+          });
+          
+          console.log('✅ Partage réussi avec Filesystem + Share');
+          return;
+        } catch (fsError) {
+          console.error('❌ Échec Filesystem + Share:', fsError);
+        }
+      }
+      
+      // Fallback: Direct Share with base64
+      if (Share) {
+        console.log('📤 Fallback: Share direct avec base64');
+        try {
+          await Share.share({
             title: fileName,
             text: `${fileType.toUpperCase()} Export`,
             url: base64data,
             dialogTitle: `Partager le ${fileType.toUpperCase()}`
-          }).catch(() => {
-            // Fallback: create a temporary link with the base64 data
-            const link = document.createElement('a');
-            link.href = base64data;
-            link.download = `${fileName}.${fileType}`;
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
           });
-        } else {
-          // Fallback: use blob URL with different approach
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `${fileName}.${fileType}`;
-          link.style.display = 'none';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          console.log('✅ Partage direct réussi');
+          return;
+        } catch (shareError) {
+          console.error('❌ Échec Share direct:', shareError);
         }
-      };
-      reader.readAsDataURL(blob);
+      }
+      
+      // Ultimate fallback: download link
+      console.log('⚠️ Fallback final: téléchargement direct');
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${fileName}.${fileType}`;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      console.log('📥 Tentative de téléchargement direct effectuée');
+      
     } catch (error) {
-      console.error(`Native ${fileType} save failed:`, error);
+      console.error(`❌ Native ${fileType} save failed:`, error);
       // Ultimate fallback
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -766,7 +814,7 @@ const generateEnhancedPDF = async (
   if (save) {
     // Save the PDF with proper native/web handling
     const blob = pdf.output('blob');
-    saveFileNative(blob, fileName, 'pdf');
+    await saveFileNative(blob, fileName, 'pdf');
   }
   
   return pdf;
@@ -1160,7 +1208,7 @@ export const useExportToPDF = () => {
             canvas.toBlob(b => resolve(b!), 'image/png')
           );
           
-          saveFileNative(blob, fileName, 'png');
+          await saveFileNative(blob, fileName, 'png');
 
         } catch (pngError) {
           console.error('Error generating PNG:', pngError);
@@ -1168,12 +1216,12 @@ export const useExportToPDF = () => {
           
           // Fallback to PDF with native/web compatibility
           const blob = pdfDoc.output('blob');
-          saveFileNative(blob, fileName, 'pdf');
+          await saveFileNative(blob, fileName, 'pdf');
         }
       } else {
         // Save PDF with native/web compatibility
         const blob = pdfDoc.output('blob');
-        saveFileNative(blob, fileName, 'pdf');
+        await saveFileNative(blob, fileName, 'pdf');
       }
     } catch (error) {
       console.error('Export failed:', error);
