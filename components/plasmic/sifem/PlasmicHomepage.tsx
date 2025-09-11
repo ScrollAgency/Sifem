@@ -97,6 +97,13 @@ export type PlasmicHomepage__OverridesType = {
   progressBar?: Flex__<"div">;
   button?: Flex__<typeof Button>;
   svg?: Flex__<"svg">;
+}
+
+export interface PlasmicHomepageProps {
+  isLoading?: boolean;
+  variants?: PlasmicHomepage__VariantsArgs;
+  args?: PlasmicHomepage__ArgsType;
+  overrides?: PlasmicHomepage__OverridesType;
 };
 
 export interface DefaultHomepageProps {}
@@ -114,9 +121,10 @@ function PlasmicHomepage__RenderFunc(props: {
   variants: PlasmicHomepage__VariantsArgs;
   args: PlasmicHomepage__ArgsType;
   overrides: PlasmicHomepage__OverridesType;
+  isLoading?: boolean;
   forNode?: string;
 }) {
-  const { variants, overrides, forNode } = props;
+  const { variants, overrides, isLoading, forNode } = props;
 
   const args = React.useMemo(
     () =>
@@ -330,11 +338,12 @@ function PlasmicHomepage__RenderFunc(props: {
                 className={classNames(projectcss.all, sty.image1)}
               />
 
-              {/* Barre de progression personnalisée entre l'image et le bouton */}
-              {overrides.progressBar && (
+              {/* Barre de progression affichée uniquement si loading */}
+              {overrides.progressBar && isLoading && (
                 <div
                   data-plasmic-name={"progressBar"}
                   data-plasmic-override={overrides.progressBar}
+                  className={sty.progressBar}
                 />
               )}
 
@@ -572,7 +581,13 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
 
 export const PlasmicHomepage = Object.assign(
   // Top-level PlasmicHomepage renders the root element
-  makeNodeComponent("accueil"),
+  Object.assign(
+    makeNodeComponent("accueil"),
+    {
+      // Typage pour accepter les props personnalisées
+      defaultProps: {} as PlasmicHomepageProps
+    }
+  ),
   {
     // Helper components rendering sub-elements
     main: makeNodeComponent("main"),
