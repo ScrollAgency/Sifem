@@ -6,10 +6,12 @@ import { PlasmicHomepage } from "../components/plasmic/sifem/PlasmicHomepage";
 import { useRouter } from "next/router";
 import { useData } from "@/contexts/DataContext";
 import { usePwaAssetsProgress } from "@/hook/usePwaAssetsProgress";
+import { useLocale } from "@/contexts/LocaleContext";
 
 function Homepage() {
   const { lesions, options, loading } = useData();
   const { progress: pwaProgress, complete: pwaComplete } = usePwaAssetsProgress();
+  const { locale } = useLocale();
   const allLoaded = !loading && pwaComplete;
 
   const queries = {
@@ -19,7 +21,7 @@ function Homepage() {
 
 
   return (
-    <LocaleContextProvider value={undefined}>
+    <LocaleContextProvider value={locale as "fr" | "en"}>
       <GlobalContextsProvider>
         <PageParamsProvider__
           route={useRouter()?.pathname}
