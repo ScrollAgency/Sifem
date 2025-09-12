@@ -2,7 +2,7 @@ import React, { useState, useCallback, forwardRef, useImperativeHandle, ForwardR
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { Capacitor } from '@capacitor/core';
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
 
 interface ExportOptions {
@@ -84,8 +84,7 @@ const saveFileNative = async (blob: Blob, fileName: string, fileType: 'pdf' | 'p
       result = await Filesystem.writeFile({
         path: fullFileName,
         data: base64Data,
-        directory: directory,
-        encoding: Encoding.UTF8
+        directory: directory
       });
       
       console.log('Fichier sauvegardé avec succès:', result.uri);
@@ -98,8 +97,7 @@ const saveFileNative = async (blob: Blob, fileName: string, fileType: 'pdf' | 'p
         result = await Filesystem.writeFile({
           path: fullFileName,
           data: base64Data,
-          directory: directory,
-          encoding: Encoding.UTF8
+          directory: directory
         });
         
         console.log('Fichier sauvegardé avec succès (Data):', result.uri);
@@ -111,8 +109,7 @@ const saveFileNative = async (blob: Blob, fileName: string, fileType: 'pdf' | 'p
         result = await Filesystem.writeFile({
           path: fullFileName,
           data: base64Data,
-          directory: directory,
-          encoding: Encoding.UTF8
+          directory: directory
         });
         
         console.log('Fichier sauvegardé avec succès (Documents):', result.uri);
