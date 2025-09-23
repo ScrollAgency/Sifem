@@ -1,0 +1,45 @@
+.newEndoComp {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  min-width: 0;
+}
+.freeBox {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  column-gap: 24px;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBox {
+    justify-content: space-between;
+    width: 80%;
+  }
+}
+.addEnd:global(.__wab_instance) {
+  position: relative;
+}
+.svg__hbV9K {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+  color: var(--token-SiAHIK-9x5e0);
+}
+.text__y3H4N {
+  padding-right: 0px;
+}
+.svg__bBtJw {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+  color: var(--token-SiAHIK-9x5e0);
+}

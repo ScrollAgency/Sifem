@@ -3,98 +3,46 @@
   height: auto;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   position: relative;
   cursor: pointer;
+  column-gap: 0px;
   border-radius: 16px;
   padding: 16px;
 }
-.checkboxWrapper > :global(.__wab_flex-container) {
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  margin-left: calc(0px - 0px);
-  width: calc(100% + 0px);
-}
-.checkboxWrapper > :global(.__wab_flex-container) > *,
-.checkboxWrapper > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.checkboxWrapper > :global(.__wab_flex-container) > picture > img,
-.checkboxWrapper
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-left: 0px;
-}
 .checkboxWrapperisChecked {
-  background: var(--token-FH1EpKfmnNBX);
-}
-.checkboxWrapperisChecked > :global(.__wab_flex-container) {
+  background: var(--token-wPbvExh8mjAb);
   align-items: flex-start;
   justify-content: center;
 }
 .checkboxWrapperhasMedia {
   display: flex;
   flex-direction: column;
-}
-.checkboxWrapperhasMedia > :global(.__wab_flex-container) {
-  flex-direction: column;
-  margin-left: calc(0px - 0px);
-  width: calc(100% + 0px);
-}
-.checkboxWrapperhasMedia > :global(.__wab_flex-container) > *,
-.checkboxWrapperhasMedia
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > *,
-.checkboxWrapperhasMedia > :global(.__wab_flex-container) > picture > img,
-.checkboxWrapperhasMedia
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-left: 0px;
+  column-gap: 0px;
 }
 .freeBox {
   display: flex;
   flex-direction: row;
   position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
   width: 100%;
   height: auto;
   max-width: 100%;
   min-width: 0;
   padding: 8px;
 }
-.freeBox > :global(.__wab_flex-container) {
-  flex-direction: row;
-  align-items: stretch;
-  justify-content: flex-start;
-  min-width: 0;
-}
 .freeBoxhasMedia {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-.freeBoxhasMedia > :global(.__wab_flex-container) {
   flex-wrap: wrap;
   align-items: stretch;
+  padding-left: 0px;
+  padding-right: 0px;
   justify-content: space-between;
-  margin-left: calc(0px - 8px);
-  width: calc(100% + 8px);
-  margin-top: calc(0px - 4px);
-  height: calc(100% + 4px);
+  column-gap: 8px;
+  row-gap: 4px;
 }
-.freeBoxhasMedia > :global(.__wab_flex-container) > *,
-.freeBoxhasMedia > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBoxhasMedia > :global(.__wab_flex-container) > picture > img,
-.freeBoxhasMedia
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-left: 8px;
-  margin-top: 4px;
-}
-.checkbox__b5Jhj:global(.__wab_instance) {
+.checkbox__kgcnr:global(.__wab_instance) {
   width: auto;
   height: 20px;
   position: relative;
@@ -115,25 +63,11 @@
   display: flex;
   position: relative;
   flex-direction: row;
-  border-radius: 16px;
-  padding: 2px 8px 2px 6px;
-}
-.badgeBase > :global(.__wab_flex-container) {
-  flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-left: calc(0px - 4px);
-  width: calc(100% + 4px);
-}
-.badgeBase > :global(.__wab_flex-container) > *,
-.badgeBase > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.badgeBase > :global(.__wab_flex-container) > picture > img,
-.badgeBase
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-left: 4px;
+  column-gap: 4px;
+  border-radius: 16px;
+  padding: 2px 8px 2px 6px;
 }
 .svg {
   object-fit: cover;
@@ -160,7 +94,7 @@
   position: relative;
 }
 .image5 {
-  background: url("/plasmic/sifem/images/image6.png") center center / cover no-repeat;
+  background: url("/plasmic/📍_electric_sifem_update/images/image6.png") center center / cover no-repeat;
   height: 168px;
   display: block;
   position: relative;

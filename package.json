@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "prebuild": "node scripts/generate-pwa-assets.js",
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p 3002",
     "build": "next build",
     "start": "next start -p 3000",
     "lint": "next lint",
@@ -25,7 +25,7 @@
     "@electric-sql/client": "^1.0.4",
     "@electric-sql/react": "^1.0.4",
     "@plasmicapp/loader-nextjs": "^1.0.435",
-    "@plasmicapp/react-web": "^0.2.393",
+    "@plasmicapp/react-web": "^0.2.401",
     "@plasmicpkgs/antd5": "^0.0.295",
     "@plasmicpkgs/plasmic-basic-components": "^0.0.249",
     "@plasmicpkgs/plasmic-embed-css": "^0.1.208",
