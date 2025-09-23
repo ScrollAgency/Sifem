@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Sifem</string>
-    <string name="title_activity_main">Sifem</string>
+    <string name="app_name">dPEI Pocket</string>
+    <string name="title_activity_main">dPEI Pocket</string>
     <string name="package_name">com.sifem.app</string>
     <string name="custom_url_scheme">com.sifem.app</string>
 </resources>

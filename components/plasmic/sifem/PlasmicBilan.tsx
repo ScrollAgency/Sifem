@@ -1187,9 +1187,18 @@ function PlasmicBilan__RenderFunc(props: {
                     }
                   })()
             }
-            fileName={`dpei_${new Date()
-              .toLocaleString("fr-FR", { timeZone: "Europe/Paris" })
-              .replace(/[/]/g, "_")}`}
+            fileName={`dPEI ${new Date()
+              .toLocaleString("fr-FR", { 
+                timeZone: "Europe/Paris",
+                day: "2-digit",
+                month: "2-digit", 
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+              })
+              .replace(/\//g, "-")
+              .replace(/:/g, "-")}`}
             format={(() => {
               try {
                 return $state.printType;
@@ -9300,7 +9309,7 @@ function PlasmicBilan__RenderFunc(props: {
                                           (currentItem.next_step ||
                                           currentItem.previous_step
                                             ? " : " + currentItem.face
-                                            : null)
+                                            : "")
                                         );
                                       } catch (e) {
                                         if (
@@ -12019,7 +12028,7 @@ function PlasmicBilan__RenderFunc(props: {
                 $state.step === "Profonde" ||
                 $queries.getLesions.data.find(
                   x => x.category_fr === $state.step
-                ).macro_category_fr === "Profonde"
+                )?.macro_category_fr === "Profonde"
               );
             } catch (e) {
               if (
