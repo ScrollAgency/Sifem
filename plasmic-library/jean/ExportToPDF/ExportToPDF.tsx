@@ -1,6 +1,9 @@
 import React, { useState, useCallback, forwardRef, useImperativeHandle, ForwardRefRenderFunction } from 'react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { Capacitor } from '@capacitor/core';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 
 interface ExportOptions {
   elementIds: string[];
@@ -31,6 +34,153 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const isMobileDevice = () => 
   window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+// Detect if running on native mobile platform
+const isNativePlatform = (): boolean => {
+  return Capacitor.isNativePlatform();
+};
+
+// Get platform-specific directory for file storage
+const getPlatformDirectory = async (): Promise<Directory> => {
+  const platform = Capacitor.getPlatform();
+  
+  if (platform === 'ios') {
+    return Directory.Documents;
+  } else if (platform === 'android') {
+    // Sur Android, utiliser Cache ou Data au lieu d'ExternalStorage
+    // Ces répertoires ne nécessitent pas de permissions spéciales
+    return Directory.Cache;
+  } else {
+    // Fallback pour autres plateformes
+    return Directory.Data;
+  }
+};
+
+// Native file save/share helper
+const saveFileNative = async (blob: Blob, fileName: string, fileType: 'pdf' | 'png') => {
+  console.log('Sauvegarde native du fichier:', fileName);
+  
+  try {
+    let base64Data: string;
+    
+    // Convert blob to base64
+    base64Data = await new Promise<string>((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        // Remove data URL prefix if present
+        const base64 = result.includes(',') ? result.split(',')[1] : result;
+        resolve(base64);
+      };
+      reader.readAsDataURL(blob);
+    });
+
+    let directory = await getPlatformDirectory();
+    let result;
+    const fullFileName = `${fileName}.${fileType}`;
+    
+    // Essayer d'abord avec le répertoire principal
+    try {
+      result = await Filesystem.writeFile({
+        path: fullFileName,
+        data: base64Data,
+        directory: directory
+      });
+      
+      console.log('Fichier sauvegardé avec succès:', result.uri);
+    } catch (firstError) {
+      console.warn('Échec avec le premier répertoire, essai avec Data:', firstError);
+      
+      // Si ça échoue, essayer avec Directory.Data
+      directory = Directory.Data;
+      try {
+        result = await Filesystem.writeFile({
+          path: fullFileName,
+          data: base64Data,
+          directory: directory
+        });
+        
+        console.log('Fichier sauvegardé avec succès (Data):', result.uri);
+      } catch (secondError) {
+        console.warn('Échec avec Directory.Data, essai avec Documents:', secondError);
+        
+        // Dernier essai avec Directory.Documents
+        directory = Directory.Documents;
+        result = await Filesystem.writeFile({
+          path: fullFileName,
+          data: base64Data,
+          directory: directory
+        });
+        
+        console.log('Fichier sauvegardé avec succès (Documents):', result.uri);
+      }
+    }
+
+    // Share the file
+    await Share.share({
+      title: 'Exporter le fichier',
+      text: `Partager ${fullFileName}`,
+      url: result.uri,
+      dialogTitle: 'Partager le fichier exporté'
+    });
+
+    console.log('Fichier partagé avec succès');
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde native:', error);
+    
+    // Fallback: try to share the data directly
+    try {
+      const dataUrl = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
+      
+      await Share.share({
+        title: 'Exporter le fichier',
+        text: `Partager ${fileName}.${fileType}`,
+        url: dataUrl,
+        dialogTitle: 'Partager le fichier exporté'
+      });
+      
+      console.log('Fichier partagé directement via URL de données');
+    } catch (shareError) {
+      console.error('Erreur lors du partage de fallback:', shareError);
+      throw new Error(`Impossible de sauvegarder le fichier: ${error}`);
+    }
+  }
+};
+
+// Save file using web download method
+const saveFileWeb = (
+  data: Blob, 
+  fileName: string,
+  fileType: string
+): void => {
+  const url = URL.createObjectURL(data);
+  const link = document.createElement('a');
+  link.download = `${fileName}.${fileType}`;
+  link.href = url;
+  document.body.appendChild(link);
+  link.click();
+  setTimeout(() => {
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }, 100);
+};
+
+// Universal file save function that detects platform
+const saveFile = async (
+  data: Blob, 
+  fileName: string, 
+  fileType: 'pdf' | 'png'
+): Promise<void> => {
+  if (isNativePlatform()) {
+    await saveFileNative(data, fileName, fileType);
+  } else {
+    saveFileWeb(data, fileName, fileType);
+  }
+};
 
 // Dynamic resolution detection for normalized export
 const getTargetResolution = () => {
@@ -692,18 +842,9 @@ const generateEnhancedPDF = async (
   }
   
   if (save) {
-    // Save the PDF using blob method for better mobile compatibility
+    // Save the PDF with proper native/web handling
     const blob = pdf.output('blob');
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.download = `${fileName}.pdf`;
-    link.href = url;
-    document.body.appendChild(link);
-    link.click();
-    setTimeout(() => {
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }, 100);
+    await saveFileNative(blob, fileName, 'pdf');
   }
   
   return pdf;
@@ -870,6 +1011,96 @@ const temporarilySetDesktopLayout = () => {
   };
 };
 
+// Vérifier la stabilité du layout après changement mobile->desktop
+const waitForLayoutStabilization = async (elementIds: string[], maxAttempts: number = 10): Promise<boolean> => {
+  console.log('Vérification de la stabilité du layout...');
+  
+  let previousWidths: number[] = [];
+  let stableCount = 0;
+  const requiredStableChecks = 3; // Nombre de vérifications stables consécutives requises
+  
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const currentWidths: number[] = [];
+    let allElementsFound = true;
+    
+    // Mesurer la largeur de tous les éléments
+    for (const id of elementIds) {
+      const element = document.getElementById(id);
+      if (!element) {
+        console.warn(`Élément "${id}" non trouvé lors de la vérification de stabilité`);
+        allElementsFound = false;
+        break;
+      }
+      
+      const rect = element.getBoundingClientRect();
+      currentWidths.push(rect.width);
+    }
+    
+    if (!allElementsFound) {
+      await delay(200);
+      continue;
+    }
+    
+    // Comparer avec les largeurs précédentes
+    if (previousWidths.length > 0) {
+      const isStable = currentWidths.every((width, index) => 
+        Math.abs(width - previousWidths[index]) < 1 // Tolérance de 1px
+      );
+      
+      if (isStable) {
+        stableCount++;
+        console.log(`Layout stable (${stableCount}/${requiredStableChecks}):`, currentWidths.map(w => Math.round(w)));
+        
+        if (stableCount >= requiredStableChecks) {
+          console.log('Layout stabilisé avec succès');
+          return true;
+        }
+      } else {
+        stableCount = 0;
+        console.log(`Layout instable (tentative ${attempt + 1}):`, {
+          précédent: previousWidths.map(w => Math.round(w)),
+          actuel: currentWidths.map(w => Math.round(w))
+        });
+      }
+    }
+    
+    previousWidths = [...currentWidths];
+    
+    // Attendre avant la prochaine vérification
+    await delay(300);
+    
+    // Forcer des reflows pour aider à la stabilisation
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    document.body.offsetHeight;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    document.documentElement.offsetHeight;
+  }
+  
+  console.warn('Timeout: le layout ne s\'est pas stabilisé dans le temps imparti');
+  return false;
+};
+
+// Fonction pour vérifier que les éléments ont atteint leur taille desktop
+const verifyDesktopSizing = (elementIds: string[]): boolean => {
+  const minDesktopWidth = 800; // Largeur minimum attendue en mode desktop
+  
+  for (const id of elementIds) {
+    const element = document.getElementById(id);
+    if (!element) continue;
+    
+    const rect = element.getBoundingClientRect();
+    console.log(`Élément "${id}": largeur actuelle ${Math.round(rect.width)}px`);
+    
+    if (rect.width < minDesktopWidth) {
+      console.warn(`Élément "${id}" semble encore en mode mobile (largeur: ${Math.round(rect.width)}px)`);
+      return false;
+    }
+  }
+  
+  console.log('Tous les éléments ont atteint leur taille desktop');
+  return true;
+};
+
 export const useExportToPDF = () => {
   const [isExporting, setIsExporting] = useState(false);
 
@@ -885,6 +1116,8 @@ export const useExportToPDF = () => {
     let restoreLayout: (() => void) | null = null;
     
     try {
+      console.log('Début de l\'export avec les IDs d\'éléments:', elementIds);
+      
       // Scroll to top of page for consistent export experience
       window.scrollTo({
         top: 0,
@@ -898,34 +1131,43 @@ export const useExportToPDF = () => {
       // Switch to desktop layout if on mobile
       restoreLayout = temporarilySetDesktopLayout();
       
-      // Wait for layout changes to take effect (délai augmenté significativement)
-      await delay(800);
+      // SÉCURITÉ: Délai initial plus long pour le changement de layout
+      console.log('Attente du changement de layout mobile->desktop...');
+      await delay(800); // Augmenté de 500 à 800ms
       
-      // Vérification que le changement de layout a bien eu lieu
-      let currentWidth = window.innerWidth;
-      let attempts = 0;
-      const maxAttempts = 10;
-      const targetRes = getTargetResolution(); // Résolution mobile optimisée
-      const targetWidth = targetRes.width;
-      
-      while (currentWidth !== targetWidth && attempts < maxAttempts) {
-        // Force additional reflows
-        for (let i = 0; i < 3; i++) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          document.body.offsetHeight;
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          document.documentElement.offsetHeight;
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          document.body.scrollWidth;
-        }
-        
-        await delay(200);
-        currentWidth = window.innerWidth;
-        attempts++;
+      // SÉCURITÉ: Vérifications multiples de stabilisation
+      for (let i = 0; i < 5; i++) { // Augmenté de 3 à 5 itérations
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        document.body.offsetHeight;
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        document.documentElement.offsetHeight;
+        await delay(150); // Augmenté de 100 à 150ms
       }
       
-      // Additional stabilization delay after convergence
-      await delay(600);
+      const currentWidth = window.innerWidth;
+      console.log(`Largeur actuelle après changement de layout: ${currentWidth}px`);
+      
+      // SÉCURITÉ: Attendre la stabilisation du layout
+      const isStabilized = await waitForLayoutStabilization(elementIds, 15); // Augmenté de 10 à 15 tentatives
+      if (!isStabilized) {
+        console.warn('Le layout ne s\'est pas complètement stabilisé, mais on continue...');
+      }
+      
+      // SÉCURITÉ: Vérifier que les éléments ont bien leur taille desktop
+      const hasDesktopSizing = verifyDesktopSizing(elementIds);
+      if (!hasDesktopSizing) {
+        console.warn('Certains éléments semblent encore en mode mobile, délai supplémentaire...');
+        await delay(1000); // Délai supplémentaire si problème détecté
+        
+        // Re-vérifier après le délai supplémentaire
+        const recheckSizing = verifyDesktopSizing(elementIds);
+        if (!recheckSizing) {
+          console.error('Les éléments n\'ont pas atteint leur taille desktop optimale');
+        }
+      }
+      
+      // SÉCURITÉ: Délai de stabilisation final
+      await delay(600); // Augmenté de 400 à 600ms
       
       // Wait for web fonts
       if (document.fonts && document.fonts.ready) {
@@ -944,71 +1186,58 @@ export const useExportToPDF = () => {
       for (const id of elementIds) {
         const element = document.getElementById(id);
         if (!element) {
-          console.warn(`Element with ID "${id}" not found in the DOM`);
-          alert(`Element with ID "${id}" not found. Please check your element IDs.`);
+          console.warn(`Élément avec l'ID "${id}" non trouvé dans le DOM`);
+          alert(`Élément avec l'ID "${id}" non trouvé. Veuillez vérifier vos IDs d'éléments.`);
           continue;
         }
         
+        const rect = element.getBoundingClientRect();
+        console.log(`Élément "${id}" trouvé avec la taille desktop ${Math.round(rect.width)}x${Math.round(rect.height)}px`);
         elements.push(element);
       }
       
       if (elements.length === 0) {
-        throw new Error('No valid elements found to export. Please check that your element IDs exist and are visible.');
+        throw new Error('Aucun élément valide trouvé pour l\'export. Veuillez vérifier que vos IDs d\'éléments existent et sont visibles.');
       }
 
       // Process elements sequentially for consistency
       for (let i = 0; i < elements.length; i++) {
         const element = elements[i];
-        const isLastElement = i === elements.length - 1;
+        console.log(`Traitement de l'élément ${i + 1}/${elements.length}: ${element.id}`);
         
-        await delay(150);
+        await delay(150); // Augmenté de 100 à 150ms
         
         const cleanup = await waitForElementRender(element);
         await preloadImages(element);
         cleanup();
         
-        // Check for flex elements that need extra stabilization
-        const computedStyle = window.getComputedStyle(element);
-        const parentStyle = element.parentElement ? window.getComputedStyle(element.parentElement) : null;
-        const isFlexChild = parentStyle?.display?.includes('flex');
-        const isFlexContainer = computedStyle.display?.includes('flex');
-        const isFlexElement = isFlexChild || isFlexContainer;
+        // SÉCURITÉ: Attente plus longue pour la stabilisation complète de l'élément
+        await delay(400); // Augmenté de 300 à 400ms
         
-        // Wait for element stabilization (longer for last element and flex elements)
-        const stabilizationDelay = (isLastElement || isFlexElement) ? 1000 : 600;
-        await delay(stabilizationDelay);
+        // Force additional reflows for this specific element
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        element.offsetHeight;
+        await delay(150); // Augmenté de 100 à 150ms
         
-        // Force reflows (more for flex elements and last element)
-        const reflows = (isFlexElement || isLastElement) ? 10 : 5;
+        const rect = element.getBoundingClientRect();
+        console.log(`Élément ${element.id} stabilisé: ${Math.round(rect.width)}x${Math.round(rect.height)}px`);
         
-        for (let j = 0; j < reflows; j++) {
-          if (isFlexChild && element.parentElement) {
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            element.parentElement.offsetHeight;
-          }
-          if (isFlexContainer) {
-            Array.from(element.children).forEach(child => {
-              // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-              (child as HTMLElement).offsetHeight;
-            });
-          }
-          
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          element.offsetHeight;
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          element.offsetWidth;
-          await delay(isLastElement ? 100 : 50);
-        }
-        
-        await delay(isLastElement ? 400 : 200);
+        await delay(200); // Augmenté de 150 à 200ms
         
         if (i < elements.length - 1) {
-          await delay(100);
+          await delay(100); // Augmenté de 50 à 100ms
         }
       }
 
-      // Final stabilization delay before capture
-      await delay(400);
+      // SÉCURITÉ: Vérification finale avant génération
+      console.log('Vérification finale avant génération du PDF...');
+      await delay(300);
+      
+      // Vérification finale des dimensions
+      elements.forEach((element, index) => {
+        const rect = element.getBoundingClientRect();
+        console.log(`Vérification finale - Élément ${index + 1} (${element.id}): ${Math.round(rect.width)}x${Math.round(rect.height)}px`);
+      });
 
       // Generate PDF
       const pdfDoc = await generateEnhancedPDF(elements, orientation, fileName, false, autoResize, maximizeWidth);
@@ -1092,72 +1321,52 @@ export const useExportToPDF = () => {
             }
           }
           
-          // Download PNG
+          // Save PNG with native/web compatibility
           const blob = await new Promise<Blob>((resolve) => 
             canvas.toBlob(b => resolve(b!), 'image/png')
           );
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.download = `${fileName}.png`;
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-          setTimeout(() => {
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-          }, 100);
+          
+          await saveFile(blob, fileName, 'png');
 
         } catch (pngError) {
           console.error('Error generating PNG:', pngError);
           alert('PNG generation failed. Saving as PDF instead.');
           
-          // Fallback to PDF
+          // Fallback to PDF with native/web compatibility
           const blob = pdfDoc.output('blob');
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.download = `${fileName}.pdf`;
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-          setTimeout(() => {
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-          }, 100);
+          await saveFile(blob, fileName, 'pdf');
         }
       } else {
-        // Save PDF
+        // Save PDF with native/web compatibility
         const blob = pdfDoc.output('blob');
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.download = `${fileName}.pdf`;
-        link.href = url;
-        document.body.appendChild(link);
-        link.click();
-        setTimeout(() => {
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        }, 100);
+        await saveFile(blob, fileName, 'pdf');
       }
+      
+      console.log('Export terminé avec succès');
     } catch (error) {
-      console.error('Export failed:', error);
-      alert(error instanceof Error ? error.message : 'Failed to export elements. Please try again.');
+      console.error('Échec de l\'export:', error);
+      alert(error instanceof Error ? error.message : 'Échec de l\'export des éléments. Veuillez réessayer.');
     } finally {
       // Always restore layout
       if (restoreLayout) {
+        console.log('Restauration du layout mobile...');
         restoreLayout();
         
-        await delay(800);
+        // SÉCURITÉ: Plus de temps pour la restauration du layout mobile
+        await delay(600); // Augmenté de 400 à 600ms
         
         // Force reflows after restoration
-        for (let i = 0; i < 5; i++) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          document.body.offsetHeight;
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          document.documentElement.offsetHeight;
-          await delay(50);
-        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        document.body.offsetHeight;
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        document.documentElement.offsetHeight;
         
-        await delay(600);
+        await delay(300); // Augmenté de 200 à 300ms
+        
+        const restoredWidth = window.innerWidth;
+        console.log(`Layout restauré: ${restoredWidth}px`);
+        
+        await delay(300); // Augmenté de 200 à 300ms
       }
       setIsExporting(false);
     }

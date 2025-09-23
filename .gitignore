@@ -38,3 +38,5 @@ next-env.d.ts
 
 /electric-vps
 /elektrionic_sifem
+resources/ios/**/*
+resources/android/**/*

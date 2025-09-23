@@ -256,6 +256,18 @@
     "revision": null
   },
   {
+    "url": "/lesions/image_en/bladder.jpg",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_en/caecum_ileon_appendice.jpg",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_en/cl_prl.jpg",
+    "revision": null
+  },
+  {
     "url": "/lesions/image_en/Diaphragme.jpg",
     "revision": null
   },
@@ -265,14 +277,6 @@
   },
   {
     "url": "/lesions/image_en/Espace_perivesical_G.jpg",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_en/LUS_distal_D.jpg",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_en/LUS_distal_G.jpg",
     "revision": null
   },
   {
@@ -289,6 +293,14 @@
   },
   {
     "url": "/lesions/image_en/Ligament_rond_G.jpg",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_en/LUS_distal_D.jpg",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_en/LUS_distal_G.jpg",
     "revision": null
   },
   {
@@ -328,6 +340,14 @@
     "revision": null
   },
   {
+    "url": "/lesions/image_en/rectumRS_EN.jpg",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_en/rup_ea.jpg",
+    "revision": null
+  },
+  {
     "url": "/lesions/image_en/Sciatique_D.jpg",
     "revision": null
   },
@@ -348,23 +368,15 @@
     "revision": null
   },
   {
-    "url": "/lesions/image_en/bladder.jpg",
+    "url": "/lesions/image_fr/bladder.jpg",
     "revision": null
   },
   {
-    "url": "/lesions/image_en/caecum_ileon_appendice.jpg",
+    "url": "/lesions/image_fr/caecum_ileon_appendice.jpg",
     "revision": null
   },
   {
-    "url": "/lesions/image_en/cl_prl.jpg",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_en/rectumRS_EN.jpg",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_en/rup_ea.jpg",
+    "url": "/lesions/image_fr/cl_prl.jpg",
     "revision": null
   },
   {
@@ -377,14 +389,6 @@
   },
   {
     "url": "/lesions/image_fr/Espace_perivesical_G.jpg",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_fr/LUS_distal_D.jpg",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_fr/LUS_distal_G.jpg",
     "revision": null
   },
   {
@@ -401,6 +405,14 @@
   },
   {
     "url": "/lesions/image_fr/Ligament_rond_G.jpg",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_fr/LUS_distal_D.jpg",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_fr/LUS_distal_G.jpg",
     "revision": null
   },
   {
@@ -440,6 +452,14 @@
     "revision": null
   },
   {
+    "url": "/lesions/image_fr/rectumRS_FR.jpg",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_fr/rup_ea.jpg",
+    "revision": null
+  },
+  {
     "url": "/lesions/image_fr/Sciatique_D.jpg",
     "revision": null
   },
@@ -457,26 +477,6 @@
   },
   {
     "url": "/lesions/image_fr/VaginaRVS_FR.jpg",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_fr/bladder.jpg",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_fr/caecum_ileon_appendice.jpg",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_fr/cl_prl.jpg",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_fr/rectumRS_FR.jpg",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_fr/rup_ea.jpg",
     "revision": null
   },
   {
@@ -516,11 +516,39 @@
     "revision": null
   },
   {
+    "url": "/lesions/image_map/image_POV_face-droite/endometriome (5-10cm).png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face-droite/endometriome (_10cm).png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face-droite/endometriome (_1cm).png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face-droite/endometriome (_2cm).png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face-droite/endometriome (_3cm).png",
+    "revision": null
+  },
+  {
     "url": "/lesions/image_map/image_POV_face-droite/Espace_perivesical.png",
     "revision": null
   },
   {
-    "url": "/lesions/image_map/image_POV_face-droite/LUS_distal.png",
+    "url": "/lesions/image_map/image_POV_face-droite/fossette ovarienne.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face-droite/hematosalpinx.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face-droite/hydrosalpinx_associe.png",
     "revision": null
   },
   {
@@ -536,7 +564,15 @@
     "revision": null
   },
   {
+    "url": "/lesions/image_map/image_POV_face-droite/LUS_distal.png",
+    "revision": null
+  },
+  {
     "url": "/lesions/image_map/image_POV_face-droite/Lus_Proximal.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face-droite/microendometriome.png",
     "revision": null
   },
   {
@@ -564,10 +600,6 @@
     "revision": null
   },
   {
-    "url": "/lesions/image_map/image_POV_face-droite/Rectum_RS_jct.png",
-    "revision": null
-  },
-  {
     "url": "/lesions/image_map/image_POV_face-droite/Rectum_high.png",
     "revision": null
   },
@@ -577,6 +609,10 @@
   },
   {
     "url": "/lesions/image_map/image_POV_face-droite/Rectum_middle.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face-droite/Rectum_RS_jct.png",
     "revision": null
   },
   {
@@ -608,43 +644,31 @@
     "revision": null
   },
   {
-    "url": "/lesions/image_map/image_POV_face-droite/endometriome (5-10cm).png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face-droite/endometriome (_10cm).png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face-droite/endometriome (_1cm).png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face-droite/endometriome (_2cm).png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face-droite/endometriome (_3cm).png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face-droite/fossette ovarienne.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face-droite/hematosalpinx.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face-droite/hydrosalpinx_associe.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face-droite/microendometriome.png",
-    "revision": null
-  },
-  {
     "url": "/lesions/image_map/image_POV_face_gauche/Cloison_rectovaginale.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face_gauche/endometriome (5-10cm).png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face_gauche/endometriome (_10cm).png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face_gauche/endometriome (_1cm).png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face_gauche/endometriome (_2cm).png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face_gauche/endometriome (_3cm).png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face_gauche/endometriome (_4cm).png",
     "revision": null
   },
   {
@@ -652,7 +676,15 @@
     "revision": null
   },
   {
-    "url": "/lesions/image_map/image_POV_face_gauche/LUS_distal.png",
+    "url": "/lesions/image_map/image_POV_face_gauche/fossette_ovarienne.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face_gauche/hematosalpinx.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face_gauche/hydrosalpinx_associe.png",
     "revision": null
   },
   {
@@ -664,7 +696,15 @@
     "revision": null
   },
   {
+    "url": "/lesions/image_map/image_POV_face_gauche/LUS_distal.png",
+    "revision": null
+  },
+  {
     "url": "/lesions/image_map/image_POV_face_gauche/Lus_Proximal.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face_gauche/microendometriome.png",
     "revision": null
   },
   {
@@ -692,10 +732,6 @@
     "revision": null
   },
   {
-    "url": "/lesions/image_map/image_POV_face_gauche/Rectum_RS_jct.png",
-    "revision": null
-  },
-  {
     "url": "/lesions/image_map/image_POV_face_gauche/Rectum_high.png",
     "revision": null
   },
@@ -705,6 +741,10 @@
   },
   {
     "url": "/lesions/image_map/image_POV_face_gauche/Rectum_middle.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_face_gauche/Rectum_RS_jct.png",
     "revision": null
   },
   {
@@ -736,127 +776,7 @@
     "revision": null
   },
   {
-    "url": "/lesions/image_map/image_POV_face_gauche/endometriome (5-10cm).png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face_gauche/endometriome (_10cm).png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face_gauche/endometriome (_1cm).png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face_gauche/endometriome (_2cm).png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face_gauche/endometriome (_3cm).png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face_gauche/endometriome (_4cm).png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face_gauche/fossette_ovarienne.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face_gauche/hematosalpinx.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face_gauche/hydrosalpinx_associe.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_face_gauche/microendometriome.png",
-    "revision": null
-  },
-  {
     "url": "/lesions/image_map/image_POV_profil/Cloison_rectovaginale.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Espace_perivesical.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/LUS_distal.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Lame.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Ligament_rond_distal.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Ligament_rond_proximal.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Lus_Proximal.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Myometre_externe Anterieur.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Myometre_externe Posterieur.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Parametre_mediolateral.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Paroi_pelvienne_S3_S4.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Rectum_RS_jct.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Rectum_high.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Rectum_low.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Rectum_middle.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Ureter.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Uretere_lombaire.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Vagina.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Vessie_base.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Vessie_cul_de_sac.png",
-    "revision": null
-  },
-  {
-    "url": "/lesions/image_map/image_POV_profil/Vessie_dome.png",
     "revision": null
   },
   {
@@ -884,6 +804,10 @@
     "revision": null
   },
   {
+    "url": "/lesions/image_map/image_POV_profil/Espace_perivesical.png",
+    "revision": null
+  },
+  {
     "url": "/lesions/image_map/image_POV_profil/fossette_ovarienne.png",
     "revision": null
   },
@@ -896,7 +820,83 @@
     "revision": null
   },
   {
+    "url": "/lesions/image_map/image_POV_profil/Lame.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Ligament_rond_distal.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Ligament_rond_proximal.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/LUS_distal.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Lus_Proximal.png",
+    "revision": null
+  },
+  {
     "url": "/lesions/image_map/image_POV_profil/microendometriome.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Myometre_externe Anterieur.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Myometre_externe Posterieur.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Parametre_mediolateral.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Paroi_pelvienne_S3_S4.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Rectum_high.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Rectum_low.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Rectum_middle.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Rectum_RS_jct.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Ureter.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Uretere_lombaire.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Vagina.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Vessie_base.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Vessie_cul_de_sac.png",
+    "revision": null
+  },
+  {
+    "url": "/lesions/image_map/image_POV_profil/Vessie_dome.png",
     "revision": null
   },
   {

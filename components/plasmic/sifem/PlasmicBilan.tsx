@@ -491,32 +491,7 @@ function PlasmicBilan__RenderFunc(props: {
         path: "cat",
         type: "private",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
-          (() => {
-            try {
-              return (() => {
-                const removeDup = [
-                  ...new Map(
-                    $state.submission.map(item => [item["category_fr"], item])
-                  ).values()
-                ];
-                removeDup.forEach(item => (item.visible = true));
-                return removeDup.map(item => ({
-                  category_fr: item.category_fr,
-                  category_en: item.category_en,
-                  visible: item.visible
-                }));
-              })();
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return [];
-              }
-              throw e;
-            }
-          })()
+        initFunc: ({ $props, $state, $queries, $ctx }) => []
       },
       {
         path: "subCheckbox2[][][].isChecked",
@@ -558,61 +533,7 @@ function PlasmicBilan__RenderFunc(props: {
         path: "score2",
         type: "private",
         variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
-          (() => {
-            try {
-              return (
-                // 1 point par compartiment contenant une lésion sélectionnée (10 points max)
-                $state.cat.filter(
-                  x =>
-                    x.category_fr !== "Pathologies associées" &&
-                    x.category_fr !== "Superficielle" &&
-                    x.category_fr !== "Annexielle > côté gauche" &&
-                    x.category_fr !== "Annexielle > côté droit"
-                ).length +
-                // 1 point si la lésion vagin est sélectionnée
-                ($state.submission.some(item => item.id === "60") ? 1 : 0) +
-                // 1pt pour l’uretère (dans le compartiment Médiolatéral droit)
-                ($state.submission.some(item => item.id === "28")
-                  ? 1
-                  : $state.subSubmission.some(item => item.id === "17")
-                  ? 1
-                  : 0) +
-                // 1pt pour l’uretère (dans le compartiment Médiolatéral gauche)
-                ($state.submission.some(item => item.id === "31")
-                  ? 1
-                  : $state.subSubmission.some(item => item.id === "18")
-                  ? 1
-                  : 0) +
-                // 1pt pour PAROI PELVIENNE ML (+/- OBTURATEUR) du compartiment Médiolatéral droit
-                ($state.submission.some(item => item.id === "29") ? 1 : 0) +
-                // 1pt pour PAROI PELVIENNE ML (+/- OBTURATEUR) du compartiment Médiolatéral gauche
-                ($state.submission.some(item => item.id === "32") ? 1 : 0) +
-                // 1pt pour PAROI PELVIENNE PL (S3, S4) et/ou PAROI PELVIENNE PL (+/- NERF SCIATIQUE) du compartiment Postérolatéral droit
-                ($state.submission.some(
-                  item => item.id === "35" || item.id === "36"
-                )
-                  ? 1
-                  : 0) +
-                // 1pt pour PAROI PELVIENNE PL (S3, S4) et/ou PAROI PELVIENNE PL (+/- NERF SCIATIQUE) du compartiment Postérolatéral gauche
-                ($state.submission.some(
-                  item => item.id === "39" || item.id === "40"
-                )
-                  ? 1
-                  : 0) +
-                // Option Base
-                ($state.subSubmission.some(item => item.id === "14") ? 1 : 0)
-              );
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return 0;
-              }
-              throw e;
-            }
-          })()
+        initFunc: ({ $props, $state, $queries, $ctx }) => 0
       },
       {
         path: "stepLabelsEn",
@@ -935,6 +856,85 @@ function PlasmicBilan__RenderFunc(props: {
     }
   }, [$state.submission, $state.submissionEndometriome, $state.subSubmission, onSubmissionChange]);
 
+  // Calculate "cat" state reactively based on submission
+  React.useEffect(() => {
+    try {
+      const normalizedSubmission = $state.submission.map(item => 
+        item.currentItem ? item.currentItem : item
+      );
+      const removeDup = [
+        ...new Map(
+          normalizedSubmission.map(item => [item["category_fr"], item])
+        ).values()
+      ];
+      removeDup.forEach(item => (item.visible = true));
+      const newCat = removeDup.map(item => ({
+        category_fr: item.category_fr,
+        category_en: item.category_en,
+        visible: item.visible
+      }));
+      $stateSet($state, ["cat"], newCat);
+    } catch (e) {
+      $stateSet($state, ["cat"], []);
+    }
+  }, [$state.submission]);
+
+  // Calculate "score2" reactively based on submission, subSubmission, and cat
+  React.useEffect(() => {
+    try {
+      // Normalize submission to handle both {currentItem: obj} and obj formats
+      const normalizedSubmission = $state.submission.map(item => 
+        item.currentItem ? item.currentItem : item
+      );
+      
+      const score = (
+        // 1 point par compartiment contenant une lésion sélectionnée (10 points max)
+        $state.cat.filter(
+          x =>
+            x.category_fr !== "Pathologies associées" &&
+            x.category_fr !== "Superficielle" &&
+            x.category_fr !== "Annexielle > côté gauche" &&
+            x.category_fr !== "Annexielle > côté droit"
+        ).length +
+        // 1 point si la lésion vagin est sélectionnée
+        (normalizedSubmission.some(item => String(item.id) === "60") ? 1 : 0) +
+        // 1pt pour l'uretère (dans le compartiment Médiolatéral droit)
+        (normalizedSubmission.some(item => String(item.id) === "28")
+          ? 1
+          : $state.subSubmission.some(item => String(item.id) === "17")
+          ? 1
+          : 0) +
+        // 1pt pour l'uretère (dans le compartiment Médiolatéral gauche)
+        (normalizedSubmission.some(item => String(item.id) === "31")
+          ? 1
+          : $state.subSubmission.some(item => String(item.id) === "18")
+          ? 1
+          : 0) +
+        // 1pt pour PAROI PELVIENNE ML (+/- OBTURATEUR) du compartiment Médiolatéral droit
+        (normalizedSubmission.some(item => String(item.id) === "29") ? 1 : 0) +
+        // 1pt pour PAROI PELVIENNE ML (+/- OBTURATEUR) du compartiment Médiolatéral gauche
+        (normalizedSubmission.some(item => String(item.id) === "32") ? 1 : 0) +
+        // 1pt pour PAROI PELVIENNE PL (S3, S4) et/ou PAROI PELVIENNE PL (+/- NERF SCIATIQUE) du compartiment Postérolatéral droit
+        (normalizedSubmission.some(
+          item => String(item.id) === "35" || String(item.id) === "36"
+        )
+          ? 1
+          : 0) +
+        // 1pt pour PAROI PELVIENNE PL (S3, S4) et/ou PAROI PELVIENNE PL (+/- NERF SCIATIQUE) du compartiment Postérolatéral gauche
+        (normalizedSubmission.some(
+          item => String(item.id) === "39" || String(item.id) === "40"
+        )
+          ? 1
+          : 0) +
+        // Option Base
+        ($state.subSubmission.some(item => String(item.id) === "14") ? 1 : 0)
+      );
+      $stateSet($state, ["score2"], score);
+    } catch (e) {
+      $stateSet($state, ["score2"], 0);
+    }
+  }, [$state.submission, $state.subSubmission, $state.cat]);
+
   const queries = {
     getLesions: { data: lesions },
     getOptions: { data: options },
@@ -1188,9 +1188,18 @@ function PlasmicBilan__RenderFunc(props: {
                     }
                   })()
             }
-            fileName={`dpei_${new Date()
-              .toLocaleString("fr-FR", { timeZone: "Europe/Paris" })
-              .replace(/[/]/g, "_")}`}
+            fileName={`dPEI ${new Date()
+              .toLocaleString("fr-FR", { 
+                timeZone: "Europe/Paris",
+                day: "2-digit",
+                month: "2-digit", 
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+              })
+              .replace(/\//g, "-")
+              .replace(/:/g, "-")}`}
             format={(() => {
               try {
                 return $state.printType;
@@ -9239,7 +9248,7 @@ function PlasmicBilan__RenderFunc(props: {
                                           (currentItem.next_step ||
                                           currentItem.previous_step
                                             ? " : " + currentItem.face
-                                            : null)
+                                            : "")
                                         );
                                       } catch (e) {
                                         if (
@@ -11958,7 +11967,7 @@ function PlasmicBilan__RenderFunc(props: {
                 $state.step === "Profonde" ||
                 $queries.getLesions.data.find(
                   x => x.category_fr === $state.step
-                ).macro_category_fr === "Profonde"
+                )?.macro_category_fr === "Profonde"
               );
             } catch (e) {
               if (

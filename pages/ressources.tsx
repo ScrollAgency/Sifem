@@ -4,10 +4,12 @@ import * as React from "react";
 import { PageParamsProvider as PageParamsProvider__ } from "@plasmicapp/react-web/lib/host";
 import GlobalContextsProvider from "../components/plasmic/sifem/PlasmicGlobalContextsProvider";
 import { LocaleContextProvider } from "../components/plasmic/sifem/PlasmicGlobalVariant__Locale";
+import { useLocale } from "@/contexts/LocaleContext";
 import { PlasmicRessources } from "../components/plasmic/sifem/PlasmicRessources";
 import { useRouter } from "next/router";
 
 function Ressources() {
+  const { locale } = useLocale();
   // Use PlasmicRessources to render this component as it was
   // designed in Plasmic, by activating the appropriate variants,
   // attaching the appropriate event handlers, etc.  You
@@ -26,7 +28,7 @@ function Ressources() {
   // (https://nextjs.org/docs/advanced-features/custom-app).
 
   return (
-    <LocaleContextProvider value={undefined}>
+    <LocaleContextProvider value={locale as "fr" | "en"}>
       <GlobalContextsProvider>
         <PageParamsProvider__
           route={useRouter()?.pathname}
