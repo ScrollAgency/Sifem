@@ -51,3 +51,4 @@ id,name_fr,name_en,category_fr,category_en,image_fr,video_fr,macro_category_fr,m
 50,Cæcum – Iléon – Appendice –Sigmoïde,Caecum – Ileum – Appendix – Sigmoid Colon,Extrapelvien,Extrapelvic,image_fr/caecum_ileon_appendice.jpg,video_fr/extra_pelvien.mp4,Profonde,false,null,null,image_en/caecum_ileon_appendice.jpg,null,null,null,true
 45,Ligament Rond Proximal,Proximal Round Ligament,Antérocentral,Anterocentral,image_fr/cl_prl.jpg,video_fr/rond_proximal.mp4,Profonde,false,null,null,image_en/cl_prl.jpg,null,Ligament_rond_proximal.png,null,true
 49,Nerf Pudendal,Pudendal Nerve,Extrapelvien,Extrapelvic,image_fr/Nerf_pudendal.jpg,video_fr/extra_pelvien.mp4,Profonde,false,null,null,image_en/Nerf_pudendal.jpg,null,null,null,true
+62,Myomes Utérins,Uterine Fibroids,Pathologies associées,Associated pathologies,null,null,Profonde,null,null,null,null,null,null,null,false

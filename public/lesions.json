@@ -934,5 +934,23 @@
     "image_trauma": null,
     "face": null,
     "has_options": true
+  },
+  {
+    "id": 62,
+    "name_fr": "Myomes Utérins",
+    "name_en": "Uterine Fibroids",
+    "category_fr": "Pathologies associées",
+    "category_en": "Associated pathologies",
+    "image_fr": null,
+    "video_fr": null,
+    "macro_category_fr": "Profonde",
+    "multi_step": null,
+    "next_step": null,
+    "previous_step": null,
+    "image_en": null,
+    "video_en": null,
+    "image_trauma": null,
+    "face": null,
+    "has_options": false
   }
 ]

@@ -4,8 +4,8 @@ import path from 'path';
 
 /** @type {import('next').NextConfig} */
 const baseConfig = {
-  // to export
-  output: 'web',
+  // to 'export' ou 'web
+  output: 'export',
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
