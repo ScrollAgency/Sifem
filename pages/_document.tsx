@@ -12,8 +12,8 @@ export default function Document() {
         <link rel="manifest" href="/site.webmanifest" />
         
         {/* Métadonnées de base */}
-        <meta name="theme-color" content="#000000" />
-        <meta name="description" content="Application Plasmic" />
+        <meta name="theme-color" content="#4B0082" />
+        <meta name="description" content="Application Sifem" />
       </Head>
       <body>
         <Main />
