@@ -1,7 +1,7 @@
 {
-  "name": "Sifem",
-  "short_name": "Sifem",
-  "description": "Application Sifem",
+  "name": "dPEI Pocket",
+  "short_name": "dPEI Pocket",
+  "description": "dPEI Pocket",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
