@@ -265,6 +265,7 @@ const optimizeSVGsForCapture = (element: HTMLElement): (() => void) => {
 // Convert image to data URL with fallback
 const convertImageToDataURL = async (imgElement: HTMLImageElement): Promise<string> => {
   const FALLBACK_IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+  const TIMEOUT_MS = 8000; // 8 secondes de timeout (augmenté)
   
   // Skip if already a data URL
   if (imgElement.src.startsWith('data:')) {
@@ -276,12 +277,19 @@ const convertImageToDataURL = async (imgElement: HTMLImageElement): Promise<stri
     ? imgElement.src 
     : new URL(imgElement.src, window.location.href).href;
 
+  // Méthode 1: Essayer de fetch avec CORS (avec timeout)
+  // Ne PAS essayer de convertir l'image du DOM car cela crée un canvas tainted pour les images externes
   try {
-    // Try to fetch the image
-    const response = await fetch(`${absoluteUrl}?cacheBust=${Date.now()}`, {
+    const fetchPromise = fetch(`${absoluteUrl}?cacheBust=${Date.now()}`, {
       mode: 'cors',
       cache: 'no-cache',
     });
+    
+    const timeoutPromise = new Promise<never>((_, reject) => 
+      setTimeout(() => reject(new Error('Fetch timeout')), TIMEOUT_MS)
+    );
+    
+    const response = await Promise.race([fetchPromise, timeoutPromise]);
     
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     
@@ -289,19 +297,62 @@ const convertImageToDataURL = async (imgElement: HTMLImageElement): Promise<stri
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
+      reader.onerror = () => reject(new Error('FileReader error'));
       reader.readAsDataURL(blob);
     });
   } catch (fetchError) {
-    console.warn('Direct fetch failed, trying canvas method:', fetchError);
+    console.warn('Direct fetch failed (CORS or timeout), trying fallback with new Image():', fetchError);
     
-    // Fallback: Use canvas method
-    try {
-      return new Promise<string>((resolve) => {
+    // Méthode 2: Charger l'image avec new Image() et essayer avec/sans crossOrigin
+    return new Promise<string>((resolve) => {
+      let resolved = false;
+      const timeoutId = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          console.warn(`Image load timeout: ${absoluteUrl}`);
+          // Dernière tentative: utiliser l'image du DOM même si elle n'est pas complète
+          try {
+            if (imgElement.naturalWidth > 0 || imgElement.complete) {
+              const canvas = document.createElement('canvas');
+              const computedStyle = window.getComputedStyle(imgElement);
+              const displayWidth = parseFloat(computedStyle.width) || imgElement.width || 100;
+              const displayHeight = parseFloat(computedStyle.height) || imgElement.height || 100;
+              
+              canvas.width = displayWidth;
+              canvas.height = displayHeight;
+              
+              const ctx = canvas.getContext('2d');
+              if (ctx) {
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                try {
+                  ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+                  const dataURL = canvas.toDataURL('image/png');
+                  console.log(`Used DOM image as fallback: ${absoluteUrl.substring(0, 80)}...`);
+                  resolve(dataURL);
+                  return;
+                } catch {
+                  // Ignore
+                }
+              }
+            }
+          } catch {
+            // Ignore
+          }
+          resolve(FALLBACK_IMAGE);
+        }
+      }, TIMEOUT_MS);
+      
+      const tryLoadImage = (useCORS: boolean) => {
+        if (resolved) return;
+        
         const img = new Image();
-        img.crossOrigin = 'anonymous';
+        if (useCORS) {
+          img.crossOrigin = 'anonymous';
+        }
         
         img.onload = () => {
+          if (resolved) return;
           try {
             const canvas = document.createElement('canvas');
             const computedStyle = window.getComputedStyle(imgElement);
@@ -322,24 +373,78 @@ const convertImageToDataURL = async (imgElement: HTMLImageElement): Promise<stri
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             
             const dataURL = canvas.toDataURL('image/png');
-            resolve(dataURL);
+            if (!resolved) {
+              resolved = true;
+              clearTimeout(timeoutId);
+              console.log(`Successfully loaded image via canvas: ${absoluteUrl.substring(0, 80)}...`);
+              resolve(dataURL);
+            }
           } catch (err) {
             console.warn('Canvas conversion failed:', err);
-            resolve(FALLBACK_IMAGE);
+            if (!resolved && !useCORS) {
+              resolved = true;
+              clearTimeout(timeoutId);
+              resolve(FALLBACK_IMAGE);
+            } else if (!resolved && useCORS) {
+              // Essayer sans CORS si la méthode avec CORS échoue
+              tryLoadImage(false);
+            }
           }
         };
         
         img.onerror = () => {
-          console.warn(`Failed to load image: ${img.src}`);
-          resolve(FALLBACK_IMAGE);
+          if (resolved) return;
+          console.warn(`Failed to load image ${useCORS ? 'with CORS' : 'without CORS'}: ${img.src}`);
+          if (useCORS) {
+            // Essayer sans CORS si la méthode avec CORS échoue
+            tryLoadImage(false);
+          } else {
+            // Si les deux méthodes échouent, essayer d'utiliser l'image du DOM
+            if (!resolved) {
+              try {
+                if (imgElement.naturalWidth > 0 || imgElement.complete) {
+                  const canvas = document.createElement('canvas');
+                  const computedStyle = window.getComputedStyle(imgElement);
+                  const displayWidth = parseFloat(computedStyle.width) || imgElement.width || 100;
+                  const displayHeight = parseFloat(computedStyle.height) || imgElement.height || 100;
+                  
+                  canvas.width = displayWidth;
+                  canvas.height = displayHeight;
+                  
+                  const ctx = canvas.getContext('2d');
+                  if (ctx) {
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    try {
+                      ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+                      const dataURL = canvas.toDataURL('image/png');
+                      console.log(`Used DOM image as final fallback: ${absoluteUrl.substring(0, 80)}...`);
+                      resolved = true;
+                      clearTimeout(timeoutId);
+                      resolve(dataURL);
+                      return;
+                    } catch {
+                      // Continue to fallback
+                    }
+                  }
+                }
+              } catch {
+                // Continue to fallback
+              }
+              // Dernier recours: image transparente
+              resolved = true;
+              clearTimeout(timeoutId);
+              resolve(FALLBACK_IMAGE);
+            }
+          }
         };
         
         img.src = absoluteUrl;
-      });
-    } catch (canvasError) {
-      console.error('Canvas method failed:', canvasError);
-      return FALLBACK_IMAGE;
-    }
+      };
+      
+      // Essayer d'abord avec CORS, puis sans si ça échoue
+      tryLoadImage(true);
+    });
   }
 };
 
@@ -350,36 +455,157 @@ const preloadImages = async (element: HTMLElement): Promise<void> => {
   
   if (images.length === 0) return;
   
-  // Convert all images to data URLs in parallel
-  const imagePromises = Array.from(images).map(async (img) => {
-    try {
-      // Set loading to eager
+  // D'abord, s'assurer que toutes les images sont chargées
+  const loadPromises = Array.from(images).map((img) => {
+    return new Promise<void>((resolve) => {
+      // Si l'image est déjà chargée, résoudre immédiatement
+      if (img.complete && img.naturalWidth > 0) {
+        resolve();
+        return;
+      }
+      
+      // Sinon, attendre le chargement
+      const timeoutId = setTimeout(() => {
+        console.warn(`Image load timeout (waiting): ${img.src.substring(0, 80)}...`);
+        resolve(); // Continuer même si l'image n'est pas chargée
+      }, 5000);
+      
+      img.onload = () => {
+        clearTimeout(timeoutId);
+        resolve();
+      };
+      
+      img.onerror = () => {
+        clearTimeout(timeoutId);
+        console.warn(`Image load error (will try to use DOM version): ${img.src.substring(0, 80)}...`);
+        resolve(); // Continuer même en cas d'erreur
+      };
+      
+      // Forcer le chargement si nécessaire
       if (img.loading === 'lazy') {
         img.loading = 'eager';
       }
       
-      // Remove srcset to ensure the browser uses src only
+      // Si l'image n'a pas de src ou n'est pas en cours de chargement, déclencher le chargement
+      if (!img.src || img.src === '') {
+        const srcset = img.getAttribute('srcset');
+        if (srcset) {
+          // Utiliser le premier srcset si disponible
+          const firstSrc = srcset.split(',')[0].trim().split(' ')[0];
+          img.src = firstSrc;
+        }
+      }
+    });
+  });
+  
+  // Attendre que toutes les images soient chargées (ou timeout)
+  await Promise.allSettled(loadPromises);
+  console.log('All images load attempts completed');
+  
+  // Attendre un peu pour que les images se stabilisent
+  await delay(300);
+  
+  // Convert all images to data URLs in parallel (avec gestion d'erreur robuste)
+  const imagePromises = Array.from(images).map(async (img) => {
+    try {
+      // Stocker l'URL originale pour logging
+      const originalSrc = img.src;
+      
+      // Si l'image est déjà une data URL (SVG, images déjà converties, etc.), on peut la garder
+      if (img.src.startsWith('data:')) {
+        // Nettoyer quand même les attributs pour éviter que html2canvas ne recharge
+        if (img.srcset) {
+          img.removeAttribute('srcset');
+        }
+        if (img.sizes) {
+          img.removeAttribute('sizes');
+        }
+        if (img.hasAttribute('crossorigin')) {
+          img.removeAttribute('crossorigin');
+          (img as HTMLImageElement).crossOrigin = null;
+        }
+        console.log(`Image already a data URL, skipping conversion: ${originalSrc.substring(0, 60)}...`);
+        return { success: true, img };
+      }
+      
+      // Nettoyer TOUS les attributs qui pourraient faire que html2canvas recharge l'image
+      // Cela force html2canvas à utiliser uniquement le src (qui sera une data URL)
       if (img.srcset) {
         img.removeAttribute('srcset');
       }
-      
-      // Set crossOrigin attribute
-      if (!img.hasAttribute('crossorigin')) {
-        img.crossOrigin = 'anonymous';
+      if (img.sizes) {
+        img.removeAttribute('sizes');
+      }
+      // Retirer crossOrigin pour éviter les problèmes CORS lors de la conversion
+      if (img.hasAttribute('crossorigin')) {
+        img.removeAttribute('crossorigin');
+        (img as HTMLImageElement).crossOrigin = null;
       }
       
-      // Convert to data URL
-      const dataUrl = await convertImageToDataURL(img);
+      // Ne pas forcer crossOrigin ici, laisser convertImageToDataURL gérer
+      // car certaines images peuvent ne pas supporter CORS
+      
+      // Convert to data URL avec timeout
+      const dataUrl = await Promise.race([
+        convertImageToDataURL(img),
+        new Promise<string>((resolve) => 
+          setTimeout(() => {
+            console.warn(`Image conversion timeout for: ${originalSrc.substring(0, 80)}...`);
+            // Si l'image est déjà chargée dans le DOM, essayer de l'utiliser quand même
+            if (img.complete && img.naturalWidth > 0) {
+              try {
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = img.naturalWidth;
+                tempCanvas.height = img.naturalHeight;
+                const tempCtx = tempCanvas.getContext('2d');
+                if (tempCtx) {
+                  tempCtx.fillStyle = '#FFFFFF';
+                  tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                  tempCtx.drawImage(img, 0, 0);
+                  const fallbackDataUrl = tempCanvas.toDataURL('image/png');
+                  resolve(fallbackDataUrl);
+                  return;
+                }
+              } catch {
+                // Ignore
+              }
+            }
+            resolve('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
+          }, 10000) // 10 secondes max par image (augmenté)
+        )
+      ]);
+      
+      // Remplacer le src par la data URL - CRITIQUE pour que html2canvas utilise la data URL
       img.src = dataUrl;
       
-      return true;
+      // Forcer le navigateur à utiliser la nouvelle src
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      img.offsetHeight; // Force reflow
+      
+      console.log(`Image converted to data URL: ${originalSrc.substring(0, 60)}... -> data URL (${dataUrl.substring(0, 50)}...)`);
+      
+      return { success: true, img };
     } catch (err) {
-      console.error(`Failed to process image:`, err);
-      return false;
+      console.warn(`Failed to process image ${img.src.substring(0, 80)}...:`, err);
+      // Utiliser une image de fallback pour continuer
+      img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      img.offsetHeight; // Force reflow
+      return { success: false, img, error: err };
     }
   });
   
-  await Promise.all(imagePromises);
+  // Utiliser allSettled pour continuer même si certaines images échouent
+  const results = await Promise.allSettled(imagePromises);
+  const successful = results.filter(r => 
+    r.status === 'fulfilled' && r.value && (r.value as { success: boolean }).success
+  ).length;
+  const failed = results.length - successful;
+  
+  if (failed > 0) {
+    console.warn(`${failed} image(s) failed to load, continuing with fallback images`);
+  }
+  console.log(`Processed ${successful}/${images.length} images successfully`);
   
   // Wait for images to stabilize with longer delay
   await delay(400);
@@ -400,43 +626,6 @@ const waitForElementRender = async (element: HTMLElement) => {
   await delay(150);
   
   return () => {}; // No cleanup needed
-};
-
-// Process images for PDF generation
-const processImagesForPDF = async (element: HTMLElement): Promise<{[key: string]: string}> => {
-  const images = element.querySelectorAll('img');
-  const imageMap: {[key: string]: string} = {};
-  
-
-  
-  await Promise.all(Array.from(images).map(async (img, index) => {
-    try {
-      const imgId = img.id || `img-${index}-${Date.now()}`;
-      
-      // Force image to load if needed
-      if (!img.complete || img.naturalWidth === 0) {
-        await new Promise<void>((resolve) => {
-          img.onload = () => resolve();
-          img.onerror = () => resolve();
-          
-          if (img.loading === 'lazy') {
-            img.loading = 'eager';
-            const currentSrc = img.src;
-            img.src = '';
-            img.src = currentSrc;
-          }
-        });
-      }
-      
-      const dataUrl = await convertImageToDataURL(img);
-      imageMap[imgId] = dataUrl;
-      img.setAttribute('data-pdf-id', imgId);
-    } catch (err) {
-      console.error(`Error processing image ${index}:`, err);
-    }
-  }));
-  
-  return imageMap;
 };
 
 // Enhanced PDF generator
@@ -506,8 +695,12 @@ const generateEnhancedPDF = async (
     const elementData = elementDimensions[i];
     const element = elementData.element;
     
-    // Pre-process images
-    await processImagesForPDF(element);
+    // Pre-process images: convertir toutes les images en data URLs et remplacer leurs src dans le DOM
+    // Cela empêche html2canvas d'essayer de recharger les images depuis leur URL originale (problème CORS)
+    await preloadImages(element);
+    
+    // Attendre un peu pour que les images soient bien remplacées dans le DOM
+    await delay(200);
     
     // Convert to millimeters and calculate optimal scaling
     let elementWidth = elementData.width * pxToMm;
@@ -619,21 +812,107 @@ const generateEnhancedPDF = async (
       const cleanupSVGs = optimizeSVGsForCapture(element);
       await delay(50); // Small delay for SVG optimization to take effect
       
+      // Vérifier STRICTEMENT que toutes les images ont bien été converties en data URLs
+      const allImages = element.querySelectorAll('img');
+      let imagesNotConverted = Array.from(allImages).filter(img => {
+        const src = img.src || img.getAttribute('src') || '';
+        return src && !src.startsWith('data:') && !src.startsWith('blob:');
+      });
+      
+      // Essayer plusieurs fois de convertir les images restantes
+      let attempts = 0;
+      const maxAttempts = 3;
+      while (imagesNotConverted.length > 0 && attempts < maxAttempts) {
+        attempts++;
+        console.warn(`Attempt ${attempts}: ${imagesNotConverted.length} image(s) not converted to data URLs, forcing conversion now`);
+        
+        // Forcer la conversion des images restantes
+        const conversionPromises = imagesNotConverted.map(async (img) => {
+          try {
+            // Nettoyer tous les attributs qui pourraient causer des problèmes
+            if (img.srcset) img.removeAttribute('srcset');
+            if (img.sizes) img.removeAttribute('sizes');
+            if (img.hasAttribute('crossorigin')) {
+              img.removeAttribute('crossorigin');
+              (img as HTMLImageElement).crossOrigin = null;
+            }
+            
+            const dataUrl = await Promise.race([
+              convertImageToDataURL(img),
+              new Promise<string>((resolve) => 
+                setTimeout(() => {
+                  console.warn(`Conversion timeout for image: ${img.src}`);
+                  resolve('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
+                }, 5000)
+              )
+            ]);
+            
+            img.src = dataUrl;
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            img.offsetHeight; // Force reflow
+            return true;
+          } catch (err) {
+            console.warn(`Failed to convert image ${img.src}:`, err);
+            img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            img.offsetHeight; // Force reflow
+            return false;
+          }
+        });
+        
+        await Promise.all(conversionPromises);
+        await delay(300); // Attendre que les images soient mises à jour
+        
+        // Vérifier à nouveau
+        imagesNotConverted = Array.from(element.querySelectorAll('img')).filter(img => {
+          const src = img.src || img.getAttribute('src') || '';
+          return src && !src.startsWith('data:') && !src.startsWith('blob:');
+        });
+      }
+      
+      if (imagesNotConverted.length > 0) {
+        console.error(`WARNING: ${imagesNotConverted.length} image(s) could not be converted to data URLs after ${maxAttempts} attempts`);
+        // Forcer toutes les images non converties à utiliser un fallback
+        imagesNotConverted.forEach(img => {
+          img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+        });
+        await delay(200);
+      }
+      
       // Capture with html2canvas
       const targetRes = getTargetResolution(); // Résolution mobile optimisée
       const captureOptions = {
-        useCORS: true,
-        allowTaint: true,
+        useCORS: false, // Désactivé car toutes les images sont déjà en data URLs
+        allowTaint: false, // FORCER à ne pas créer de canvas tainted - toutes les images DOIVENT être en data URLs
         backgroundColor: '#ffffff',
         logging: false,
         scale: NORMALIZED_CAPTURE_SCALE, // Scale normalisé pour cohérence desktop/mobile
         foreignObjectRendering: false,
-        imageTimeout: 15000,
+        imageTimeout: 3000, // Timeout réduit car les images sont déjà en data URLs
         removeContainer: true,
         windowWidth: targetRes.width, // Force desktop window width
         windowHeight: targetRes.height, // Force desktop window height
         width: elementData.width, // Use actual element width
         height: elementData.height, // Use actual element height
+        onclone: (clonedDoc: Document) => {
+          // S'assurer que toutes les images dans le clone utilisent des data URLs
+          const clonedImages = clonedDoc.querySelectorAll('img');
+          clonedImages.forEach((clonedImg) => {
+            const clonedSrc = clonedImg.getAttribute('src') || (clonedImg as HTMLImageElement).src;
+            // Si l'image n'est pas une data URL, utiliser un fallback
+            if (clonedSrc && !clonedSrc.startsWith('data:') && !clonedSrc.startsWith('blob:')) {
+              // Essayer de trouver l'image originale
+              const originalImg = element.querySelector(`img[src="${clonedSrc}"]`) as HTMLImageElement;
+              if (originalImg && originalImg.src.startsWith('data:')) {
+                // Utiliser la data URL de l'image originale
+                (clonedImg as HTMLImageElement).src = originalImg.src;
+              } else {
+                // Fallback si l'image n'a pas pu être convertie
+                (clonedImg as HTMLImageElement).src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+              }
+            }
+          });
+        },
       };
       
       const canvas = await html2canvas(element, captureOptions);
@@ -641,7 +920,62 @@ const generateEnhancedPDF = async (
       // Wait for canvas to be fully processed
       await delay(150);
       
-             const imgData = canvas.toDataURL('image/jpeg', 0.98);
+      // Essayer d'extraire les données du canvas
+      let imgData: string;
+      try {
+        imgData = canvas.toDataURL('image/jpeg', 0.98);
+      } catch (taintedError) {
+        // Si le canvas est tainted, essayer avec toBlob() puis convertir en data URL
+        console.warn('Canvas is tainted, trying toBlob() method:', taintedError);
+        
+        try {
+          // Essayer toBlob() qui peut parfois fonctionner même avec canvas tainted
+          const blob = await Promise.race([
+            new Promise<Blob>((resolve, reject) => {
+              canvas.toBlob((blob) => {
+                if (blob) {
+                  resolve(blob);
+                } else {
+                  reject(new Error('toBlob returned null'));
+                }
+              }, 'image/jpeg', 0.98);
+            }),
+            new Promise<Blob>((_, reject) => 
+              setTimeout(() => reject(new Error('toBlob timeout')), 2000)
+            )
+          ]);
+          
+          // Convertir le blob en data URL
+          imgData = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+          
+          console.log('Successfully extracted canvas data using toBlob()');
+        } catch (blobError) {
+          // Si toBlob() échoue aussi, créer une image de fallback
+          console.error('toBlob() also failed, creating fallback image:', blobError);
+          
+          const blankCanvas = document.createElement('canvas');
+          blankCanvas.width = elementData.width;
+          blankCanvas.height = elementData.height;
+          const blankCtx = blankCanvas.getContext('2d');
+          
+          if (blankCtx) {
+            blankCtx.fillStyle = '#FFFFFF';
+            blankCtx.fillRect(0, 0, blankCanvas.width, blankCanvas.height);
+            blankCtx.fillStyle = '#000000';
+            blankCtx.font = '16px Arial';
+            blankCtx.textAlign = 'center';
+            blankCtx.fillText('Erreur: certaines images n\'ont pas pu être chargées', blankCanvas.width / 2, blankCanvas.height / 2);
+            imgData = blankCanvas.toDataURL('image/jpeg', 0.98);
+          } else {
+            throw new Error('Cannot create fallback canvas');
+          }
+        }
+      }
        
        // Use same dimensions on mobile and desktop
        const finalImageWidth = elementWidth;
@@ -1059,18 +1393,56 @@ export const useExportToPDF = () => {
             try {
               await delay(150); // Délai augmenté avant capture
               
+              // Vérifier que toutes les images ont bien été converties en data URLs
+              const allImages = info.element.querySelectorAll('img');
+              const imagesNotConverted = Array.from(allImages).filter(img => !img.src.startsWith('data:'));
+              if (imagesNotConverted.length > 0) {
+                console.warn(`${imagesNotConverted.length} image(s) not converted to data URLs for PNG export, forcing conversion now`);
+                // Forcer la conversion des images restantes
+                for (const img of imagesNotConverted) {
+                  try {
+                    const dataUrl = await convertImageToDataURL(img);
+                    img.src = dataUrl;
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    img.offsetHeight; // Force reflow
+                  } catch (err) {
+                    console.warn(`Failed to convert image ${img.src}:`, err);
+                    img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+                  }
+                }
+                await delay(200); // Attendre que les images soient mises à jour
+              }
+              
               const targetRes = getTargetResolution(); // Résolution mobile optimisée
               const tempCanvas = await html2canvas(info.element, {
-                useCORS: true,
-                allowTaint: true,
+                useCORS: false, // Désactivé car toutes les images sont déjà en data URLs
+                allowTaint: true, // Permet de continuer même si certaines images échouent
                 backgroundColor: '#ffffff',
                 logging: false,
                 scale: NORMALIZED_CAPTURE_SCALE, // Scale normalisé pour cohérence desktop/mobile
                 foreignObjectRendering: false,
-                imageTimeout: 15000,
+                imageTimeout: 5000, // Timeout réduit car les images sont déjà en data URLs
                 removeContainer: true,
                 windowWidth: targetRes.width, // Force desktop width
                 windowHeight: targetRes.height, // Force desktop height
+                onclone: (clonedDoc: Document) => {
+                  // S'assurer que toutes les images dans le clone utilisent des data URLs
+                  const clonedImages = clonedDoc.querySelectorAll('img');
+                  clonedImages.forEach((clonedImg) => {
+                    const clonedSrc = clonedImg.getAttribute('src');
+                    // Si l'image n'est pas une data URL, essayer de trouver l'image originale
+                    if (clonedSrc && !clonedSrc.startsWith('data:')) {
+                      const originalImg = info.element.querySelector(`img[src="${clonedSrc}"]`) as HTMLImageElement;
+                      if (originalImg && originalImg.src.startsWith('data:')) {
+                        // Utiliser la data URL de l'image originale
+                        (clonedImg as HTMLImageElement).src = originalImg.src;
+                      } else {
+                        // Fallback si l'image n'a pas pu être convertie
+                        (clonedImg as HTMLImageElement).src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+                      }
+                    }
+                  });
+                },
               });
               
               await delay(100); // Délai après capture
